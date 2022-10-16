@@ -33,6 +33,8 @@ contract POC1SumArgs {
         uint8 stackHeight;
         for (uint idx = 0; idx < _postfixNodes.length; idx++) {
             if (_postfixNodes[idx].nodeType == PostfixNodeType.VARIABLE) {
+                // @todo variableIndex0 = DATE, variableIndex1 = BLOCK
+                // value = _variables[variableIndex - 2]
                 _postfixNodes[idx].nodeType = PostfixNodeType.VALUE;
                 //                _postfixNodes[idx].value = _variables[_postfixNodes[idx].variableIndex];
             }
@@ -48,6 +50,7 @@ contract POC1SumArgs {
                 revert("Broken node");
             }
 
+            // @todo checked/unchecked flag, try/catch for fallback (negative or 3rd action?)
             if (_postfixNodes[idx].operator == PostfixNodeOperator.ADD) {
                 if (stackHeight < 2) {
                     revert("Broken stack");
