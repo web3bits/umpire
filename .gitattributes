@@ -1,0 +1,9 @@
+*.js    eol=lf
+*.jsx   eol=lf
+*.json  eol=lf
+*.ts    eol=lf
+*.tsx   eol=lf
+*.scss  eol=lf
+*.css   eol=lf
+*.sol   eol=lf
+*.md    eol=lf
