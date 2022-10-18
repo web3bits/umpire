@@ -1,10 +1,10 @@
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
 import { ethers, network } from 'hardhat';
-import { PostfixNodeStruct } from '../typechain-types/POC1.sol/POC1';
 import { pfOperator, pfValue } from './utils';
+import { PostfixNodeStruct } from '../typechain-types/POC1';
 
-const numbersToTest = [0, 1, 2, 3, 5, 10, 51, 123];
+const numbersToTest = [0, 1, 2, 11, 100];
 describe('POC1', function () {
   async function deployPOC1() {
     const [owner, otherAccount] = await ethers.getSigners();
@@ -15,7 +15,7 @@ describe('POC1', function () {
     return { instance, owner, otherAccount };
   }
 
-  describe('Resolve', function () {
+  describe('resolve', function () {
     it('a + b = c', async function () {
       const { instance } = await loadFixture(deployPOC1);
 
@@ -23,7 +23,7 @@ describe('POC1', function () {
         for (let b of numbersToTest) {
           const input: PostfixNodeStruct[] = [pfValue(a), pfValue(b), pfOperator('+')];
 
-          expect(await instance.resolve(input)).to.equal(a + b);
+          expect(await instance.resolve(input, [])).to.equal(a + b);
         }
       }
     });
@@ -36,7 +36,7 @@ describe('POC1', function () {
           for (let c of numbersToTest) {
             const input: PostfixNodeStruct[] = [pfValue(a), pfValue(b), pfOperator('+'), pfValue(c), pfOperator('+')];
 
-            expect(await instance.resolve(input)).to.equal(a + b + c);
+            expect(await instance.resolve(input, [])).to.equal(a + b + c);
           }
         }
       }
@@ -49,7 +49,7 @@ describe('POC1', function () {
         for (let b of numbersToTest) {
           const input: PostfixNodeStruct[] = [pfValue(a), pfValue(b), pfOperator('*')];
 
-          expect(await instance.resolve(input)).to.equal(a * b);
+          expect(await instance.resolve(input, [])).to.equal(a * b);
         }
       }
     });
@@ -62,7 +62,7 @@ describe('POC1', function () {
           for (let c of numbersToTest) {
             const input: PostfixNodeStruct[] = [pfValue(a), pfValue(b), pfOperator('*'), pfValue(c), pfOperator('+')];
 
-            expect(await instance.resolve(input)).to.equal(a * b + c);
+            expect(await instance.resolve(input, [])).to.equal(a * b + c);
           }
         }
       }
@@ -76,8 +76,20 @@ describe('POC1', function () {
           for (let c of numbersToTest) {
             const input: PostfixNodeStruct[] = [pfValue(a), pfValue(b), pfValue(c), pfOperator('+'), pfOperator('*')];
 
-            expect(await instance.resolve(input)).to.equal(a * (b + c));
+            expect(await instance.resolve(input, [])).to.equal(a * (b + c));
           }
+        }
+      }
+    });
+  });
+
+  describe('resolveFormula', function () {
+    it('a + b = c', async function () {
+      const { instance } = await loadFixture(deployPOC1);
+
+      for (let a of numbersToTest) {
+        for (let b of numbersToTest) {
+          expect(await instance.resolveFormula('V0V1+', [a, b], [])).to.equal(a + b);
         }
       }
     });

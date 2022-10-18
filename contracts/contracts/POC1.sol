@@ -25,20 +25,18 @@ pragma solidity ^0.8.17;
         uint8 variableIndex;
     }
 
-
 // @todo natspec
 contract POC1 {
-    function resolve(PostfixNode[] memory _postfixNodes/*, uint[] memory _variables*/) public pure returns (uint) {
+    function resolve(PostfixNode[] memory _postfixNodes, uint[] memory _variables) public pure returns (uint) {
         require(_postfixNodes.length > 0, "Provide nodes");
 
         uint[] memory stack = new uint[](256);
         uint8 stackHeight;
         for (uint idx = 0; idx < _postfixNodes.length; idx++) {
             if (_postfixNodes[idx].nodeType == PostfixNodeType.VARIABLE) {
-                // @todo variableIndex0 = DATE, variableIndex1 = BLOCK
-                // value = _variables[variableIndex - 2]
                 _postfixNodes[idx].nodeType = PostfixNodeType.VALUE;
-                //                _postfixNodes[idx].value = _variables[_postfixNodes[idx].variableIndex];
+                // @todo first 32 variable indexes reserved for constants like PI, e, timestamp, block number
+                _postfixNodes[idx].value = _variables[_postfixNodes[idx].variableIndex];
             }
 
             if (_postfixNodes[idx].nodeType == PostfixNodeType.VALUE) {
@@ -86,7 +84,58 @@ contract POC1 {
         return stack[0];
     }
 
-    // @dev testing
+    // @dev supports up to 10 values and 10 variables
+    // @dev formula format is postfix, variable and value indexes prefixed with X and V
+    // @dev example formula: V0V1+
+    function stringToNodes(string memory _formula, uint[] memory _values) public pure returns (PostfixNode[] memory) {
+        bytes memory chars = bytes(_formula);
+        uint symbolCount = chars.length;
+        for (uint idx = 0; idx < chars.length; idx++) {
+            if (chars[idx] == 'V' || chars[idx] == 'X') {
+                symbolCount--;
+            }
+        }
+
+        bool isValue = false;
+        bool isVariable = false;
+        PostfixNode[] memory nodes = new PostfixNode[](symbolCount);
+        uint8 nodeIdx = 0;
+
+        for (uint idx = 0; idx < chars.length; idx++) {
+            if (chars[idx] == 'V') {
+                isValue = true;
+                continue;
+            }
+
+            if (chars[idx] == 'X') {
+                isVariable = true;
+                continue;
+            }
+
+            if (isValue) {
+                isValue = false;
+                nodes[nodeIdx] = PostfixNode(_values[uint8(chars[idx]) - 48], PostfixNodeType.VALUE, PostfixNodeOperator.ADD, 0);
+                nodeIdx++;
+            } else if (isVariable) {
+                isVariable = false;
+                nodes[nodeIdx] = PostfixNode(0, PostfixNodeType.VARIABLE, PostfixNodeOperator.ADD, uint8(chars[idx]) - 48);
+                nodeIdx++;
+            } else if (chars[idx] == '+') {
+                nodes[nodeIdx] = PostfixNode(0, PostfixNodeType.OPERATOR, PostfixNodeOperator.ADD, 0);
+                nodeIdx++;
+            } else {
+                revert("Not implemented");
+            }
+        }
+
+        return nodes;
+    }
+
+    function resolveFormula(string memory _formula, uint[] memory _values, uint[] memory _variables) public pure returns (uint) {
+        return resolve(stringToNodes(_formula, _values), _variables);
+    }
+
+    // @dev testing, remove afterwards
     function addTwoNumbers(uint _a, uint _b) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](3);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -98,12 +147,12 @@ contract POC1 {
         nodes[2].nodeType = PostfixNodeType.OPERATOR;
         nodes[2].operator = PostfixNodeOperator.ADD;
 
-        //        uint[0] memory variables;
+        uint[] memory variables;
 
-        return resolve(nodes/*, variables*/);
+        return resolve(nodes, variables);
     }
 
-    // @dev testing
+    // @dev testing, remove afterwards
     function mulTwoNumbers(uint _a, uint _b) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](3);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -115,12 +164,12 @@ contract POC1 {
         nodes[2].nodeType = PostfixNodeType.OPERATOR;
         nodes[2].operator = PostfixNodeOperator.MUL;
 
-        //        uint[0] memory variables;
+        uint[] memory variables;
 
-        return resolve(nodes/*, variables*/);
+        return resolve(nodes, variables);
     }
 
-    // @dev testing
+    // @dev testing, remove afterwards
     function subTwoNumbers(uint _a, uint _b) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](3);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -132,12 +181,12 @@ contract POC1 {
         nodes[2].nodeType = PostfixNodeType.OPERATOR;
         nodes[2].operator = PostfixNodeOperator.SUB;
 
-        //        uint[0] memory variables;
+        uint[] memory variables;
 
-        return resolve(nodes/*, variables*/);
+        return resolve(nodes, variables);
     }
 
-    // @dev testing
+    // @dev testing, remove afterwards
     function addThreeNumbers(uint _a, uint _b, uint _c) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](5);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -155,12 +204,12 @@ contract POC1 {
         nodes[4].nodeType = PostfixNodeType.OPERATOR;
         nodes[4].operator = PostfixNodeOperator.ADD;
 
-        //        uint[0] memory variables;
+        uint[] memory variables;
 
-        return resolve(nodes/*, variables*/);
+        return resolve(nodes, variables);
     }
 
-    // @dev testing
+    // @dev testing, remove afterwards
     function addThenTimes(uint _a, uint _b, uint _c) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](5);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -178,12 +227,12 @@ contract POC1 {
         nodes[4].nodeType = PostfixNodeType.OPERATOR;
         nodes[4].operator = PostfixNodeOperator.ADD;
 
-        //        uint[0] memory variables;
+        uint[] memory variables;
 
-        return resolve(nodes/*, variables*/);
+        return resolve(nodes, variables);
     }
 
-    // @dev testing
+    // @dev testing, remove afterwards
     function timesThenAdd(uint _a, uint _b, uint _c) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](5);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -201,8 +250,8 @@ contract POC1 {
         nodes[4].nodeType = PostfixNodeType.OPERATOR;
         nodes[4].operator = PostfixNodeOperator.ADD;
 
-        //        uint[0] memory variables;
+        uint[] memory variables;
 
-        return resolve(nodes/*, variables*/);
+        return resolve(nodes, variables);
     }
 }

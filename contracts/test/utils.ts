@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 import { PostfixNodeOperator, PostfixNodeType } from '../enums';
-import { PostfixNodeStruct } from '../typechain-types/POC1.sol/POC1';
+import { PostfixNodeStruct } from '../typechain-types/POC1';
 
 const pfOperatorMap = {
   '+': PostfixNodeOperator.ADD,
