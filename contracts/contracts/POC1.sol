@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: Unlicensed
 pragma solidity ^0.8.17;
 
+//import "hardhat/console.sol";
+
     enum PostfixNodeType {
         VALUE,
         VARIABLE,
@@ -25,7 +27,7 @@ pragma solidity ^0.8.17;
 
 
 // @todo natspec
-contract POC1SumArgs {
+contract POC1 {
     function resolve(PostfixNode[] memory _postfixNodes/*, uint[] memory _variables*/) public pure returns (uint) {
         require(_postfixNodes.length > 0, "Provide nodes");
 
@@ -84,6 +86,7 @@ contract POC1SumArgs {
         return stack[0];
     }
 
+    // @dev testing
     function addTwoNumbers(uint _a, uint _b) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](3);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -100,6 +103,7 @@ contract POC1SumArgs {
         return resolve(nodes/*, variables*/);
     }
 
+    // @dev testing
     function mulTwoNumbers(uint _a, uint _b) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](3);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -116,6 +120,7 @@ contract POC1SumArgs {
         return resolve(nodes/*, variables*/);
     }
 
+    // @dev testing
     function subTwoNumbers(uint _a, uint _b) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](3);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -132,6 +137,7 @@ contract POC1SumArgs {
         return resolve(nodes/*, variables*/);
     }
 
+    // @dev testing
     function addThreeNumbers(uint _a, uint _b, uint _c) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](5);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -154,6 +160,7 @@ contract POC1SumArgs {
         return resolve(nodes/*, variables*/);
     }
 
+    // @dev testing
     function addThenTimes(uint _a, uint _b, uint _c) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](5);
         nodes[0].nodeType = PostfixNodeType.VALUE;
@@ -176,6 +183,7 @@ contract POC1SumArgs {
         return resolve(nodes/*, variables*/);
     }
 
+    // @dev testing
     function timesThenAdd(uint _a, uint _b, uint _c) public pure returns (uint) {
         PostfixNode[] memory nodes = new PostfixNode[](5);
         nodes[0].nodeType = PostfixNodeType.VALUE;
