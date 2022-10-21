@@ -1,32 +1,11 @@
-// SPDX-License-Identifier: Unlicensed
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
+import "./UmpireModel.sol";
 //import "hardhat/console.sol";
 
-    enum PostfixNodeType {
-        VALUE,
-        VARIABLE,
-        OPERATOR
-    }
-
-    enum PostfixNodeOperator {
-        ADD,
-        SUB,
-        MUL,
-        DIV,
-        MOD,
-        POW
-    }
-
-    struct PostfixNode {
-        uint value;
-        PostfixNodeType nodeType;
-        PostfixNodeOperator operator;
-        uint8 variableIndex;
-    }
-
 // @todo natspec
-contract POC1 {
+contract UmpireFormulaResolver {
     function resolve(PostfixNode[] memory _postfixNodes, uint[] memory _variables) public pure returns (uint) {
         require(_postfixNodes.length > 0, "Provide nodes");
 
