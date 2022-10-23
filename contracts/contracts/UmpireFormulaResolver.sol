@@ -6,15 +6,14 @@ import "./UmpireModel.sol";
 
 // @todo natspec
 contract UmpireFormulaResolver {
-    function resolve(PostfixNode[] memory _postfixNodes, uint[] memory _variables) public pure returns (uint) {
+    function resolve(PostfixNode[] memory _postfixNodes, int[] memory _variables) public pure returns (int) {
         require(_postfixNodes.length > 0, "Provide nodes");
 
-        uint[] memory stack = new uint[](256);
+        int[] memory stack = new int[](256);
         uint8 stackHeight;
         for (uint idx = 0; idx < _postfixNodes.length; idx++) {
             if (_postfixNodes[idx].nodeType == PostfixNodeType.VARIABLE) {
                 _postfixNodes[idx].nodeType = PostfixNodeType.VALUE;
-                // @todo first 32 variable indexes reserved for constants like PI, e, timestamp, block number
                 _postfixNodes[idx].value = _variables[_postfixNodes[idx].variableIndex];
             }
 
@@ -34,21 +33,21 @@ contract UmpireFormulaResolver {
                 if (stackHeight < 2) {
                     revert("Broken stack");
                 }
-                uint result = stack[stackHeight - 2] + stack[stackHeight - 1];
+                int result = stack[stackHeight - 2] + stack[stackHeight - 1];
                 stack[stackHeight - 2] = result;
                 stackHeight--;
             } else if (_postfixNodes[idx].operator == PostfixNodeOperator.SUB) {
                 if (stackHeight < 2) {
                     revert("Broken stack");
                 }
-                uint result = stack[stackHeight - 2] - stack[stackHeight - 1];
+                int result = stack[stackHeight - 2] - stack[stackHeight - 1];
                 stack[stackHeight - 2] = result;
                 stackHeight--;
             } else if (_postfixNodes[idx].operator == PostfixNodeOperator.MUL) {
                 if (stackHeight < 2) {
                     revert("Broken stack");
                 }
-                uint result = stack[stackHeight - 2] * stack[stackHeight - 1];
+                int result = stack[stackHeight - 2] * stack[stackHeight - 1];
                 stack[stackHeight - 2] = result;
                 stackHeight--;
             } else {
@@ -66,7 +65,7 @@ contract UmpireFormulaResolver {
     // @dev supports up to 10 values and 10 variables
     // @dev formula format is postfix, variable and value indexes prefixed with X and V
     // @dev example formula: V0V1+
-    function stringToNodes(string memory _formula, uint[] memory _values) public pure returns (PostfixNode[] memory) {
+    function stringToNodes(string memory _formula, int[] memory _values) public pure returns (PostfixNode[] memory) {
         bytes memory chars = bytes(_formula);
         uint symbolCount = chars.length;
         for (uint idx = 0; idx < chars.length; idx++) {
@@ -110,12 +109,12 @@ contract UmpireFormulaResolver {
         return nodes;
     }
 
-    function resolveFormula(string memory _formula, uint[] memory _values, uint[] memory _variables) public pure returns (uint) {
+    function resolveFormula(string memory _formula, int[] memory _values, int[] memory _variables) public pure returns (int) {
         return resolve(stringToNodes(_formula, _values), _variables);
     }
 
     // @dev testing, remove afterwards
-    function addTwoNumbers(uint _a, uint _b) public pure returns (uint) {
+    function addTwoNumbers(int _a, int _b) public pure returns (int) {
         PostfixNode[] memory nodes = new PostfixNode[](3);
         nodes[0].nodeType = PostfixNodeType.VALUE;
         nodes[0].value = _a;
@@ -126,13 +125,13 @@ contract UmpireFormulaResolver {
         nodes[2].nodeType = PostfixNodeType.OPERATOR;
         nodes[2].operator = PostfixNodeOperator.ADD;
 
-        uint[] memory variables;
+        int[] memory variables;
 
         return resolve(nodes, variables);
     }
 
     // @dev testing, remove afterwards
-    function mulTwoNumbers(uint _a, uint _b) public pure returns (uint) {
+    function mulTwoNumbers(int _a, int _b) public pure returns (int) {
         PostfixNode[] memory nodes = new PostfixNode[](3);
         nodes[0].nodeType = PostfixNodeType.VALUE;
         nodes[0].value = _a;
@@ -143,13 +142,13 @@ contract UmpireFormulaResolver {
         nodes[2].nodeType = PostfixNodeType.OPERATOR;
         nodes[2].operator = PostfixNodeOperator.MUL;
 
-        uint[] memory variables;
+        int[] memory variables;
 
         return resolve(nodes, variables);
     }
 
     // @dev testing, remove afterwards
-    function subTwoNumbers(uint _a, uint _b) public pure returns (uint) {
+    function subTwoNumbers(int _a, int _b) public pure returns (int) {
         PostfixNode[] memory nodes = new PostfixNode[](3);
         nodes[0].nodeType = PostfixNodeType.VALUE;
         nodes[0].value = _a;
@@ -160,13 +159,13 @@ contract UmpireFormulaResolver {
         nodes[2].nodeType = PostfixNodeType.OPERATOR;
         nodes[2].operator = PostfixNodeOperator.SUB;
 
-        uint[] memory variables;
+        int[] memory variables;
 
         return resolve(nodes, variables);
     }
 
     // @dev testing, remove afterwards
-    function addThreeNumbers(uint _a, uint _b, uint _c) public pure returns (uint) {
+    function addThreeNumbers(int _a, int _b, int _c) public pure returns (int) {
         PostfixNode[] memory nodes = new PostfixNode[](5);
         nodes[0].nodeType = PostfixNodeType.VALUE;
         nodes[0].value = _a;
@@ -183,13 +182,13 @@ contract UmpireFormulaResolver {
         nodes[4].nodeType = PostfixNodeType.OPERATOR;
         nodes[4].operator = PostfixNodeOperator.ADD;
 
-        uint[] memory variables;
+        int[] memory variables;
 
         return resolve(nodes, variables);
     }
 
     // @dev testing, remove afterwards
-    function addThenTimes(uint _a, uint _b, uint _c) public pure returns (uint) {
+    function addThenTimes(int _a, int _b, int _c) public pure returns (int) {
         PostfixNode[] memory nodes = new PostfixNode[](5);
         nodes[0].nodeType = PostfixNodeType.VALUE;
         nodes[0].value = _a;
@@ -206,13 +205,13 @@ contract UmpireFormulaResolver {
         nodes[4].nodeType = PostfixNodeType.OPERATOR;
         nodes[4].operator = PostfixNodeOperator.ADD;
 
-        uint[] memory variables;
+        int[] memory variables;
 
         return resolve(nodes, variables);
     }
 
     // @dev testing, remove afterwards
-    function timesThenAdd(uint _a, uint _b, uint _c) public pure returns (uint) {
+    function timesThenAdd(int _a, int _b, int _c) public pure returns (int) {
         PostfixNode[] memory nodes = new PostfixNode[](5);
         nodes[0].nodeType = PostfixNodeType.VALUE;
         nodes[0].value = _a;
@@ -229,7 +228,7 @@ contract UmpireFormulaResolver {
         nodes[4].nodeType = PostfixNodeType.OPERATOR;
         nodes[4].operator = PostfixNodeOperator.ADD;
 
-        uint[] memory variables;
+        int[] memory variables;
 
         return resolve(nodes, variables);
     }

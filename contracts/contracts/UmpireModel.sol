@@ -17,7 +17,7 @@ enum PostfixNodeOperator {
 }
 
 struct PostfixNode {
-    uint value;
+    int value;
     PostfixNodeType nodeType;
     PostfixNodeOperator operator;
     uint8 variableIndex;
