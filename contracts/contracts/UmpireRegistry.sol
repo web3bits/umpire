@@ -16,7 +16,11 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     mapping(uint => address) public s_inputFeeds;
     mapping(uint => UmpireJob) public s_jobs;
     mapping(address => uint[]) public s_jobsByOwner;
-    UmpireFormulaResolver public s_resolver;
+    UmpireFormulaResolver public i_resolver;
+
+    constructor (address _resolver) {
+        i_resolver = UmpireFormulaResolver(_resolver);
+    }
 
     function createJobFromNodes(
         PostfixNode[] memory _postfixNodesLeft,
@@ -77,8 +81,8 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
             variables[i] = getFeedValue(s_jobs[_jobId].dataFeeds[i]);
         }
 
-        int leftValue = s_resolver.resolve(s_jobs[_jobId].formulaLeft, variables);
-        int rightValue = s_resolver.resolve(s_jobs[_jobId].formulaRight, variables);
+        int leftValue = i_resolver.resolve(s_jobs[_jobId].formulaLeft, variables);
+        int rightValue = i_resolver.resolve(s_jobs[_jobId].formulaRight, variables);
 
         if (s_jobs[_jobId].comparator == UmpireComparator.EQUAL) {
             return leftValue == rightValue;
@@ -111,9 +115,25 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         bytes memory /* performData */
     )
     {
-        // @todo for all NEW jobs, evaluate them, if true -> return true, run performUpkeep with jobIds in checkData
-        // @todo ALSO for each job, if timeout passed, run it too
+        // @todo optimization: run performUpkeep with jobIds in checkData, so this should only return jobIds that require upkeep
         // @todo ALSO for each job, if evaluate throws inside try/catch, return true
+        for (uint i; i < s_counterJobs; i++) {
+            if (s_jobs[i].jobStatus != UmpireJobStatus.NEW) {
+                continue;
+            }
+
+            if (block.timestamp > s_jobs[i].timeout) {
+                upkeepNeeded = true;
+                break;
+            }
+
+            if (evaluateJob(i)) {
+                upkeepNeeded = true;
+                break;
+            }
+        }
+
+        return (upkeepNeeded, "");
     }
 
     /**
@@ -125,14 +145,25 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         (bool upkeepNeeded, ) = checkUpkeep(""); // @todo evaluate each processed job again, revert if not needed for some/all
         require(upkeepNeeded, "Upkeep not needed");
 
-        // @todo for each job from performData, run:
-            // @todo evaluate job inside try/catch
-            // @todo if positive, run positive action and update job status
-            // @todo if negative, run positive action and update job status
-            // @todo if throws, run reverted action and update job status
-    }
+        // @todo optimization: run only for each job from performData
+        // @todo evaluate job inside try/catch
+        // @todo if throws, run reverted action and update job status
+        for (uint i; i < s_counterJobs; i++) {
+            if (s_jobs[i].jobStatus != UmpireJobStatus.NEW) {
+                continue;
+            }
 
-    function setResolver (address _resolver) public onlyOwner {
-        s_resolver = UmpireFormulaResolver(_resolver);
+            if (block.timestamp > s_jobs[i].timeout) {
+                s_jobs[i].jobStatus = UmpireJobStatus.NEGATIVE;
+                // @todo run negative action
+                continue;
+            }
+
+            if (evaluateJob(i)) {
+                s_jobs[i].jobStatus = UmpireJobStatus.POSITIVE;
+                // @todo run positive action
+                break;
+            }
+        }
     }
 }
