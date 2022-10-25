@@ -8,9 +8,10 @@ node_modules
 # artifacts
 /contracts/typechain-types/*
 /contracts/artifacts/*
+/contracts/cache
 
 # production
-/build
+/frontend/build
 /.env
 cdk.out
 
@@ -22,6 +23,7 @@ cdk.out
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
 
 # IDEs and editors
 /.idea
