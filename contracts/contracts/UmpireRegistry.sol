@@ -6,6 +6,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import "./UmpireModel.sol";
 import "./UmpireFormulaResolver.sol";
+import "./UmpireActionInterface.sol";
 //import "hardhat/console.sol";
 
 
@@ -155,13 +156,13 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
 
             if (block.timestamp > s_jobs[i].timeout) {
                 s_jobs[i].jobStatus = UmpireJobStatus.NEGATIVE;
-                // @todo run negative action
+                UmpireActionInterface(s_jobs[i].action).positiveAction();
                 continue;
             }
 
             if (evaluateJob(i)) {
                 s_jobs[i].jobStatus = UmpireJobStatus.POSITIVE;
-                // @todo run positive action
+                UmpireActionInterface(s_jobs[i].action).negativeAction();
                 break;
             }
         }
