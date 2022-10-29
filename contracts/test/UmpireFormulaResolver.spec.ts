@@ -6,7 +6,7 @@ import { PostfixNodeStruct } from '../typechain-types/UmpireFormulaResolver';
 
 const numbersToTest = [0, 1, 2, 11, 100];
 describe('POC1', function () {
-  async function deployFormularesolver() {
+  async function deployFormulaResolver() {
     const [owner, otherAccount] = await ethers.getSigners();
 
     const FormulaResolver = await ethers.getContractFactory('UmpireFormulaResolver');
@@ -17,7 +17,7 @@ describe('POC1', function () {
 
   describe('resolve', function () {
     it('a + b = c', async function () {
-      const { instance } = await loadFixture(deployFormularesolver);
+      const { instance } = await loadFixture(deployFormulaResolver);
 
       for (let a of numbersToTest) {
         for (let b of numbersToTest) {
@@ -29,7 +29,7 @@ describe('POC1', function () {
     });
 
     it('a + b + c = d', async function () {
-      const { instance } = await loadFixture(deployFormularesolver);
+      const { instance } = await loadFixture(deployFormulaResolver);
 
       for (let a of numbersToTest) {
         for (let b of numbersToTest) {
@@ -43,7 +43,7 @@ describe('POC1', function () {
     });
 
     it('a * b = c', async function () {
-      const { instance } = await loadFixture(deployFormularesolver);
+      const { instance } = await loadFixture(deployFormulaResolver);
 
       for (let a of numbersToTest) {
         for (let b of numbersToTest) {
@@ -55,7 +55,7 @@ describe('POC1', function () {
     });
 
     it('a * b + c = d', async function () {
-      const { instance } = await loadFixture(deployFormularesolver);
+      const { instance } = await loadFixture(deployFormulaResolver);
 
       for (let a of numbersToTest) {
         for (let b of numbersToTest) {
@@ -69,7 +69,7 @@ describe('POC1', function () {
     });
 
     it('a * (b + c) = d', async function () {
-      const { instance } = await loadFixture(deployFormularesolver);
+      const { instance } = await loadFixture(deployFormulaResolver);
 
       for (let a of numbersToTest) {
         for (let b of numbersToTest) {
@@ -85,7 +85,7 @@ describe('POC1', function () {
 
   describe('resolveFormula', function () {
     it('a + b = c', async function () {
-      const { instance } = await loadFixture(deployFormularesolver);
+      const { instance } = await loadFixture(deployFormulaResolver);
 
       for (let a of numbersToTest) {
         for (let b of numbersToTest) {
