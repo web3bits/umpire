@@ -31,7 +31,7 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         uint _timeout,
         address _action
     ) external returns (uint jobId) {
-        require(_timeout < block.timestamp + 30 minutes, "Timeout at least 30 minutes into the future is required");
+        require(_timeout > block.timestamp + 5 minutes, "Timeout at least 5 minutes into the future is required");
         jobId = s_counterJobs;
         s_counterJobs = s_counterJobs + 1;
 
@@ -155,13 +155,13 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
             }
 
             if (block.timestamp > s_jobs[i].timeout) {
-                s_jobs[i].jobStatus = UmpireJobStatus.NEGATIVE;
+                s_jobs[i].jobStatus = UmpireJobStatus.POSITIVE;
                 UmpireActionInterface(s_jobs[i].action).positiveAction();
                 continue;
             }
 
             if (evaluateJob(i)) {
-                s_jobs[i].jobStatus = UmpireJobStatus.POSITIVE;
+                s_jobs[i].jobStatus = UmpireJobStatus.NEGATIVE;
                 UmpireActionInterface(s_jobs[i].action).negativeAction();
                 break;
             }
