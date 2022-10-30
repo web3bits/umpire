@@ -9,7 +9,6 @@ import "./UmpireFormulaResolver.sol";
 import "./UmpireActionInterface.sol";
 //import "hardhat/console.sol";
 
-
 // @todo natspec
 contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     uint private s_counterInputs = 0;
@@ -24,25 +23,31 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     }
 
     function createJobFromNodes(
+        string memory _name,
         PostfixNode[] memory _postfixNodesLeft,
         UmpireComparator _comparator,
         PostfixNode[] memory _postfixNodesRight,
         address[] memory _dataFeeds,
-        uint _timeout,
+        uint _activationDate,
+        uint _timeoutDate,
         address _action
     ) external returns (uint jobId) {
-        require(_timeout > block.timestamp + 5 minutes, "Timeout at least 5 minutes into the future is required");
+        require(_timeoutDate > block.timestamp + 5 minutes, "Timeout date at least 5 minutes into the future is required");
+        require(_timeoutDate >= _activationDate + 1 minutes, "Evaluation period must be at least 1 minute long");
+        if (_activationDate > 0) {
+            require(_activationDate >= block.timestamp + 1 minutes, "If activation date is set, it must be at least 1 minute into the future");
+        }
         jobId = s_counterJobs;
         s_counterJobs = s_counterJobs + 1;
 
-        // @todo consider data feed reuse between jobs?
-
         s_jobs[jobId].id = jobId;
+        s_jobs[jobId].jobName = _name;
         s_jobs[jobId].owner = msg.sender;
         s_jobs[jobId].jobStatus = UmpireJobStatus.NEW;
         s_jobs[jobId].comparator = _comparator;
         s_jobs[jobId].createdAt = block.timestamp;
-        s_jobs[jobId].timeout = _timeout;
+        s_jobs[jobId].activationDate = _activationDate;
+        s_jobs[jobId].timeoutDate = _timeoutDate;
         s_jobs[jobId].action = _action;
         s_jobs[jobId].dataFeeds = _dataFeeds;
 
@@ -72,9 +77,9 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         return price;
     }
 
-    function evaluateJob(uint _jobId) public view returns (bool) {
+    function evaluateJob(uint _jobId) public view returns (bool, int, int) {
         if (_jobId > s_counterJobs) {
-            return false;
+            return (false, 0, 0);
         }
 
         int[] memory variables = new int[](s_jobs[_jobId].dataFeeds.length);
@@ -86,17 +91,17 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         int rightValue = i_resolver.resolve(s_jobs[_jobId].formulaRight, variables);
 
         if (s_jobs[_jobId].comparator == UmpireComparator.EQUAL) {
-            return leftValue == rightValue;
+            return (leftValue == rightValue, leftValue, rightValue);
         } else if (s_jobs[_jobId].comparator == UmpireComparator.NOT_EQUAL) {
-            return leftValue != rightValue;
+            return (leftValue != rightValue, leftValue, rightValue);
         } else if (s_jobs[_jobId].comparator == UmpireComparator.GREATER_THAN) {
-            return leftValue > rightValue;
+            return (leftValue > rightValue, leftValue, rightValue);
         } else if (s_jobs[_jobId].comparator == UmpireComparator.GREATER_THAN_EQUAL) {
-            return leftValue >= rightValue;
+            return (leftValue >= rightValue, leftValue, rightValue);
         } else if (s_jobs[_jobId].comparator == UmpireComparator.LESS_THAN) {
-            return leftValue < rightValue;
+            return (leftValue < rightValue, leftValue, rightValue);
         } else if (s_jobs[_jobId].comparator == UmpireComparator.LESS_THAN_EQUAL) {
-            return leftValue <= rightValue;
+            return (leftValue <= rightValue, leftValue, rightValue);
         } else {
             revert("Unknown operator");
         }
@@ -123,14 +128,17 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
                 continue;
             }
 
-            if (block.timestamp > s_jobs[i].timeout) {
+            if (block.timestamp > s_jobs[i].timeoutDate) {
                 upkeepNeeded = true;
                 break;
             }
 
-            if (evaluateJob(i)) {
-                upkeepNeeded = true;
-                break;
+            if (block.timestamp >= s_jobs[i].activationDate) {
+                (bool evaluationResult,,) = evaluateJob(i);
+                if (evaluationResult == true) {
+                    upkeepNeeded = true;
+                    break;
+                }
             }
         }
 
@@ -143,7 +151,8 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     function performUpkeep(
         bytes calldata /* performData */
     ) external override {
-        (bool upkeepNeeded, ) = checkUpkeep(""); // @todo evaluate each processed job again, revert if not needed for some/all
+        (bool upkeepNeeded,) = checkUpkeep("");
+        // @todo evaluate each processed job again, revert if not needed for some/all
         require(upkeepNeeded, "Upkeep not needed");
 
         // @todo optimization: run only for each job from performData
@@ -154,16 +163,25 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
                 continue;
             }
 
-            if (block.timestamp > s_jobs[i].timeout) {
-                s_jobs[i].jobStatus = UmpireJobStatus.POSITIVE;
-                UmpireActionInterface(s_jobs[i].action).positiveAction();
+            if (block.timestamp > s_jobs[i].timeoutDate) {
+                s_jobs[i].jobStatus = UmpireJobStatus.NEGATIVE;
+                UmpireActionInterface(s_jobs[i].action).negativeAction();
                 continue;
             }
 
-            if (evaluateJob(i)) {
-                s_jobs[i].jobStatus = UmpireJobStatus.NEGATIVE;
-                UmpireActionInterface(s_jobs[i].action).negativeAction();
-                break;
+            if (block.timestamp >= s_jobs[i].activationDate) {
+                (
+                    bool evaluationResult,
+                    int leftValue,
+                    int rightValue
+                ) = evaluateJob(i);
+                if (evaluationResult == true) {
+                    s_jobs[i].jobStatus = UmpireJobStatus.POSITIVE;
+                    s_jobs[i].leftValue = leftValue;
+                    s_jobs[i].rightValue = rightValue;
+                    UmpireActionInterface(s_jobs[i].action).positiveAction();
+                    break;
+                }
             }
         }
     }

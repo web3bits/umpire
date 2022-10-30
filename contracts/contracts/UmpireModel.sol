@@ -48,6 +48,10 @@ struct UmpireJob {
     PostfixNode[] formulaRight;
     address[] dataFeeds;
     uint createdAt;
-    uint timeout;
+    uint timeoutDate;
+    uint activationDate;
     address action;
+    int leftValue;
+    int rightValue;
+    string jobName;
 }
