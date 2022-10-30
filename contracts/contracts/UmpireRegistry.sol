@@ -11,8 +11,7 @@ import "./UmpireActionInterface.sol";
 
 // @todo natspec
 contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
-    uint private s_counterInputs = 0;
-    uint private s_counterJobs = 0;
+    uint public s_counterJobs = 0;
     mapping(uint => address) public s_inputFeeds;
     mapping(uint => UmpireJob) public s_jobs;
     mapping(address => uint[]) public s_jobsByOwner;
