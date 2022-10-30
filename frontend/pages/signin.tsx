@@ -13,7 +13,6 @@ function SignIn() {
   const { push } = useRouter();
 
   const handleAuth = async () => {
-    debugger;
     if (isConnected) {
       await disconnectAsync();
     }
