@@ -12,6 +12,9 @@ import "./UmpireActionInterface.sol";
 // @todo natspec
 contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     uint public s_counterJobs = 0;
+    uint8 public s_minimumMinutesBeforeTimeout = 2;
+    uint8 public s_minimumMinutesBetweenActivationAndTimeout = 1;
+    uint8 public s_minimumMinutesActivationOffset = 1;
     mapping(uint => address) public s_inputFeeds;
     mapping(uint => UmpireJob) public s_jobs;
     mapping(address => uint[]) public s_jobsByOwner;
@@ -31,10 +34,10 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         uint _timeoutDate,
         address _action
     ) external returns (uint jobId) {
-        require(_timeoutDate > block.timestamp + 5 minutes, "Timeout date at least 5 minutes into the future is required");
-        require(_timeoutDate >= _activationDate + 1 minutes, "Evaluation period must be at least 1 minute long");
+        require(_timeoutDate > block.timestamp + (s_minimumMinutesBeforeTimeout * 60), "Timeout date farther into the future required");
+        require(_timeoutDate >= _activationDate + (s_minimumMinutesBetweenActivationAndTimeout * 60), "A longer evaluation period required");
         if (_activationDate > 0) {
-            require(_activationDate >= block.timestamp + 1 minutes, "If activation date is set, it must be at least 1 minute into the future");
+            require(_activationDate >= block.timestamp + (s_minimumMinutesActivationOffset * 60), "Activation must be 0 or in the future");
         }
         jobId = s_counterJobs;
         s_counterJobs = s_counterJobs + 1;
@@ -170,9 +173,9 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
 
             if (block.timestamp >= s_jobs[i].activationDate) {
                 (
-                    bool evaluationResult,
-                    int leftValue,
-                    int rightValue
+                bool evaluationResult,
+                int leftValue,
+                int rightValue
                 ) = evaluateJob(i);
                 if (evaluationResult == true) {
                     s_jobs[i].jobStatus = UmpireJobStatus.POSITIVE;
@@ -183,5 +186,15 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
                 }
             }
         }
+    }
+
+    function updateTimeConstraints(
+        uint8 _minimumMinutesBeforeTimeout,
+        uint8 _minimumMinutesBetweenActivationAndTimeout,
+        uint8 _minimumMinutesActivationOffset
+    ) public onlyOwner {
+        s_minimumMinutesBeforeTimeout = _minimumMinutesBeforeTimeout;
+        s_minimumMinutesBetweenActivationAndTimeout = _minimumMinutesBetweenActivationAndTimeout;
+        s_minimumMinutesActivationOffset = _minimumMinutesActivationOffset;
     }
 }
