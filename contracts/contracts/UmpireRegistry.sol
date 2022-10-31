@@ -105,7 +105,7 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         } else if (s_jobs[_jobId].comparator == UmpireComparator.LESS_THAN_EQUAL) {
             return (leftValue <= rightValue, leftValue, rightValue);
         } else {
-            revert("Unknown operator");
+            revert("Unknown comparator");
         }
     }
 

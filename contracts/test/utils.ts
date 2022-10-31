@@ -26,6 +26,6 @@ export const getNode = (
 };
 
 export const pfValue = (value: BigNumber | number) => getNode(value);
-export const pfVariable = (variableIndex: number) => getNode(0, PostfixNodeType.VARIABLE);
+export const pfVariable = (variableIndex: number) => getNode(0, PostfixNodeType.VARIABLE, 0, variableIndex);
 export const pfOperator = (operator: keyof typeof pfOperatorMap) =>
   getNode(0, PostfixNodeType.OPERATOR, pfOperatorMap[operator]);
