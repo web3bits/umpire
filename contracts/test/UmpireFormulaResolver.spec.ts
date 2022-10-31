@@ -5,7 +5,7 @@ import { pfOperator, pfValue } from './utils';
 import { PostfixNodeStruct } from '../typechain-types/UmpireFormulaResolver';
 
 const numbersToTest = [0, 1, 2, 11, 100];
-describe('POC1', function () {
+describe('UmpireFormulaResolver', function () {
   async function deployFormulaResolver() {
     const [owner, otherAccount] = await ethers.getSigners();
 
