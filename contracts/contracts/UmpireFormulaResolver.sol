@@ -24,11 +24,9 @@ contract UmpireFormulaResolver {
             }
 
             if (_postfixNodes[idx].nodeType != PostfixNodeType.OPERATOR) {
-                // @todo
                 revert("Broken node");
             }
 
-            // @todo checked/unchecked flag, try/catch for fallback (negative or 3rd action?)
             if (_postfixNodes[idx].operator == PostfixNodeOperator.ADD) {
                 if (stackHeight < 2) {
                     revert("Broken stack");
@@ -48,6 +46,16 @@ contract UmpireFormulaResolver {
                     revert("Broken stack");
                 }
                 int result = stack[stackHeight - 2] * stack[stackHeight - 1];
+                stack[stackHeight - 2] = result;
+                stackHeight--;
+            } else if (_postfixNodes[idx].operator == PostfixNodeOperator.DIV) {
+                if (stackHeight < 2) {
+                    revert("Broken stack");
+                }
+                if (stack[stackHeight - 1] == 0) {
+                    revert("Division by 0");
+                }
+                int result = stack[stackHeight - 2] / stack[stackHeight - 1];
                 stack[stackHeight - 2] = result;
                 stackHeight--;
             } else {
@@ -111,125 +119,5 @@ contract UmpireFormulaResolver {
 
     function resolveFormula(string memory _formula, int[] memory _values, int[] memory _variables) public pure returns (int) {
         return resolve(stringToNodes(_formula, _values), _variables);
-    }
-
-    // @dev testing, remove afterwards
-    function addTwoNumbers(int _a, int _b) public pure returns (int) {
-        PostfixNode[] memory nodes = new PostfixNode[](3);
-        nodes[0].nodeType = PostfixNodeType.VALUE;
-        nodes[0].value = _a;
-
-        nodes[1].nodeType = PostfixNodeType.VALUE;
-        nodes[1].value = _b;
-
-        nodes[2].nodeType = PostfixNodeType.OPERATOR;
-        nodes[2].operator = PostfixNodeOperator.ADD;
-
-        int[] memory variables;
-
-        return resolve(nodes, variables);
-    }
-
-    // @dev testing, remove afterwards
-    function mulTwoNumbers(int _a, int _b) public pure returns (int) {
-        PostfixNode[] memory nodes = new PostfixNode[](3);
-        nodes[0].nodeType = PostfixNodeType.VALUE;
-        nodes[0].value = _a;
-
-        nodes[1].nodeType = PostfixNodeType.VALUE;
-        nodes[1].value = _b;
-
-        nodes[2].nodeType = PostfixNodeType.OPERATOR;
-        nodes[2].operator = PostfixNodeOperator.MUL;
-
-        int[] memory variables;
-
-        return resolve(nodes, variables);
-    }
-
-    // @dev testing, remove afterwards
-    function subTwoNumbers(int _a, int _b) public pure returns (int) {
-        PostfixNode[] memory nodes = new PostfixNode[](3);
-        nodes[0].nodeType = PostfixNodeType.VALUE;
-        nodes[0].value = _a;
-
-        nodes[1].nodeType = PostfixNodeType.VALUE;
-        nodes[1].value = _b;
-
-        nodes[2].nodeType = PostfixNodeType.OPERATOR;
-        nodes[2].operator = PostfixNodeOperator.SUB;
-
-        int[] memory variables;
-
-        return resolve(nodes, variables);
-    }
-
-    // @dev testing, remove afterwards
-    function addThreeNumbers(int _a, int _b, int _c) public pure returns (int) {
-        PostfixNode[] memory nodes = new PostfixNode[](5);
-        nodes[0].nodeType = PostfixNodeType.VALUE;
-        nodes[0].value = _a;
-
-        nodes[1].nodeType = PostfixNodeType.VALUE;
-        nodes[1].value = _b;
-
-        nodes[2].nodeType = PostfixNodeType.OPERATOR;
-        nodes[2].operator = PostfixNodeOperator.ADD;
-
-        nodes[3].nodeType = PostfixNodeType.VALUE;
-        nodes[3].value = _c;
-
-        nodes[4].nodeType = PostfixNodeType.OPERATOR;
-        nodes[4].operator = PostfixNodeOperator.ADD;
-
-        int[] memory variables;
-
-        return resolve(nodes, variables);
-    }
-
-    // @dev testing, remove afterwards
-    function addThenTimes(int _a, int _b, int _c) public pure returns (int) {
-        PostfixNode[] memory nodes = new PostfixNode[](5);
-        nodes[0].nodeType = PostfixNodeType.VALUE;
-        nodes[0].value = _a;
-
-        nodes[1].nodeType = PostfixNodeType.VALUE;
-        nodes[1].value = _b;
-
-        nodes[2].nodeType = PostfixNodeType.VALUE;
-        nodes[2].value = _c;
-
-        nodes[3].nodeType = PostfixNodeType.OPERATOR;
-        nodes[3].operator = PostfixNodeOperator.MUL;
-
-        nodes[4].nodeType = PostfixNodeType.OPERATOR;
-        nodes[4].operator = PostfixNodeOperator.ADD;
-
-        int[] memory variables;
-
-        return resolve(nodes, variables);
-    }
-
-    // @dev testing, remove afterwards
-    function timesThenAdd(int _a, int _b, int _c) public pure returns (int) {
-        PostfixNode[] memory nodes = new PostfixNode[](5);
-        nodes[0].nodeType = PostfixNodeType.VALUE;
-        nodes[0].value = _a;
-
-        nodes[1].nodeType = PostfixNodeType.VALUE;
-        nodes[1].value = _b;
-
-        nodes[2].nodeType = PostfixNodeType.OPERATOR;
-        nodes[2].operator = PostfixNodeOperator.MUL;
-
-        nodes[3].nodeType = PostfixNodeType.VALUE;
-        nodes[3].value = _c;
-
-        nodes[4].nodeType = PostfixNodeType.OPERATOR;
-        nodes[4].operator = PostfixNodeOperator.ADD;
-
-        int[] memory variables;
-
-        return resolve(nodes, variables);
     }
 }

@@ -7,8 +7,7 @@ import "../UmpireModel.sol";
 enum BasicUmpireActionStatus {
     NEW,
     POSITIVE,
-    NEGATIVE,
-    REVERTED
+    NEGATIVE
 }
 
 contract BasicUmpireAction is AbstractUmpireAction {
@@ -22,10 +21,5 @@ contract BasicUmpireAction is AbstractUmpireAction {
     function negativeAction() external override isActionAllowed(UmpireJobStatus.NEGATIVE) {
         // Some logic goes here...
         s_status = BasicUmpireActionStatus.NEGATIVE;
-    }
-
-    function revertedAction() external override isActionAllowed(UmpireJobStatus.REVERTED) {
-        // Some logic goes here...
-        s_status = BasicUmpireActionStatus.REVERTED;
     }
 }

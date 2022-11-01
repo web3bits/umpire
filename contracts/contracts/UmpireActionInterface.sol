@@ -5,6 +5,4 @@ interface UmpireActionInterface {
     function positiveAction() external;
 
     function negativeAction() external;
-
-    function revertedAction() external;
 }

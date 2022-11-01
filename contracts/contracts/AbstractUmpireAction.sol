@@ -38,6 +38,4 @@ abstract contract AbstractUmpireAction is Ownable, UmpireActionInterface {
     function positiveAction() external virtual;
 
     function negativeAction() external virtual;
-
-    function revertedAction() external virtual;
 }
