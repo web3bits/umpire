@@ -13,8 +13,10 @@ describe('UmpireRegistry', function () {
     const FormulaResolver = await ethers.getContractFactory('UmpireFormulaResolver');
     const Registry = await ethers.getContractFactory('UmpireRegistry');
     const BasicAction = await ethers.getContractFactory('BasicUmpireAction');
+    const BrokenAction = await ethers.getContractFactory('BrokenUmpireAction');
 
     const action = await BasicAction.deploy();
+    const brokenAction = await BrokenAction.deploy();
     const resolver = await FormulaResolver.deploy();
     const registry = await Registry.deploy(resolver.address);
 
@@ -26,6 +28,7 @@ describe('UmpireRegistry', function () {
 
     return {
       action,
+      brokenAction,
       resolver,
       registry,
       owner,
@@ -79,7 +82,6 @@ describe('UmpireRegistry', function () {
     expect(job.jobName).to.equal('job name');
     await expect(action.positiveAction()).to.be.revertedWith('Not allowed');
     await expect(action.negativeAction()).to.be.revertedWith('Not allowed');
-    await expect(action.revertedAction()).to.be.revertedWith('Not allowed');
 
     // Run upkeep - should trigger an action
     const runUpkeepTx = await registry.performUpkeep([]);
@@ -102,7 +104,6 @@ describe('UmpireRegistry', function () {
     expect(job.rightValue).to.equal(4);
     expect(job.jobName).to.equal('job name');
     await expect(action.negativeAction()).to.be.revertedWith('Not allowed');
-    await expect(action.revertedAction()).to.be.revertedWith('Not allowed');
   });
 
   it('Pi > e', async () => {
@@ -325,5 +326,58 @@ describe('UmpireRegistry', function () {
     expect(job.jobStatus).to.equal(UmpireJobStatus.POSITIVE);
     expect(job.leftValue).to.equal(271828);
     expect(job.rightValue).to.equal(271828);
+  });
+
+  it('broken action - positive', async () => {
+    const { brokenAction, registry } = await loadFixture(deployContracts);
+
+    const timeoutDate = Math.round(+new Date() / 1000) + timeOffset;
+    const jobCreationTx = await registry.createJobFromNodes(
+      'job name',
+      [pfValue(2)],
+      UmpireComparator.EQUAL,
+      [pfValue(2)],
+      [],
+      0,
+      timeoutDate,
+      brokenAction.address
+    );
+    await jobCreationTx.wait();
+    await (await brokenAction.actionSetup(registry.address, 0)).wait();
+
+    // Run upkeep - should trigger an action
+    const runUpkeepTx = await registry.performUpkeep([]);
+    await runUpkeepTx.wait();
+
+    const job = await registry.s_jobs(0);
+    expect(job.jobStatus).to.equal(UmpireJobStatus.REVERTED);
+  });
+
+  it('broken action - negative', async () => {
+    const { brokenAction, registry } = await loadFixture(deployContracts);
+
+    const timeoutDate = Math.round(+new Date() / 1000) + timeOffset;
+    const jobCreationTx = await registry.createJobFromNodes(
+      'job name',
+      [pfValue(2)],
+      UmpireComparator.NOT_EQUAL,
+      [pfValue(2)],
+      [],
+      0,
+      timeoutDate,
+      brokenAction.address
+    );
+    await jobCreationTx.wait();
+    await (await brokenAction.actionSetup(registry.address, 0)).wait();
+
+    await network.provider.send('evm_increaseTime', [timeOffset + 1]);
+    await network.provider.send('evm_mine');
+
+    // Run upkeep - should trigger an action
+    const runUpkeepTx = await registry.performUpkeep([]);
+    await runUpkeepTx.wait();
+
+    const job = await registry.s_jobs(0);
+    expect(job.jobStatus).to.equal(UmpireJobStatus.REVERTED);
   });
 });

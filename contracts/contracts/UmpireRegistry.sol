@@ -20,6 +20,9 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     mapping(address => uint[]) public s_jobsByOwner;
     UmpireFormulaResolver public i_resolver;
 
+    event UmpireJobCreated(uint indexed jobId, address indexed jobOwner, address action);
+    event UmpireJobCompleted(uint indexed jobId, address indexed jobOwner, address action, UmpireJobStatus jobStatus);
+
     constructor (address _resolver) {
         i_resolver = UmpireFormulaResolver(_resolver);
     }
@@ -63,7 +66,7 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
 
         s_jobsByOwner[msg.sender].push(jobId);
 
-        // @todo emit event
+        emit UmpireJobCreated(jobId, msg.sender, _action);
 
         return jobId;
     }
@@ -89,8 +92,28 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
             variables[i] = getFeedValue(s_jobs[_jobId].dataFeeds[i]);
         }
 
-        int leftValue = i_resolver.resolve(s_jobs[_jobId].formulaLeft, variables);
-        int rightValue = i_resolver.resolve(s_jobs[_jobId].formulaRight, variables);
+        int leftValue;
+        int rightValue;
+        bool reverted = false;
+        try i_resolver.resolve(s_jobs[_jobId].formulaLeft, variables) returns (int _leftValue) {
+            leftValue = _leftValue;
+        } catch Error(string memory /*_err*/) {
+            reverted = true;
+        } catch (bytes memory /*_err*/) {
+            reverted = true;
+        }
+
+        try i_resolver.resolve(s_jobs[_jobId].formulaRight, variables) returns (int _rightValue) {
+            rightValue = _rightValue;
+        } catch Error(string memory /*_err*/) {
+            reverted = true;
+        } catch (bytes memory /*_err*/) {
+            reverted = true;
+        }
+
+        if (reverted) {
+            return (false, 0, 0);
+        }
 
         if (s_jobs[_jobId].comparator == UmpireComparator.EQUAL) {
             return (leftValue == rightValue, leftValue, rightValue);
@@ -124,7 +147,6 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     )
     {
         // @todo optimization: run performUpkeep with jobIds in checkData, so this should only return jobIds that require upkeep
-        // @todo ALSO for each job, if evaluate throws inside try/catch, return true
         for (uint i; i < s_counterJobs; i++) {
             if (s_jobs[i].jobStatus != UmpireJobStatus.NEW) {
                 continue;
@@ -158,8 +180,6 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         require(upkeepNeeded, "Upkeep not needed");
 
         // @todo optimization: run only for each job from performData
-        // @todo evaluate job inside try/catch
-        // @todo if throws, run reverted action and update job status
         for (uint i; i < s_counterJobs; i++) {
             if (s_jobs[i].jobStatus != UmpireJobStatus.NEW) {
                 continue;
@@ -167,7 +187,13 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
 
             if (block.timestamp > s_jobs[i].timeoutDate) {
                 s_jobs[i].jobStatus = UmpireJobStatus.NEGATIVE;
-                UmpireActionInterface(s_jobs[i].action).negativeAction();
+                try UmpireActionInterface(s_jobs[i].action).negativeAction() {
+                    emit UmpireJobCompleted(i, s_jobs[i].owner, s_jobs[i].action, UmpireJobStatus.NEGATIVE);
+                } catch Error(string memory /*_err*/) {
+                    s_jobs[i].jobStatus = UmpireJobStatus.REVERTED;
+                } catch (bytes memory /*_err*/) {
+                    s_jobs[i].jobStatus = UmpireJobStatus.REVERTED;
+                }
                 continue;
             }
 
@@ -181,8 +207,14 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
                     s_jobs[i].jobStatus = UmpireJobStatus.POSITIVE;
                     s_jobs[i].leftValue = leftValue;
                     s_jobs[i].rightValue = rightValue;
-                    UmpireActionInterface(s_jobs[i].action).positiveAction();
-                    break;
+                    try UmpireActionInterface(s_jobs[i].action).positiveAction() {
+                        emit UmpireJobCompleted(i, s_jobs[i].owner, s_jobs[i].action, UmpireJobStatus.POSITIVE);
+                    } catch Error(string memory /*_err*/) {
+                        s_jobs[i].jobStatus = UmpireJobStatus.REVERTED;
+                    } catch (bytes memory /*_err*/) {
+                        s_jobs[i].jobStatus = UmpireJobStatus.REVERTED;
+                    }
+                    continue;
                 }
             }
         }
