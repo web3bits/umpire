@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/globals.css";
+import theme from "../theme";
 import type { AppProps } from "next/app";
 import {
   createClient,
@@ -9,6 +9,8 @@ import {
 } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { SessionProvider } from "next-auth/react";
+import { ThemeProvider } from "@mui/private-theming";
+import { GlobalContextProvider } from "../context/GlobalContext";
 const { provider, webSocketProvider } = configureChains(defaultChains, [
   publicProvider(),
 ]);
@@ -20,10 +22,15 @@ const client = createClient({
 });
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <WagmiConfig client={client}>
-      <SessionProvider session={pageProps.session} refetchInterval={0}>
-        <Component {...pageProps} />
-      </SessionProvider>
-    </WagmiConfig>
+    // @ts-ignore
+    <GlobalContextProvider>
+      <WagmiConfig client={client}>
+        <SessionProvider session={pageProps.session} refetchInterval={0}>
+          <ThemeProvider theme={theme}>
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </SessionProvider>
+      </WagmiConfig>
+    </GlobalContextProvider>
   );
 }
