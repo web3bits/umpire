@@ -1,12 +1,15 @@
 import React, { useEffect } from "react";
 import { getSession, signOut } from "next-auth/react";
 import { Button, Box, Typography } from "@mui/material";
-import { Header } from "../components/Header";
 import { useGlobalContext } from "../context/GlobalContext";
+import { Layout } from "../components/Layout";
 
 const useHome = (user: any) => {
-  const { setUser } = useGlobalContext();
+  const { setUser, setLoading } = useGlobalContext();
   useEffect(() => {
+    if (user) {
+      setLoading(false);
+    }
     setUser(user);
   }, [user]);
   return {};
@@ -14,8 +17,7 @@ const useHome = (user: any) => {
 function Home({ user }: { user: any }) {
   useHome(user);
   return (
-    <>
-      <Header />
+    <Layout>
       <Box style={{ margin: "1rem" }}>
         <Typography variant="h5">User session:</Typography>
         <pre>{JSON.stringify(user, null, 2)}</pre>
@@ -31,7 +33,7 @@ function Home({ user }: { user: any }) {
           Sign out
         </Button>
       </Box>
-    </>
+    </Layout>
   );
 }
 
