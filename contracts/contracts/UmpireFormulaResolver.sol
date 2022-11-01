@@ -24,11 +24,9 @@ contract UmpireFormulaResolver {
             }
 
             if (_postfixNodes[idx].nodeType != PostfixNodeType.OPERATOR) {
-                // @todo
                 revert("Broken node");
             }
 
-            // @todo checked/unchecked flag, try/catch for fallback (negative or 3rd action?)
             if (_postfixNodes[idx].operator == PostfixNodeOperator.ADD) {
                 if (stackHeight < 2) {
                     revert("Broken stack");
