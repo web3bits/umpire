@@ -34,7 +34,7 @@ jobs:
           CI= yarn build
       - name: Build CDK app stack
         run: |
-          cd infra
+          cd ../infra
           yarn install
           yarn build
       - name: Deploy App
