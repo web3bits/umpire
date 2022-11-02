@@ -9,7 +9,7 @@ describe('UmpireFormulaResolver', function () {
   async function deployFormulaResolver() {
     const [owner, otherAccount] = await ethers.getSigners();
 
-    const FormulaResolver = await ethers.getContractFactory('UmpireFormulaResolver');
+    const FormulaResolver = await ethers.getContractFactory('UmpireFormulaResolverV2');
     const instance = await FormulaResolver.deploy();
 
     return { instance, owner, otherAccount };
@@ -48,7 +48,7 @@ describe('UmpireFormulaResolver', function () {
       for (let a of numbersToTest) {
         for (let b of numbersToTest) {
           const input: PostfixNodeStruct[] = [pfValue(a), pfValue(b), pfOperator('*')];
-
+          console.log(`${a} * ${b} = ${a*b}`);
           expect(await instance.resolve(input, [])).to.equal(a * b);
         }
       }
