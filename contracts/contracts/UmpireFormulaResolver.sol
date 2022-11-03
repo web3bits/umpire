@@ -2,11 +2,12 @@
 pragma solidity ^0.8.17;
 
 import "./UmpireModel.sol";
+import "./AbstractUmpireFormulaResolver.sol";
 //import "hardhat/console.sol";
 
 // @todo natspec
-contract UmpireFormulaResolver {
-    function resolve(PostfixNode[] memory _postfixNodes, int[] memory _variables) public pure returns (int) {
+contract UmpireFormulaResolver is AbstractUmpireFormulaResolver {
+    function resolve(PostfixNode[] memory _postfixNodes, int[] memory _variables) public pure override returns (int) {
         require(_postfixNodes.length > 0, "Provide nodes");
 
         int[] memory stack = new int[](256);

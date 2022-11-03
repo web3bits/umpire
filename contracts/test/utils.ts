@@ -1,6 +1,7 @@
 import { BigNumber } from 'ethers';
 import { PostfixNodeOperator, PostfixNodeType } from '../enums';
 import { PostfixNodeStruct } from '../typechain-types/UmpireFormulaResolver';
+import { toBn } from 'evm-bn';
 
 const pfOperatorMap = {
   '+': PostfixNodeOperator.ADD,
@@ -26,6 +27,8 @@ export const getNode = (
 };
 
 export const pfValue = (value: BigNumber | number) => getNode(value);
+export const pfValueSD59x18 = (value: BigNumber | number) => getNode(toBn(String(Number(value))));
 export const pfVariable = (variableIndex: number) => getNode(0, PostfixNodeType.VARIABLE, 0, variableIndex);
 export const pfOperator = (operator: keyof typeof pfOperatorMap) =>
   getNode(0, PostfixNodeType.OPERATOR, pfOperatorMap[operator]);
+export const numToSD59x18 = (value: BigNumber | number) => toBn(String(value));

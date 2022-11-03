@@ -2,11 +2,11 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import "./UmpireModel.sol";
 import "./UmpireFormulaResolver.sol";
 import "./UmpireActionInterface.sol";
+import "./AbstractUmpireFormulaResolver.sol";
 //import "hardhat/console.sol";
 
 // @todo natspec
@@ -18,13 +18,13 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     mapping(uint => address) public s_inputFeeds;
     mapping(uint => UmpireJob) public s_jobs;
     mapping(address => uint[]) public s_jobsByOwner;
-    UmpireFormulaResolver public i_resolver;
+    AbstractUmpireFormulaResolver public i_resolver;
 
     event UmpireJobCreated(uint indexed jobId, address indexed jobOwner, address action);
     event UmpireJobCompleted(uint indexed jobId, address indexed jobOwner, address action, UmpireJobStatus jobStatus);
 
     constructor (address _resolver) {
-        i_resolver = UmpireFormulaResolver(_resolver);
+        i_resolver = AbstractUmpireFormulaResolver(_resolver);
     }
 
     function createJobFromNodes(
@@ -71,17 +71,6 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         return jobId;
     }
 
-    function getFeedValue(address _priceFeed) public view returns (int256) {
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(_priceFeed);
-        (
-        ,
-        int256 price,
-        ,
-        ,
-        ) = priceFeed.latestRoundData();
-        return price;
-    }
-
     function evaluateJob(uint _jobId) public view returns (bool, int, int) {
         if (_jobId > s_counterJobs) {
             return (false, 0, 0);
@@ -89,7 +78,7 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
 
         int[] memory variables = new int[](s_jobs[_jobId].dataFeeds.length);
         for (uint i; i < s_jobs[_jobId].dataFeeds.length; i++) {
-            variables[i] = getFeedValue(s_jobs[_jobId].dataFeeds[i]);
+            variables[i] = i_resolver.getFeedValue(s_jobs[_jobId].dataFeeds[i]);
         }
 
         int leftValue;

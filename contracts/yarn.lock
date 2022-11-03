@@ -2176,7 +2176,7 @@ event-target-shim@^5.0.0:
   resolved "https://registry.yarnpkg.com/event-target-shim/-/event-target-shim-5.0.1.tgz#5d4d3ebdf9583d63a5333ce2deb7480ab2b05789"
   integrity sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==
 
-evm-bn@^1.1.1:
+evm-bn@^1.1.1, evm-bn@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/evm-bn/-/evm-bn-1.1.2.tgz#0bfd19d13b18765eac6bdea51d286266cfeab2bc"
   integrity sha512-Lq8CT1EAjSeN+Yk0h1hpSwnZyMA4Xir6fQD4vlStljAuW2xr7qLOEGDLGsTa9sU2e40EYIumA4wYhMC/e+lyKw==

@@ -2,13 +2,15 @@
 pragma solidity ^0.8.17;
 
 import "./UmpireModel.sol";
+import "./AbstractUmpireFormulaResolver.sol";
 import "@prb/math/contracts/PRBMathSD59x18.sol";
+import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 //import "hardhat/console.sol";
 
 // @todo natspec
-contract UmpireFormulaResolverV2 {
+contract UmpireFormulaResolverV2 is AbstractUmpireFormulaResolver {
     using PRBMathSD59x18 for int;
-    function resolve(PostfixNode[] memory _postfixNodes, int[] memory _variables) public pure returns (int) {
+    function resolve(PostfixNode[] memory _postfixNodes, int[] memory _variables) public pure override returns (int) {
         require(_postfixNodes.length > 0, "Provide nodes");
 
         int[] memory stack = new int[](256);
@@ -163,5 +165,23 @@ contract UmpireFormulaResolverV2 {
 
     function resolveFormula(string memory _formula, int[] memory _values, int[] memory _variables) public pure returns (int) {
         return resolve(stringToNodes(_formula, _values), _variables);
+    }
+
+    function getFeedValue(address _priceFeed) public view override returns (int256) {
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(_priceFeed);
+        (
+        ,
+        int256 price,
+        ,
+        ,
+        ) = priceFeed.latestRoundData();
+        uint8 decimals = priceFeed.decimals();
+        if (decimals == 18) {
+            return price * 10**18;
+        } else if (decimals < 18) {
+            return price * int(uint(10**(18 - decimals)));
+        } else {
+            return price / int(10**decimals);
+        }
     }
 }

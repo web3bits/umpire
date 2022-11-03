@@ -10,7 +10,7 @@ contract UmpireConstantE is AggregatorV3Interface {
     }
 
     function description() external pure returns (string memory) {
-        return "Pi";
+        return "e";
     }
 
     function version() external pure returns (uint256) {
