@@ -11,6 +11,10 @@ export enum PostfixNodeOperator {
   DIV,
   MOD,
   POW,
+  LOG10,
+  LOG2,
+  LN,
+  SQRT
 }
 
 export enum UmpireJobStatus {

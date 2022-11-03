@@ -13,7 +13,11 @@ enum PostfixNodeOperator {
     MUL,
     DIV,
     MOD,
-    POW
+    POW,
+    LOG10,
+    LOG2,
+    LN,
+    SQRT
 }
 
 struct PostfixNode {
