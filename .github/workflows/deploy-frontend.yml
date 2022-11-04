@@ -24,17 +24,14 @@ jobs:
           cd frontend
           yarn install --frozen-lockfile
           echo NEXT_PUBLIC_MORALIS_API_KEY=${{ secrets.NEXT_PUBLIC_MORALIS_API_KEY }} >> .env
-          # echo APP_DOMAIN=${{ secrets.APP_DOMAIN }} >> .env
-          # echo NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} >> .env
-          # echo NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} >> .env
-          echo APP_DOMAIN=test >> .env
-          echo NEXTAUTH_URL=test >> .env
-          echo NEXTAUTH_SECRET=test >> .env
+          echo APP_DOMAIN=${{ secrets.APP_DOMAIN }} >> .env
+          echo NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }} >> .env
+          echo NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} >> .env
           export NODE_OPTIONS="--max-old-space-size=4096"
           CI= yarn build
       - name: Build CDK app stack
         run: |
-          cd ../infra
+          cd infra
           yarn install
           yarn build
       - name: Deploy App
