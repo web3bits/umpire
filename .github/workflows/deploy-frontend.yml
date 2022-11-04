@@ -1,6 +1,21 @@
 name: Deploy
 
 on:
+  workflow_call:
+    inputs:
+      envName:
+        required: true
+        type: string
+        default: prod
+    secrets:
+      NEXT_PUBLIC_MORALIS_API_KEY:
+        required: true
+      APP_DOMAIN:
+        required: true
+      NEXTAUTH_URL:
+        required: true
+      NEXTAUTH_SECRET:
+        required: true
   push:
     branches:
       - main
