@@ -1,11 +1,11 @@
 import { ethers } from 'hardhat';
 
 async function main() {
-  const UmpireFormulaResolver = await ethers.getContractFactory('UmpireFormulaResolver');
+  const UmpireFormulaResolver = await ethers.getContractFactory('UmpireFormulaResolverV2');
   const resolver = await UmpireFormulaResolver.deploy();
   await resolver.deployed();
 
-  console.log(`UmpireFormulaResolver deployed to ${resolver.address}`);
+  console.log(`UmpireFormulaResolverV2 deployed to ${resolver.address}`);
 
   const UmpireRegistry = await ethers.getContractFactory('UmpireRegistry');
   const registry = await UmpireRegistry.deploy(resolver.address);
