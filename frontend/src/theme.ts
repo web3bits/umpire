@@ -1,6 +1,34 @@
 import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
-
+import { makeStyles, createStyles } from "@mui/styles";
+export const useGlobalClasses = makeStyles(
+  createStyles({
+    header: {
+      width: "100%",
+      display: "flex",
+      justifyContent: "flex-end",
+      maxWidth: "100%",
+      paddingTop: ".5rem",
+      paddingBottom: ".5rem",
+    },
+    row: {
+      marginTop: "1rem",
+    },
+    container: {
+      margin: "1rem",
+    },
+    centeredRow: {
+      marginTop: "1rem",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    link: {
+      textDecoration: "none",
+      cursor: "pointer",
+    },
+  })
+);
 const theme = createTheme({
   palette: {
     primary: {

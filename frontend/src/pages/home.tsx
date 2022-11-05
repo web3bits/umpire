@@ -11,6 +11,7 @@ const useHome = (user: any) => {
       setLoading(false);
     }
     setUser(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
   return {};
 };
