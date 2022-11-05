@@ -7,25 +7,12 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { makeStyles, createStyles } from "@mui/styles";
 import makeBlockie from "ethereum-blockies-base64";
 import { useGlobalContext } from "../context/GlobalContext";
-
-const useStyles = makeStyles(
-  createStyles({
-    container: {
-      width: "100%",
-      display: "flex",
-      justifyContent: "flex-end",
-      maxWidth: "100%",
-      paddingTop: ".5rem",
-      paddingBottom: ".5rem",
-    },
-  })
-);
+import Link from "next/link";
+import { useGlobalClasses } from "../theme";
 
 const useHeader = () => {
   const { user, setUser } = useGlobalContext();
@@ -50,6 +37,11 @@ const useHeader = () => {
 
   const settings = [
     {
+      title: "Jobs",
+      action: undefined,
+      href: "/jobs/list",
+    },
+    {
       title: "Sign Out",
       action: signOut,
     },
@@ -65,7 +57,7 @@ const useHeader = () => {
 };
 
 export const Header = () => {
-  const classes = useStyles();
+  const classes = useGlobalClasses();
   const {
     address,
     settings,
@@ -81,9 +73,15 @@ export const Header = () => {
     return <Avatar alt={address} src={makeBlockie(address)} />;
   };
 
+  const renderMenuLink = (setting: any, children: any) => {
+    if (!setting.href) {
+      return children;
+    }
+    return <Link href={setting.href}>{children}</Link>;
+  };
   return (
     <AppBar position="static">
-      <Container className={classes.container}>
+      <Container className={classes.header}>
         <Typography
           variant="h5"
           noWrap
@@ -128,7 +126,10 @@ export const Header = () => {
               const { action, title } = setting;
               return (
                 <MenuItem key={title} onClick={action}>
-                  <Typography textAlign="center">{title}</Typography>
+                  {renderMenuLink(
+                    setting,
+                    <Typography textAlign="center">{title}</Typography>
+                  )}
                 </MenuItem>
               );
             })}
