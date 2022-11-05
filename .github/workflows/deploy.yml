@@ -44,13 +44,13 @@ jobs:
           CI=false yarn build
       - name: Build CDK app stack
         run: |
-          cd infra/
-          npm install
+          # cd infra/
+          # npm install
       - name: Deploy App
         run: |
           cd infra
-          export AWS_ACCOUNT_ID="${{ secrets.AWS_ACCOUNT_ID }}"
-          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
-          export AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}"
-          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          node_modules/.bin/cdk deploy --require-approval never --ci
+          # export AWS_ACCOUNT_ID="${{ secrets.AWS_ACCOUNT_ID }}"
+          # export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+          # export AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}"
+          # export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          # node_modules/.bin/cdk deploy --require-approval never --ci
