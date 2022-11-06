@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useGlobalClasses } from "../../../theme";
 
-export const ItemsSelected = ({
+const ItemsSelected = ({
   leftSideValuesSelected,
   rightSideValuesSelected,
 }: {
@@ -30,3 +30,4 @@ export const ItemsSelected = ({
   };
   return <>{renderItems()}</>;
 };
+export default ItemsSelected;
