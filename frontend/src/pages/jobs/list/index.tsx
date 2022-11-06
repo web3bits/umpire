@@ -25,7 +25,7 @@ enum EUmpireJobStatus {
 const useListJobs = () => {
   // const {} = useContract(); //TODO Run contract to fetch jobs
   const router = useRouter();
-  const createNewJob = () => router.push("/jobs/create");
+  const createNewJob = () => router.push("/jobs/create/step1");
 
   const [jobs, setJobs] = useState<IUmpireJob[]>([
     {
@@ -71,7 +71,6 @@ const ListJobs = () => {
 
 export async function getServerSideProps(context: any) {
   const session = await getSession(context);
-
   // redirect if not authenticated
   if (!session) {
     return {

@@ -27,6 +27,15 @@ export const useGlobalClasses = makeStyles(
       textDecoration: "none",
       cursor: "pointer",
     },
+    mt2: {
+      marginTop: "2rem",
+    },
+    mt3: {
+      marginTop: "3rem",
+    },
+    mt4: {
+      marginTop: "4rem",
+    },
   })
 );
 const theme = createTheme({

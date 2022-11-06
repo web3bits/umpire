@@ -6,19 +6,8 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { Box, Typography, Button, Alert } from "@mui/material";
 import { GlobalSpinner } from "../components/GlobalSpinner";
-import { makeStyles, createStyles } from "@mui/styles";
 import { useGlobalContext } from "../context/GlobalContext";
-
-const useStyles = makeStyles(
-  createStyles({
-    container: {
-      margin: "1rem",
-    },
-    row: {
-      margin: "1rem 0",
-    },
-  })
-);
+import { useGlobalClasses } from "../theme";
 
 const useSignIn = () => {
   const { connectAsync } = useConnect();
@@ -79,32 +68,24 @@ const useSignIn = () => {
 };
 
 function SignIn() {
-  const classes = useStyles();
+  const classes = useGlobalClasses();
   const { displayAlert, handleAuth } = useSignIn();
 
-  const renderError = () => {
-    if (!displayAlert) {
-      return null;
-    }
-    return (
-      <Alert severity="error">Authentication error, please try again</Alert>
-    );
-  };
   const renderHome = () => {
     return (
-      <>
-        <Box className={classes.row}>
+      <Box className={classes.container}>
+        <Box className={classes.centeredRow}>
           <Typography variant="h3">Welcome to Umpire</Typography>
         </Box>
-        <Box className={classes.row}>
+        <Box className={classes.centeredRow}>
           <Typography variant="h6">Umpire is a ...</Typography>
         </Box>
-        <Box className={classes.row}>
+        <Box className={classes.centeredRow}>
           <Button variant="outlined" onClick={handleAuth}>
             Sign in with Metamask
           </Button>
         </Box>
-      </>
+      </Box>
     );
   };
   return (

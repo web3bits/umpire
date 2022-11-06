@@ -6,7 +6,6 @@ const config = {
   uri: process.env.NEXTAUTH_URL!,
   timeout: 60,
 };
-console.log("Config", config);
 
 export default async function handler(req: any, res: any) {
   debugger;
