@@ -6,6 +6,7 @@ import { useGlobalClasses } from "../../../theme";
 import UmpireTable from "../../../components/ui/UmpireTable";
 import { useContract } from "../../../hooks/useContract";
 import { useRouter } from "next/router";
+import { useGlobalContext } from "../../../context/GlobalContext";
 
 interface IUmpireJob {
   jobId: string;
@@ -22,10 +23,18 @@ enum EUmpireJobStatus {
   REVERTED = "REVERTED",
   NEGATIVE = "NEGATIVE",
 }
-const useListJobs = () => {
+const useListJobs = (user: any) => {
   // const {} = useContract(); //TODO Run contract to fetch jobs
   const router = useRouter();
-  const createNewJob = () => router.push("/jobs/create");
+  const createNewJob = () => router.push("/jobs/create/step1");
+  const { setUser, setLoading } = useGlobalContext();
+  useEffect(() => {
+    if (user) {
+      setLoading(false);
+    }
+    setUser(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const [jobs, setJobs] = useState<IUmpireJob[]>([
     {
@@ -50,9 +59,9 @@ const TABLE_COLUMNS: string[] = [
   "Timeout",
 ];
 
-const ListJobs = () => {
+const ListJobs = ({ user }: { user: any }) => {
   const classes = useGlobalClasses();
-  const { jobs, createNewJob } = useListJobs();
+  const { jobs, createNewJob } = useListJobs(user);
   return (
     <Layout>
       <Box className={classes.container}>
@@ -71,7 +80,6 @@ const ListJobs = () => {
 
 export async function getServerSideProps(context: any) {
   const session = await getSession(context);
-
   // redirect if not authenticated
   if (!session) {
     return {
