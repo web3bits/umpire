@@ -8,8 +8,8 @@ import UmpireStepper from "../../../components/ui/UmpireStepper";
 import { STEPS, STEP_NAVIGATION } from "../../../constants";
 import { EComparator, useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
-import { EditFormula } from "./EditFormula";
-import { ItemsSelected } from "./ItemsSelected";
+import EditFormula from "./EditFormula";
+import ItemsSelected from "./ItemsSelected";
 
 const useCreateJobStep3 = () => {
   const [currentFormulaOperator, setCurrentFormulaOperator] =

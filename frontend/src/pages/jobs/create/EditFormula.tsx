@@ -57,7 +57,7 @@ const renderRadioGroup = (
     </FormControl>
   );
 };
-export const EditFormula = ({
+const EditFormula = ({
   handleOperatorChange,
   currentFormulaOperator,
 }: {
@@ -93,3 +93,5 @@ export const EditFormula = ({
     </Box>
   );
 };
+
+export default EditFormula;

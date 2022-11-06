@@ -17,7 +17,7 @@ import {
 } from "../../../constants";
 import { EFormulaType, useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
-import { ItemsSelected } from "./ItemsSelected";
+import ItemsSelected from "./ItemsSelected";
 const useCreateJobStep2 = (classes: any) => {
   const [activeTab, setActiveTab] = useState(0);
   const [leftSideValuesSelected, setLeftSideValuesSelected] = useState<
