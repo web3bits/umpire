@@ -18,38 +18,19 @@ export enum EFormulaType {
   FOREX = "Forex",
   COMMODITIES = "Commodities",
 }
-enum EForexValues {
-  EUR_USD = "EUR/USD",
-  AUD_USD = "AUD/USD",
-  CAD_USD = "CAD/USD",
-  CHF_USD = "CHF/USD",
-}
 
-enum ECryptoUsdValues {}
-
-enum ECryptoETHValues {}
-
-enum ECommoditiesValues {}
-
-enum EComparator {
+export enum EComparator {
   EQUAL = "=",
   GREATER_THAN_EQUAL = ">=",
-  GREATER_THAN = "=",
+  GREATER_THAN = ">",
   LOWER_THAN = "<",
   LOWER_THAN_EQUAL = "<=",
+  DIFFERENT_FROM = "!=",
 }
 interface ICreateJob {
   formulaType?: EFormulaType;
-  valueFrom?:
-    | EForexValues
-    | ECryptoUsdValues
-    | ECryptoETHValues
-    | ECommoditiesValues;
-  valueTo?:
-    | EForexValues
-    | ECryptoUsdValues
-    | ECryptoETHValues
-    | ECommoditiesValues;
+  valuesFrom?: string[];
+  valuesTo?: string[];
   leftSide?: string;
   comparator?: EComparator;
   rightSide?: string;
@@ -72,6 +53,7 @@ interface IGlobalContext {
   createJob: ICreateJob | null;
   setCreateJobStepNumber: (createJobStepNumber: number) => void;
   createJobStepNumber: number;
+  setCreateJob: (createJob: ICreateJob) => void;
 }
 
 export const defaultGlobalContext: IGlobalContext = {
@@ -86,6 +68,7 @@ export const defaultGlobalContext: IGlobalContext = {
   createJob: null,
   setCreateJobStepNumber: () => {},
   createJobStepNumber: 0,
+  setCreateJob: () => {},
 };
 
 export const GlobalContext: Context<IGlobalContext> =
@@ -113,6 +96,7 @@ export const GlobalContextProvider: React.FC = ({ children }) => {
         createJob,
         createJobStepNumber,
         setCreateJobStepNumber,
+        setCreateJob,
       }}
     >
       {children}

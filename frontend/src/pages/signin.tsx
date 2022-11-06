@@ -48,7 +48,7 @@ const useSignIn = () => {
         message,
         signature,
         redirect: false,
-        callbackUrl: "/home",
+        callbackUrl: "/jobs/list",
       });
       /**
        * instead of using signIn(..., redirect: "/user")

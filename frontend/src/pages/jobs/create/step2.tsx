@@ -29,9 +29,14 @@ const useCreateJobStep2 = (classes: any) => {
   const [listItems, setListItems] = useState<any[]>([]);
 
   const router = useRouter();
-  const { setCreateJobStepNumber } = useGlobalContext();
+  const { setCreateJobStepNumber, createJob, setCreateJob } =
+    useGlobalContext();
   const nextStep = () => {
     setCreateJobStepNumber(2);
+    setCreateJob({
+      valuesFrom: leftSideValuesSelected,
+      valuesTo: leftSideValuesSelected,
+    });
     router.push("/jobs/create/step3");
   };
 

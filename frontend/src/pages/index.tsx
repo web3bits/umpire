@@ -17,7 +17,7 @@ export async function getServerSideProps(context: any) {
   const session = await getSession(context);
 
   // redirect if not authenticated
-  const destination = session ? "/home" : "/signin";
+  const destination = session ? "/jobs/list" : "/signin";
   return {
     redirect: {
       destination,
