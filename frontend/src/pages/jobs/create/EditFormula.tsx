@@ -190,7 +190,7 @@ const EditFormula = ({
     operator,
     leftSide,
     rightSide,
-  } = useEditFormula(setFormula, valuesFrom.length);
+  } = useEditFormula(setFormula, valuesFrom?.length ?? 0);
   return (
     <Box className={`${classes.container} ${classes.mt3}`}>
       <Box className={classes.centeredRow}>
