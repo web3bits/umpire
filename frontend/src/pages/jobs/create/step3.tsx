@@ -46,7 +46,6 @@ const useCreateJobStep3 = () => {
     try {
       const leftValue = replaceValues(leftSide, valuesFrom!);
       const rightValue = replaceValues(rightSide, valuesTo!);
-      debugger;
       setFormula(`${leftValue} ${operator} ${rightValue}`);
       setCreateJob({
         ...createJob,

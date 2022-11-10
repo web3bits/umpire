@@ -10,24 +10,18 @@ import { useGlobalContext } from "../../../context/GlobalContext";
 
 interface IUmpireJob {
   jobId: string;
-  name: string;
+  jobName: string;
   status: string;
   formula: string;
   dateCreated: string;
   timeout: string;
 }
 
-enum EUmpireJobStatus {
-  NEW = "NEW",
-  POSITIVE = "POSITIVE",
-  REVERTED = "REVERTED",
-  NEGATIVE = "NEGATIVE",
-}
 const useListJobs = (user: any) => {
   // const {} = useContract(); //TODO Run contract to fetch jobs
   const router = useRouter();
   const createNewJob = () => router.push("/jobs/create/step1");
-  const { setUser, setLoading } = useGlobalContext();
+  const { setUser, setLoading, jobs } = useGlobalContext();
   useEffect(() => {
     if (user) {
       setLoading(false);
@@ -36,16 +30,6 @@ const useListJobs = (user: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const [jobs, setJobs] = useState<IUmpireJob[]>([
-    {
-      jobId: "3",
-      name: "Some job 1",
-      status: EUmpireJobStatus.NEW,
-      formula: "[BTC/USD] > 20,000",
-      dateCreated: "2022-10-01",
-      timeout: "In 20 days",
-    },
-  ]);
   useEffect(() => {}, []);
   return { jobs, createNewJob };
 };

@@ -12,6 +12,12 @@ interface IUser {
   signature: string;
 }
 
+export enum EUmpireJobStatus {
+  NEW = "NEW",
+  POSITIVE = "POSITIVE",
+  REVERTED = "REVERTED",
+  NEGATIVE = "NEGATIVE",
+}
 export enum EFormulaType {
   CRYPTO_USD = "Crypto/USD",
   EQUITIES = "Equities",
@@ -27,7 +33,7 @@ export enum EComparator {
   LOWER_THAN_EQUAL = "<=",
   DIFFERENT_FROM = "!=",
 }
-interface ICreateJob {
+export interface ICreateJob {
   formulaType?: EFormulaType;
   valuesFrom?: string[];
   valuesTo?: string[];
@@ -39,6 +45,8 @@ interface ICreateJob {
   actionAddress?: string;
   activationDate?: number;
   deadlineDate?: number;
+  status?: EUmpireJobStatus;
+  dateCreated?: number;
 }
 
 interface IGlobalContext {
@@ -54,6 +62,8 @@ interface IGlobalContext {
   setCreateJobStepNumber: (createJobStepNumber: number) => void;
   createJobStepNumber: number;
   setCreateJob: (createJob: ICreateJob) => void;
+  jobs: ICreateJob[];
+  addJob: (job: ICreateJob) => void;
 }
 
 export const defaultGlobalContext: IGlobalContext = {
@@ -69,6 +79,8 @@ export const defaultGlobalContext: IGlobalContext = {
   setCreateJobStepNumber: () => {},
   createJobStepNumber: 0,
   setCreateJob: () => {},
+  jobs: [],
+  addJob: () => {},
 };
 
 export const GlobalContext: Context<IGlobalContext> =
@@ -82,6 +94,13 @@ export const GlobalContextProvider: React.FC = ({ children }) => {
   const [signInError, setSignInError] = useState(false);
   const [createJob, setCreateJob] = useState<ICreateJob | null>(null);
   const [createJobStepNumber, setCreateJobStepNumber] = useState<number>(0);
+  const [jobs, setJobs] = useState<ICreateJob[]>([]);
+  const addJob = (job: ICreateJob) => {
+    const newJobs = [...jobs];
+    newJobs.push(job);
+    setJobs(newJobs);
+  };
+
   return (
     <GlobalContext.Provider
       value={{
@@ -97,6 +116,8 @@ export const GlobalContextProvider: React.FC = ({ children }) => {
         createJobStepNumber,
         setCreateJobStepNumber,
         setCreateJob,
+        jobs,
+        addJob,
       }}
     >
       {children}
