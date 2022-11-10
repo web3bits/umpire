@@ -36,6 +36,17 @@ export const useGlobalClasses = makeStyles(
     mt4: {
       marginTop: "4rem",
     },
+    withBorder: {
+      border: "1px solid black",
+      borderRadius: 5,
+      padding: ".8rem",
+    },
+    fullWidth: { width: "100%" },
+    activationDateRow: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-evenly",
+    },
   })
 );
 const theme = createTheme({

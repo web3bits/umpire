@@ -6,31 +6,62 @@ import { useState } from "react";
 import { Layout } from "../../../components/Layout";
 import UmpireStepper from "../../../components/ui/UmpireStepper";
 import { STEPS, STEP_NAVIGATION } from "../../../constants";
-import { EComparator, useGlobalContext } from "../../../context/GlobalContext";
+import { useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
-import EditFormula from "./EditFormula";
+import EditFormula, { IFormula } from "./EditFormula";
 import ItemsSelected from "./ItemsSelected";
 
 const useCreateJobStep3 = () => {
-  const [currentFormulaOperator, setCurrentFormulaOperator] =
-    useState<EComparator>(EComparator.EQUAL);
   const router = useRouter();
-  const { setCreateJobStepNumber, createJob } = useGlobalContext();
-  const { valuesFrom, valuesTo } = createJob ?? {};
+  const { setCreateJobStepNumber, createJob, setCreateJob } =
+    useGlobalContext();
+  const { valuesFrom, valuesTo } = createJob ?? {
+    valuesFrom: [],
+    valuesTo: [],
+  };
+  const [formula, setFormula] = useState<string>("");
+
   const nextStep = () => {
     setCreateJobStepNumber(3);
     router.push("/jobs/create/step4");
   };
-  const handleOperatorChange = (event: any) => {
-    setCurrentFormulaOperator(event.target.value);
+
+  const replaceValues = (formula: string, items: string[]) => {
+    let finalValue = "";
+    let newFormula = formula;
+    const chunks = formula.split("]");
+    for (const chunk of chunks) {
+      const squareBracketIndex = chunk.indexOf("[");
+      if (squareBracketIndex > -1) {
+        const value = chunk.substring(squareBracketIndex + 1, chunk.length);
+        finalValue = items[parseInt(value) - 1];
+        newFormula = newFormula.replace(`[${value}]`, `[${finalValue}]`);
+      }
+    }
+    return newFormula;
+  };
+
+  const handleSetFormula = (formula: IFormula) => {
+    const { leftSide, rightSide, operator } = formula;
+    try {
+      const leftValue = replaceValues(leftSide, valuesFrom!);
+      const rightValue = replaceValues(rightSide, valuesTo!);
+      setFormula(`${leftValue} ${operator} ${rightValue}`);
+      setCreateJob({
+        ...createJob,
+        leftSide: leftValue,
+        comparator: operator,
+        rightSide: rightValue,
+      });
+    } catch (err: any) {}
   };
   return {
     setCreateJobStepNumber,
     nextStep,
     valuesFrom,
     valuesTo,
-    handleOperatorChange,
-    currentFormulaOperator,
+    formula,
+    setFormula: handleSetFormula,
   };
 };
 
@@ -41,8 +72,8 @@ const CreateJobStep3 = () => {
     nextStep,
     valuesFrom,
     valuesTo,
-    handleOperatorChange,
-    currentFormulaOperator,
+    formula,
+    setFormula,
   } = useCreateJobStep3();
   return (
     <Layout>
@@ -72,9 +103,16 @@ const CreateJobStep3 = () => {
         </Typography>
       </Box>
       <EditFormula
-        handleOperatorChange={handleOperatorChange}
-        currentFormulaOperator={currentFormulaOperator}
+        setFormula={setFormula}
+        valuesFrom={valuesFrom ?? []}
+        valuesTo={valuesTo ?? []}
       />
+      <Box className={classes.row}>
+        <Typography variant="h6">Formula Typed</Typography>
+      </Box>
+      <Box className={classes.row}>
+        <Typography variant="body1">{formula}</Typography>
+      </Box>
       <Box className={classes.centeredRow}>
         <Button variant="outlined" color="primary" onClick={nextStep}>
           Next Step
