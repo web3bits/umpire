@@ -3,6 +3,7 @@ import { getSession, signOut } from "next-auth/react";
 import { Button, Box, Typography } from "@mui/material";
 import { useGlobalContext } from "../context/GlobalContext";
 import { Layout } from "../components/Layout";
+import { useGlobalClasses } from "../theme";
 
 const useHome = (user: any) => {
   const { setUser, setLoading } = useGlobalContext();
@@ -17,9 +18,10 @@ const useHome = (user: any) => {
 };
 function Home({ user }: { user: any }) {
   useHome(user);
+  const classes = useGlobalClasses();
   return (
     <Layout>
-      <Box style={{ margin: "1rem" }}>
+      <Box className={classes.container}>
         <Typography variant="h5">User session:</Typography>
         <pre>{JSON.stringify(user, null, 2)}</pre>
         <Button

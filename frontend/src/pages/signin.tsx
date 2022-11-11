@@ -73,23 +73,35 @@ function SignIn() {
 
   const renderHome = () => {
     return (
-      <Box className={classes.container}>
-        <Box className={classes.centeredRow}>
-          <Typography variant="h3">Welcome to Umpire</Typography>
-        </Box>
-        <Box className={classes.centeredRow}>
-          <Typography variant="h6">Umpire is a ...</Typography>
-        </Box>
-        <Box className={classes.centeredRow}>
-          <Button variant="outlined" onClick={handleAuth}>
-            Sign in with Metamask
-          </Button>
+      <Box
+        className={`${classes.centeredRow} ${classes.signinContainer} ${classes.background}`}
+      >
+        <Box id="loginBox">
+          <Box className={classes.centeredRow}>
+            <Typography variant="h3" className={classes.whiteFont}>
+              Welcome to Umpire
+            </Typography>
+          </Box>
+          <Box className={classes.centeredRow}>
+            <Typography variant="h6" className={classes.whiteFont}>
+              Umpire is a ...
+            </Typography>
+          </Box>
+          <Box className={classes.centeredRow}>
+            <Button
+              variant="outlined"
+              onClick={handleAuth}
+              className={classes.whiteButton}
+            >
+              Sign in with Metamask
+            </Button>
+          </Box>
         </Box>
       </Box>
     );
   };
   return (
-    <Box className={classes.container}>
+    <Box>
       <GlobalSpinner />
       {renderHome()}
     </Box>
