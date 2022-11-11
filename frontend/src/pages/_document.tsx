@@ -35,9 +35,9 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Pacifico|Raleway:100,400,400i,700|Roboto:300,400,500,700&display=swap"
           />
-          <style>{`body { margin: 0 } /* custom! */`}</style>
+          <style>{`html: { height: 100%} body { margin: 0; height: 100%; } #__next {height: 100%;}`}</style>
         </Head>
-        <body className="custom_class">
+        <body>
           <Main />
           <NextScript />
         </body>

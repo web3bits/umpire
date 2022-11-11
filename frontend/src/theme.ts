@@ -3,8 +3,23 @@ import { red } from "@mui/material/colors";
 import { makeStyles, createStyles } from "@mui/styles";
 export const useGlobalClasses = makeStyles(
   createStyles({
+    background: {
+      backgroundImage: "url('./assets/background.jpg')",
+      backgroundSize: "cover",
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      margin: "0 !important",
+    },
     whiteFont: {
       color: "#FFFFFF",
+    },
+    whiteButton: {
+      color: "#FFFFFF",
+      borderColor: "#FFFFFF",
+      "&:hover": {
+        borderColor: "#FFFFFF",
+      },
     },
     bold: {
       fontWeight: "bold",
@@ -25,6 +40,12 @@ export const useGlobalClasses = makeStyles(
     },
     container: {
       margin: "1rem",
+    },
+    signinContainer: {
+      margin: "0 auto",
+      height: "100%",
+      minHeight: "100vh",
+      display: "block",
     },
     centeredRow: {
       marginTop: "1rem",
