@@ -6,6 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { ICreateJob } from "../../context/GlobalContext";
 
 const buildTableHeader = (tableId: string, columns: string[]) => {
   return columns?.map((column: string, index: number) => (
@@ -13,6 +14,27 @@ const buildTableHeader = (tableId: string, columns: string[]) => {
   ));
 };
 
+const formatRow = (row: ICreateJob): any => {
+  const {
+    jobId,
+    jobName,
+    status,
+    leftSide,
+    comparator,
+    rightSide,
+    dateCreated,
+    activationDate,
+    deadlineDate,
+  } = row;
+  return {
+    jobId,
+    jobName,
+    status,
+    formula: `${leftSide} ${comparator} ${rightSide}`,
+    dateCreated,
+    timeout: activationDate && deadlineDate ? deadlineDate - activationDate : 0,
+  };
+};
 const UmpireTable = ({
   tableId,
   columns,
@@ -29,22 +51,25 @@ const UmpireTable = ({
           <TableRow>{buildTableHeader(tableId, columns)}</TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-            >
-              {Object.keys(row).map((key: string, index: number) => (
-                <TableCell
-                  component="th"
-                  scope="row"
-                  key={`${key}-${index}-row`}
-                >
-                  {row[key]}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))}
+          {rows.map((row) => {
+            const formattedRow = formatRow(row);
+            return (
+              <TableRow
+                key={row.name}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                {Object.keys(formattedRow).map((key: string, index: number) => (
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    key={`${key}-${index}-row`}
+                  >
+                    {formattedRow[key]}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>
