@@ -3,6 +3,15 @@ import { red } from "@mui/material/colors";
 import { makeStyles, createStyles } from "@mui/styles";
 export const useGlobalClasses = makeStyles(
   createStyles({
+    whiteFont: {
+      color: "#FFFFFF",
+    },
+    bold: {
+      fontWeight: "bold",
+    },
+    primaryFont: {
+      color: "#1976d2",
+    },
     header: {
       width: "100%",
       display: "flex",
@@ -25,7 +34,7 @@ export const useGlobalClasses = makeStyles(
     },
     link: {
       textDecoration: "none",
-      cursor: "pointer",
+      cursor: "pointer !important",
     },
     mt2: {
       marginTop: "2rem",
