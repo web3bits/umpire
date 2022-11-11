@@ -22,7 +22,7 @@ import { useGlobalClasses } from "../../../theme";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-
+import { v4 as uuidv4 } from "uuid";
 const useCreateJobStep4 = () => {
   const router = useRouter();
   const { setCreateJobStepNumber, createJob, setCreateJob, addJob } =
@@ -67,6 +67,7 @@ const useCreateJobStep4 = () => {
     //TODO call smart contract
     const job: ICreateJob = {
       ...createJob,
+      jobId: uuidv4(),
       jobName,
       actionAddress,
       activationDate: activationDate?.unix() ?? undefined,
