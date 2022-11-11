@@ -99,7 +99,8 @@ const useCreateJobStep4 = () => {
     missingData:
       jobName?.trim().length === 0 ||
       actionAddress?.trim().length === 0 ||
-      (useActivationDate && (!activationDate || !deadlineDate)),
+      !deadlineDate ||
+      (useActivationDate && !activationDate),
     finishAndDeploy,
   };
 };
@@ -125,9 +126,28 @@ const CreateJobStep4 = () => {
   } = useCreateJobStep4();
   const { leftSide, comparator, rightSide } = createJob ?? {};
 
+  const renderDeadlinePicker = () => {
+    return (
+      <DateTimePicker
+        label="Deadline date & time"
+        value={deadlineDate}
+        onChange={handleDeadlineDateChange}
+        renderInput={(params) => <TextField {...params} />}
+        disablePast={true}
+        minDateTime={activationDate}
+      />
+    );
+  };
+
   const renderPickers = () => {
     if (!useActivationDate) {
-      return null;
+      return (
+        <Box className={`${classes.mt2}`}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {renderDeadlinePicker()}
+          </LocalizationProvider>
+        </Box>
+      );
     }
     return (
       <Box className={`${classes.mt2} ${classes.activationDateRow}`}>
@@ -139,14 +159,7 @@ const CreateJobStep4 = () => {
             renderInput={(params) => <TextField {...params} />}
             disablePast={true}
           />
-          <DateTimePicker
-            label="Deadline date & time"
-            value={deadlineDate}
-            onChange={handleDeadlineDateChange}
-            renderInput={(params) => <TextField {...params} />}
-            disablePast={true}
-            minDateTime={activationDate}
-          />
+          {renderDeadlinePicker()}
         </LocalizationProvider>
       </Box>
     );

@@ -7,6 +7,7 @@ import UmpireTable from "../../../components/ui/UmpireTable";
 import { useContract } from "../../../hooks/useContract";
 import { useRouter } from "next/router";
 import { ICreateJob, useGlobalContext } from "../../../context/GlobalContext";
+import dayjs from "dayjs";
 
 interface IUmpireJob {
   jobId: string;
@@ -48,7 +49,7 @@ const useListJobs = (user: any) => {
       jobName,
       status,
       formula: `${leftSide} ${comparator} ${rightSide}`,
-      dateCreated,
+      dateCreated: dayjs(dateCreated! * 1000).format("YYYY/MM/DD HH:mm"),
       timeout:
         activationDate && deadlineDate ? deadlineDate - activationDate : 0,
     };
