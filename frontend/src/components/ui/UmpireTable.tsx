@@ -7,6 +7,9 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { ICreateJob } from "../../context/GlobalContext";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import Link from "next/link";
+import { useGlobalClasses } from "../../theme";
 
 const buildTableHeader = (tableId: string, columns: string[]) => {
   return columns?.map((column: string, index: number) => (
@@ -14,27 +17,6 @@ const buildTableHeader = (tableId: string, columns: string[]) => {
   ));
 };
 
-const formatRow = (row: ICreateJob): any => {
-  const {
-    jobId,
-    jobName,
-    status,
-    leftSide,
-    comparator,
-    rightSide,
-    dateCreated,
-    activationDate,
-    deadlineDate,
-  } = row;
-  return {
-    jobId,
-    jobName,
-    status,
-    formula: `${leftSide} ${comparator} ${rightSide}`,
-    dateCreated,
-    timeout: activationDate && deadlineDate ? deadlineDate - activationDate : 0,
-  };
-};
 const UmpireTable = ({
   tableId,
   columns,
@@ -44,29 +26,41 @@ const UmpireTable = ({
   columns: any[];
   rows: any[];
 }) => {
+  const classes = useGlobalClasses();
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table" id={tableId}>
         <TableHead>
-          <TableRow>{buildTableHeader(tableId, columns)}</TableRow>
+          <TableRow>
+            {buildTableHeader(tableId, columns)}
+            <TableCell></TableCell>
+          </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => {
-            const formattedRow = formatRow(row);
+          {rows.map((row, rowIndex) => {
             return (
               <TableRow
                 key={row.name}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                {Object.keys(formattedRow).map((key: string, index: number) => (
+                {Object.keys(row).map((key: string, index: number) => (
                   <TableCell
                     component="th"
                     scope="row"
                     key={`${key}-${index}-row`}
                   >
-                    {formattedRow[key]}
+                    {row[key]}
                   </TableCell>
                 ))}
+                <TableCell component="th" scope="row" key={`view-${rowIndex}`}>
+                  <Link
+                    href={`/jobs/${row.jobId}`}
+                    className={classes.link}
+                    title="View Job Details"
+                  >
+                    <VisibilityIcon />
+                  </Link>
+                </TableCell>
               </TableRow>
             );
           })}

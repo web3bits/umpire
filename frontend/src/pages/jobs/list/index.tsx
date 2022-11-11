@@ -6,7 +6,7 @@ import { useGlobalClasses } from "../../../theme";
 import UmpireTable from "../../../components/ui/UmpireTable";
 import { useContract } from "../../../hooks/useContract";
 import { useRouter } from "next/router";
-import { useGlobalContext } from "../../../context/GlobalContext";
+import { ICreateJob, useGlobalContext } from "../../../context/GlobalContext";
 
 interface IUmpireJob {
   jobId: string;
@@ -22,6 +22,7 @@ const useListJobs = (user: any) => {
   const router = useRouter();
   const createNewJob = () => router.push("/jobs/create/step1");
   const { setUser, setLoading, jobs } = useGlobalContext();
+  const [formattedJobs, setFormattedJobs] = useState<any[]>([]);
   useEffect(() => {
     if (user) {
       setLoading(false);
@@ -30,8 +31,35 @@ const useListJobs = (user: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  useEffect(() => {}, []);
-  return { jobs, createNewJob };
+  const formatRow = (row: ICreateJob): any => {
+    const {
+      jobId,
+      jobName,
+      status,
+      leftSide,
+      comparator,
+      rightSide,
+      dateCreated,
+      activationDate,
+      deadlineDate,
+    } = row;
+    return {
+      jobId,
+      jobName,
+      status,
+      formula: `${leftSide} ${comparator} ${rightSide}`,
+      dateCreated,
+      timeout:
+        activationDate && deadlineDate ? deadlineDate - activationDate : 0,
+    };
+  };
+
+  useEffect(() => {
+    const newJobs = jobs.map((job: ICreateJob) => formatRow(job));
+    setFormattedJobs(newJobs);
+  }, [jobs]);
+
+  return { jobs: formattedJobs, createNewJob };
 };
 
 const TABLE_COLUMNS: string[] = [
