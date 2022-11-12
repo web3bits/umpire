@@ -9,6 +9,9 @@ node_modules
 /contracts/typechain-types/*
 /contracts/artifacts/*
 /contracts/cache
+/frontend/src/artifacts/build-info/*
+/frontend/src/artifacts/**/*.dbg.json
+
 
 # production
 /frontend/build

@@ -3,7 +3,6 @@ pragma solidity ^0.8.17;
 
 import "./UmpireModel.sol";
 import "./AbstractUmpireFormulaResolver.sol";
-//import "hardhat/console.sol";
 
 // @todo natspec
 contract UmpireFormulaResolver is AbstractUmpireFormulaResolver {
