@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -21,6 +21,10 @@ const useUmpireList = (items: IListItem[]) => {
   const [filteredListItems, setFilteredListItems] =
     useState<IListItem[]>(items);
   const [filter, setFilter] = useState("");
+  useEffect(() => {
+    setListItems(items);
+    setFilteredListItems(items);
+  }, [items]);
   const quickSearch = (event: any) => {
     const { value } = event.target;
     setFilter(value);

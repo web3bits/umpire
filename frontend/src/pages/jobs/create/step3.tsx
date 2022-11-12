@@ -10,7 +10,7 @@ import { useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
 import EditFormula, { IFormula } from "./EditFormula";
 import ItemsSelected from "./ItemsSelected";
-
+import { Alert } from "@mui/material";
 const useCreateJobStep3 = () => {
   const router = useRouter();
   const { setCreateJobStepNumber, createJob, setCreateJob } =
@@ -19,6 +19,7 @@ const useCreateJobStep3 = () => {
     values: [],
   };
   const [formula, setFormula] = useState<string>("");
+  const [errorInFormula, setErrorInFormula] = useState(false);
 
   const nextStep = () => {
     setCreateJobStepNumber(3);
@@ -63,13 +64,22 @@ const useCreateJobStep3 = () => {
     values,
     formula,
     setFormula: handleSetFormula,
+    setErrorInFormula,
+    errorInFormula,
   };
 };
 
 const CreateJobStep3 = () => {
   const classes = useGlobalClasses();
-  const { setCreateJobStepNumber, nextStep, values, formula, setFormula } =
-    useCreateJobStep3();
+  const {
+    setCreateJobStepNumber,
+    nextStep,
+    values,
+    formula,
+    setFormula,
+    setErrorInFormula,
+    errorInFormula,
+  } = useCreateJobStep3();
   return (
     <Layout>
       <Box className={classes.centeredRow}>
@@ -94,15 +104,31 @@ const CreateJobStep3 = () => {
           <ItemsSelected selectedValues={values ?? []} />
         </Typography>
       </Box>
-      <EditFormula setFormula={setFormula} values={values ?? []} />
+      <EditFormula
+        setFormula={setFormula}
+        setErrorInFormula={setErrorInFormula}
+        values={values ?? []}
+      />
       <Box className={classes.row}>
         <Typography variant="h6">Formula Typed</Typography>
       </Box>
       <Box className={classes.row}>
         <Typography variant="body1">{formula}</Typography>
       </Box>
+      <Box className={`${classes.row} ${classes.mt2}`}>
+        {errorInFormula && (
+          <Alert severity="warning">
+            The formula typed is not valid, please fix it.
+          </Alert>
+        )}
+      </Box>
       <Box className={classes.centeredRow}>
-        <Button variant="outlined" color="primary" onClick={nextStep}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={nextStep}
+          disabled={errorInFormula}
+        >
           Next Step
         </Button>
       </Box>
