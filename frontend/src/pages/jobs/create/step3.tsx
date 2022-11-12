@@ -15,9 +15,8 @@ const useCreateJobStep3 = () => {
   const router = useRouter();
   const { setCreateJobStepNumber, createJob, setCreateJob } =
     useGlobalContext();
-  const { valuesFrom, valuesTo } = createJob ?? {
-    valuesFrom: [],
-    valuesTo: [],
+  const { values } = createJob ?? {
+    values: [],
   };
   const [formula, setFormula] = useState<string>("");
 
@@ -43,9 +42,12 @@ const useCreateJobStep3 = () => {
 
   const handleSetFormula = (formula: IFormula) => {
     const { leftSide, rightSide, operator } = formula;
+    if (!values) {
+      return;
+    }
     try {
-      const leftValue = replaceValues(leftSide, valuesFrom!);
-      const rightValue = replaceValues(rightSide, valuesTo!);
+      const leftValue = replaceValues(leftSide, values);
+      const rightValue = replaceValues(rightSide, values);
       setFormula(`${leftValue} ${operator} ${rightValue}`);
       setCreateJob({
         ...createJob,
@@ -58,8 +60,7 @@ const useCreateJobStep3 = () => {
   return {
     setCreateJobStepNumber,
     nextStep,
-    valuesFrom,
-    valuesTo,
+    values,
     formula,
     setFormula: handleSetFormula,
   };
@@ -67,14 +68,8 @@ const useCreateJobStep3 = () => {
 
 const CreateJobStep3 = () => {
   const classes = useGlobalClasses();
-  const {
-    setCreateJobStepNumber,
-    nextStep,
-    valuesFrom,
-    valuesTo,
-    formula,
-    setFormula,
-  } = useCreateJobStep3();
+  const { setCreateJobStepNumber, nextStep, values, formula, setFormula } =
+    useCreateJobStep3();
   return (
     <Layout>
       <Box className={classes.centeredRow}>
@@ -96,17 +91,10 @@ const CreateJobStep3 = () => {
       <Box className={classes.row}>
         <Typography variant="h6">
           List of variables you have selected
-          <ItemsSelected
-            leftSideValuesSelected={valuesFrom ?? []}
-            rightSideValuesSelected={valuesTo ?? []}
-          />
+          <ItemsSelected selectedValues={values ?? []} />
         </Typography>
       </Box>
-      <EditFormula
-        setFormula={setFormula}
-        valuesFrom={valuesFrom ?? []}
-        valuesTo={valuesTo ?? []}
-      />
+      <EditFormula setFormula={setFormula} values={values ?? []} />
       <Box className={classes.row}>
         <Typography variant="h6">Formula Typed</Typography>
       </Box>

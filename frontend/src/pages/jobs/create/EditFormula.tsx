@@ -174,12 +174,10 @@ const renderRadioGroup = (
   );
 };
 const EditFormula = ({
-  valuesFrom,
-  valuesTo,
+  values,
   setFormula,
 }: {
-  valuesFrom: string[];
-  valuesTo: string[];
+  values: string[];
   setFormula: (formula: IFormula) => void;
 }) => {
   const classes = useGlobalClasses();
@@ -190,7 +188,7 @@ const EditFormula = ({
     operator,
     leftSide,
     rightSide,
-  } = useEditFormula(setFormula, valuesFrom?.length ?? 0);
+  } = useEditFormula(setFormula, values?.length ?? 0);
   return (
     <Box className={`${classes.container} ${classes.mt3}`}>
       <Box className={classes.centeredRow}>

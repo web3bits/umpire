@@ -20,12 +20,7 @@ import { useGlobalClasses } from "../../../theme";
 import ItemsSelected from "./ItemsSelected";
 const useCreateJobStep2 = (classes: any) => {
   const [activeTab, setActiveTab] = useState(0);
-  const [leftSideValuesSelected, setLeftSideValuesSelected] = useState<
-    string[]
-  >([]);
-  const [rightSideValuesSelected, setRightSideValuesSelected] = useState<
-    string[]
-  >([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
   const [listItems, setListItems] = useState<any[]>([]);
 
   const router = useRouter();
@@ -34,8 +29,7 @@ const useCreateJobStep2 = (classes: any) => {
   const nextStep = () => {
     setCreateJobStepNumber(2);
     setCreateJob({
-      valuesFrom: leftSideValuesSelected,
-      valuesTo: leftSideValuesSelected,
+      values: selectedValues,
     });
     router.push("/jobs/create/step3");
   };
@@ -72,11 +66,9 @@ const useCreateJobStep2 = (classes: any) => {
     nextStep,
     activeTab,
     setActiveTab,
-    leftSideValuesSelected,
+    selectedValues,
     listItems,
-    setLeftSideValuesSelected,
-    rightSideValuesSelected,
-    setRightSideValuesSelected,
+    setSelectedValues,
   };
 };
 
@@ -93,11 +85,9 @@ const CreateJobStep2 = () => {
     nextStep,
     activeTab,
     setActiveTab,
-    leftSideValuesSelected,
+    selectedValues,
     listItems,
-    setLeftSideValuesSelected,
-    rightSideValuesSelected,
-    setRightSideValuesSelected,
+    setSelectedValues,
   } = useCreateJobStep2(classes);
 
   const renderContent = () => {
@@ -106,20 +96,9 @@ const CreateJobStep2 = () => {
         <UmpireList
           listId="listFrom"
           listItems={listItems}
-          setOptionsSelected={setLeftSideValuesSelected}
-          selected={leftSideValuesSelected}
-          disabled={
-            leftSideValuesSelected.length > rightSideValuesSelected.length
-          }
-        />
-        <UmpireList
-          listId="listTo"
-          listItems={listItems}
-          setOptionsSelected={setRightSideValuesSelected}
-          selected={rightSideValuesSelected}
-          disabled={
-            leftSideValuesSelected.length === rightSideValuesSelected.length
-          }
+          setOptionsSelected={setSelectedValues}
+          selected={selectedValues}
+          disabled={false}
         />
       </Box>
     );
@@ -160,20 +139,14 @@ const CreateJobStep2 = () => {
       </Box>
       <Box className={classes.mt2}>
         <Typography variant="h6">List of values selected</Typography>
-        <ItemsSelected
-          leftSideValuesSelected={leftSideValuesSelected}
-          rightSideValuesSelected={rightSideValuesSelected}
-        />
+        <ItemsSelected selectedValues={selectedValues} />
       </Box>
       <Box className={classes.centeredRow}>
         <Button
           variant="outlined"
           color="primary"
           onClick={nextStep}
-          disabled={
-            leftSideValuesSelected.length === 0 ||
-            leftSideValuesSelected.length !== rightSideValuesSelected.length
-          }
+          disabled={false}
         >
           Next Step
         </Button>

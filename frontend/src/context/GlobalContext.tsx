@@ -35,8 +35,7 @@ export enum EComparator {
 }
 export interface ICreateJob {
   formulaType?: EFormulaType;
-  valuesFrom?: string[];
-  valuesTo?: string[];
+  values?: string[];
   leftSide?: string;
   comparator?: EComparator;
   rightSide?: string;
