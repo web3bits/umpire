@@ -19,6 +19,7 @@ export interface IFormula {
 }
 const useEditFormula = (
   handleFormulaCompleted: (formula: IFormula) => void,
+  setErrorInFormula: (errorInFormula: boolean) => void,
   itemsCount: number
 ) => {
   const [leftSide, setLeftSide] = useState<string>("");
@@ -26,11 +27,6 @@ const useEditFormula = (
   const [operator, setOperator] = useState<EComparator | null>(null);
   const [debouncedTimer, setDebouncedTimer] = useState<any>(undefined);
 
-  const reset = () => {
-    setLeftSide("");
-    setRightSide("");
-    setOperator(null);
-  };
   const isNumber = (element: string) => {
     try {
       const number = parseInt(element, 10);
@@ -82,18 +78,19 @@ const useEditFormula = (
     }
     const debounceTimer = debounce(() => {
       if (
-        leftSide.trim().length > 0 &&
-        rightSide.trim().length > 0 &&
-        operator &&
-        operator.length > 0 &&
-        isValidFormula(itemsCount, leftSide) &&
-        isValidFormula(itemsCount, rightSide)
+        leftSide.trim().length === 0 ||
+        rightSide.trim().length === 0 ||
+        !operator ||
+        operator.length === 0 ||
+        !isValidFormula(itemsCount, leftSide) ||
+        !isValidFormula(itemsCount, rightSide)
       ) {
+        setErrorInFormula(true);
+      } else {
         handleFormulaCompleted({ leftSide, operator, rightSide });
-        reset();
-        return;
+        setErrorInFormula(false);
       }
-    }, 3500);
+    }, 2000);
     setDebouncedTimer(debounceTimer);
   };
 
@@ -175,9 +172,11 @@ const renderRadioGroup = (
 };
 const EditFormula = ({
   values,
+  setErrorInFormula,
   setFormula,
 }: {
   values: string[];
+  setErrorInFormula: (errorInFormula: boolean) => void;
   setFormula: (formula: IFormula) => void;
 }) => {
   const classes = useGlobalClasses();
@@ -188,7 +187,7 @@ const EditFormula = ({
     operator,
     leftSide,
     rightSide,
-  } = useEditFormula(setFormula, values?.length ?? 0);
+  } = useEditFormula(setFormula, setErrorInFormula, values?.length ?? 0);
   return (
     <Box className={`${classes.container} ${classes.mt3}`}>
       <Box className={classes.centeredRow}>

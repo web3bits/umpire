@@ -10,7 +10,6 @@ const UmpireDetailRow = ({
   value: string;
 }) => {
   const classes = useGlobalClasses();
-  debugger;
   return (
     <Box className={`${classes.centeredRow} ${classes.mt2}`}>
       <Box style={{ flex: 1 }}>
