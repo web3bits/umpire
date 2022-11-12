@@ -1,0 +1,25 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "UmpireActionInterface",
+  "sourceName": "contracts/UmpireActionInterface.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "negativeAction",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "positiveAction",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
