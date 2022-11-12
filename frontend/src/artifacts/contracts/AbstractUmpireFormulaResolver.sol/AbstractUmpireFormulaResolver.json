@@ -1,0 +1,76 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "AbstractUmpireFormulaResolver",
+  "sourceName": "contracts/AbstractUmpireFormulaResolver.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_priceFeed",
+          "type": "address"
+        }
+      ],
+      "name": "getFeedValue",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "int256",
+              "name": "value",
+              "type": "int256"
+            },
+            {
+              "internalType": "enum PostfixNodeType",
+              "name": "nodeType",
+              "type": "uint8"
+            },
+            {
+              "internalType": "enum PostfixNodeOperator",
+              "name": "operator",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint8",
+              "name": "variableIndex",
+              "type": "uint8"
+            }
+          ],
+          "internalType": "struct PostfixNode[]",
+          "name": "_postfixNodes",
+          "type": "tuple[]"
+        },
+        {
+          "internalType": "int256[]",
+          "name": "_variables",
+          "type": "int256[]"
+        }
+      ],
+      "name": "resolve",
+      "outputs": [
+        {
+          "internalType": "int256",
+          "name": "",
+          "type": "int256"
+        }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

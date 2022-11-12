@@ -7,7 +7,6 @@ import "./UmpireModel.sol";
 import "./UmpireFormulaResolver.sol";
 import "./UmpireActionInterface.sol";
 import "./AbstractUmpireFormulaResolver.sol";
-//import "hardhat/console.sol";
 
 // @todo natspec
 contract UmpireRegistry is KeeperCompatibleInterface, Ownable {

@@ -5,7 +5,6 @@ import "./UmpireModel.sol";
 import "./AbstractUmpireFormulaResolver.sol";
 import "@prb/math/contracts/PRBMathSD59x18.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-//import "hardhat/console.sol";
 
 // @todo natspec
 contract UmpireFormulaResolverV2 is AbstractUmpireFormulaResolver {
