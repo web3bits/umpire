@@ -18,14 +18,14 @@ const TestWeb3 = () => {
   const classes = useGlobalClasses();
   const { address } = useAccount();
   const { setLoading } = useGlobalContext();
-  const [ readRawResult, setReadRawResult ] = useState<any>();
-  const [ writeRawResult, setWriteRawResult ] = useState<any>();
+  const [readRawResult, setReadRawResult] = useState<any>();
+  const [writeRawResult, setWriteRawResult] = useState<any>();
   const { data: resultFetchJobs, refetch: fetchJobs } = useContractRead({
     address: registryAddress,
     abi: UmpireRegistry.abi,
     functionName: "getJobsByOwner",
     enabled: false,
-    args: [address]
+    args: [address],
   });
 
   const {
@@ -90,12 +90,14 @@ const TestWeb3 = () => {
           </Button>
         </Box>
         <Box className={classes.centeredRow}>
-          <pre>{JSON.stringify({readRawResult, resultFetchJobs}, null, 2)}</pre>
+          <pre>
+            {JSON.stringify({ readRawResult, resultFetchJobs }, null, 2)}
+          </pre>
         </Box>
         <hr />
         <Box className={classes.centeredRow}>
           <Button variant="outlined" onClick={runCalculation}>
-            Create a "2 + 2 = 4" job
+            Create a `2 + 2 = 4` job
           </Button>
         </Box>
         <Box className={classes.centeredRow}>

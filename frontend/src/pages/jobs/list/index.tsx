@@ -3,7 +3,6 @@ import { Button, Box } from "@mui/material";
 import { Layout } from "../../../components/Layout";
 import { useGlobalClasses } from "../../../theme";
 import UmpireTable from "../../../components/ui/UmpireTable";
-import { useContract } from "../../../hooks/useContract";
 import { useRouter } from "next/router";
 import { ICreateJob, useGlobalContext } from "../../../context/GlobalContext";
 import dayjs from "dayjs";
