@@ -5,7 +5,15 @@ import { useGlobalClasses } from "../../../theme";
 import UmpireTable from "../../../components/ui/UmpireTable";
 import { useRouter } from "next/router";
 import { ICreateJob, useGlobalContext } from "../../../context/GlobalContext";
-import dayjs from "dayjs";
+import { useFetchJobs } from "../../../hooks/useFetchJobs";
+import { UmpireJob } from "../../../utils/model";
+import {
+  formatBN,
+  formatComparator,
+  formatFormula,
+  formatJobStatus,
+  formatTimestamp,
+} from "../../../utils/formatting";
 
 interface IUmpireJob {
   jobId: string;
@@ -16,45 +24,27 @@ interface IUmpireJob {
   timeout: string;
 }
 
-const useListJobs = (user: any) => {
-  // const {} = useContract(); //TODO Run contract to fetch jobs
+const useListJobs = () => {
+  const { jobs } = useFetchJobs(true);
   const router = useRouter();
   const createNewJob = () => router.push("/jobs/create/step1");
-  const { setUser, setLoading, jobs } = useGlobalContext();
   const [formattedJobs, setFormattedJobs] = useState<any[]>([]);
-  useEffect(() => {
-    if (user) {
-      setLoading(false);
-    }
-    setUser(user);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
 
-  const formatRow = (row: ICreateJob): any => {
-    const {
-      jobId,
-      jobName,
-      status,
-      leftSide,
-      comparator,
-      rightSide,
-      dateCreated,
-      activationDate,
-      deadlineDate,
-    } = row;
+  const formatRow = (row: UmpireJob): any => {
     return {
-      jobId,
-      jobName,
-      status,
-      formula: `${leftSide} ${comparator} ${rightSide}`,
-      dateCreated: dayjs(dateCreated! * 1000).format("YYYY/MM/DD HH:mm"),
-      timeout:
-        activationDate && deadlineDate ? deadlineDate - activationDate : 0,
+      jobId: formatBN(row.id),
+      jobName: row.jobName,
+      status: formatJobStatus(row.jobStatus),
+      formula: `${formatFormula(row.formulaLeft)} ${formatComparator(
+        row.comparator
+      )} ${formatFormula(row.formulaRight)}`,
+      dateCreated: formatTimestamp(row.createdAt),
+      timeout: formatTimestamp(row.timeoutDate),
     };
   };
 
   useEffect(() => {
-    const newJobs = jobs.map((job: ICreateJob) => formatRow(job));
+    const newJobs = jobs.map((job: UmpireJob) => formatRow(job));
     setFormattedJobs(newJobs);
   }, [jobs]);
 
@@ -70,9 +60,9 @@ const TABLE_COLUMNS: string[] = [
   "Timeout",
 ];
 
-const ListJobs = ({ user }: { user: any }) => {
+const ListJobs = () => {
   const classes = useGlobalClasses();
-  const { jobs, createNewJob } = useListJobs(user);
+  const { jobs, createNewJob } = useListJobs();
 
   return (
     <Layout>
