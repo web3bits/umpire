@@ -2,7 +2,7 @@ import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { expect } from 'chai';
 import { ethers } from 'hardhat';
 import { pfOperator, pfValue } from './utils';
-import { PostfixNodeStruct } from '../typechain-types/UmpireFormulaResolver';
+import { PostfixNodeStruct } from '../typechain-types/contracts/UmpireFormulaResolver';
 
 const numbersToTest = [0, 1, 2, 11, 100];
 describe('UmpireFormulaResolver', function () {

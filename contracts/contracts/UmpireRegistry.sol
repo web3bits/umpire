@@ -2,6 +2,7 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import "./UmpireModel.sol";
 import "./UmpireFormulaResolver.sol";
@@ -38,6 +39,7 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     ) external returns (uint jobId) {
         require(_timeoutDate > block.timestamp + (s_minimumMinutesBeforeTimeout * 60), "Timeout date farther into the future required");
         require(_timeoutDate >= _activationDate + (s_minimumMinutesBetweenActivationAndTimeout * 60), "A longer evaluation period required");
+        require(Address.isContract(_action), "Action must be a contract");
         if (_activationDate > 0) {
             require(_activationDate >= block.timestamp + (s_minimumMinutesActivationOffset * 60), "Activation must be 0 or in the future");
         }
