@@ -13,6 +13,7 @@ import { useGlobalContext } from "../context/GlobalContext";
 import { ADDRESS_ZERO, registryAddress } from "../utils";
 import UmpireRegistry from "../artifacts/contracts/UmpireRegistry.sol/UmpireRegistry.json";
 import dayjs from "dayjs";
+import { useFetchJobs } from "../hooks/useFetchJobs";
 
 const TestWeb3 = () => {
   const classes = useGlobalClasses();
@@ -20,6 +21,7 @@ const TestWeb3 = () => {
   const { setLoading } = useGlobalContext();
   const [readRawResult, setReadRawResult] = useState<any>();
   const [writeRawResult, setWriteRawResult] = useState<any>();
+  const { jobs } = useFetchJobs(true);
   const { data: resultFetchJobs, refetch: fetchJobs } = useContractRead({
     address: registryAddress,
     abi: UmpireRegistry.abi,
@@ -48,7 +50,7 @@ const TestWeb3 = () => {
       [], // variables
       0,
       dayjs().add(1, "years").unix(),
-      "0xA04BBF55fFcCac9Af713372dA77F7B0Ba2Ab4EF5",
+      "0xA04BBF55fFcCac9Af713372dA77F7B0Ba2Ab4EF5", // broken action, should cause job revert
     ],
     enabled: true,
   });
@@ -85,6 +87,10 @@ const TestWeb3 = () => {
     <Layout>
       <Box className={classes.container}>
         <Box className={classes.centeredRow}>
+          <pre>{JSON.stringify(jobs, null, 2)}</pre>
+        </Box>
+        <hr />
+        <Box className={classes.centeredRow}>
           <Button variant="outlined" onClick={fetchMyJobs}>
             Fetch my jobs
           </Button>
@@ -99,6 +105,7 @@ const TestWeb3 = () => {
           <Button variant="outlined" onClick={runCalculation}>
             Create a `2 + 2 = 4` job
           </Button>
+          <p>Well actually 0.000000000000000002 + 0.000000000000000002 = 0.000000000000000004 </p>
         </Box>
         <Box className={classes.centeredRow}>
           <pre>
