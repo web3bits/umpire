@@ -57,6 +57,9 @@ export const useGlobalClasses = makeStyles(
       textDecoration: "none",
       cursor: "pointer !important",
     },
+    mr2: {
+      marginRight: "2rem",
+    },
     mt2: {
       marginTop: "2rem",
     },

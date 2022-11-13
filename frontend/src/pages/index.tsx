@@ -1,23 +1,79 @@
-import React, { useEffect } from "react";
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
-import { useAccount, useConnect, useSignMessage, useDisconnect } from "wagmi";
+import React, { useEffect, useState } from "react";
+import { useAccount, useConnect } from "wagmi";
 import { useRouter } from "next/router";
-import { Box, Typography, Button, Alert } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { GlobalSpinner } from "../components/GlobalSpinner";
 import { useGlobalClasses } from "../theme";
 
-function Index() {
-  const classes = useGlobalClasses();
+const useIndex = () => {
   const { push } = useRouter();
-  const { connect, connectors, isLoading, pendingConnector } = useConnect();
+  const {
+    connect,
+    connectors: wagmiConnectors,
+    isLoading,
+    pendingConnector,
+  } = useConnect();
   const { isConnected } = useAccount();
+  const [connectors, setConnectors] = useState<any>();
 
+  const handleConnect = (data: any) => {
+    connect(data);
+  };
+
+  useEffect(() => {
+    console.log("Wagmi connectors changed");
+    setConnectors(wagmiConnectors);
+  }, [wagmiConnectors]);
   useEffect(() => {
     if (isConnected) {
       push("/jobs/list").then();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
 
+  return {
+    connectors,
+    handleConnect,
+    isLoading,
+    isConnected,
+    pendingConnector,
+  };
+};
+function Index() {
+  const classes = useGlobalClasses();
+  const {
+    connectors,
+    handleConnect,
+    isLoading,
+    isConnected,
+    pendingConnector,
+  } = useIndex();
+
+  const renderConnector = (connector: any) => {
+    if (!connector) {
+      return null;
+    }
+
+    return (
+      <Box className={classes.centeredRow} key={connector.id}>
+        <Button
+          disabled={!connector.ready || isConnected || isLoading}
+          onClick={() => handleConnect({ connector })}
+          variant="outlined"
+          className={classes.whiteButton}
+        >
+          Sign in using {connector.name}
+          {!connector.ready && " (unsupported)"}
+          {isLoading &&
+            connector.id === pendingConnector?.id &&
+            " (connecting)"}
+        </Button>
+      </Box>
+    );
+  };
+  const renderConnectors = () => {
+    return connectors?.map((connector: any) => renderConnector(connector));
+  };
   const renderHome = () => {
     return (
       <Box
@@ -35,22 +91,7 @@ function Index() {
             </Typography>
           </Box>
 
-          {connectors.map((connector) => (
-            <Box className={classes.centeredRow} key={connector.id}>
-              <Button
-                disabled={!connector.ready || isConnected || isLoading}
-                onClick={() => connect({ connector })}
-                variant="outlined"
-                className={classes.whiteButton}
-              >
-                Sign in using {connector.name}
-                {!connector.ready && " (unsupported)"}
-                {isLoading &&
-                  connector.id === pendingConnector?.id &&
-                  " (connecting)"}
-              </Button>
-            </Box>
-          ))}
+          {renderConnectors()}
         </Box>
       </Box>
     );
