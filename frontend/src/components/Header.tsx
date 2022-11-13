@@ -1,7 +1,7 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
@@ -22,11 +22,32 @@ import {
 
 const useHeader = () => {
   const { disconnect } = useDisconnect();
-  const { address } = useAccount();
-  const { data: ensAvatar } = useEnsAvatar({ addressOrName: address });
-  const { data: ensName } = useEnsName({ address });
+  const { address: wagmiAddress } = useAccount();
+  const { data: wagmiEnsAvatar } = useEnsAvatar({
+    addressOrName: wagmiAddress,
+  });
+  const { data: wagmiEnsName } = useEnsName({ address: wagmiAddress });
   const { chain } = useNetwork();
+  const [ensName, setEnsName] = useState<any>();
+  const [ensAvatar, setEnsAvatar] = useState<any>();
+  const [isSupportedNetwork, setIsSupportedNetwork] = React.useState(false);
+  const [address, setAddress] = useState<any>();
+  useEffect(() => {
+    setAddress(wagmiAddress);
+  }, [wagmiAddress]);
 
+  useEffect(() => {
+    const isSupportedNetwork = chain?.network === "goerli";
+    setIsSupportedNetwork(isSupportedNetwork);
+  }, [chain]);
+
+  useEffect(() => {
+    setEnsAvatar(wagmiEnsAvatar);
+  }, [wagmiEnsAvatar]);
+
+  useEffect(() => {
+    setEnsName(wagmiEnsName);
+  }, [wagmiEnsName]);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -64,7 +85,7 @@ const useHeader = () => {
     anchorElUser,
     ensAvatar,
     ensName,
-    isSupportedNetwork: chain?.network === 'goerli',
+    isSupportedNetwork,
   };
 };
 
@@ -78,7 +99,7 @@ export const Header = () => {
     address,
     ensAvatar,
     ensName,
-    isSupportedNetwork
+    isSupportedNetwork,
   } = useHeader();
 
   const renderAvatar = () => {
@@ -87,7 +108,9 @@ export const Header = () => {
     }
     return (
       <>
-        <Typography>{ensName ? `${ensName} (${address})` : address}</Typography>
+        <Typography className={`${classes.whiteFont} ${classes.mr2}`}>
+          {ensName ? `${ensName} (${address})` : address}
+        </Typography>
         <Avatar alt={address} src={ensAvatar ?? makeBlockie(address)} />
       </>
     );
@@ -98,6 +121,15 @@ export const Header = () => {
       return children;
     }
     return <Link href={setting.href}>{children}</Link>;
+  };
+
+  const renderNetworkError = () => {
+    if (isSupportedNetwork) {
+      return null;
+    }
+    return (
+      <Typography variant="h5">Please switch to Goerli testnet</Typography>
+    );
   };
   return (
     <AppBar position="static">
@@ -120,7 +152,7 @@ export const Header = () => {
         >
           Umpire
         </Typography>
-        {!isSupportedNetwork && <Typography variant="h5">Please switch to Goerli testnet</Typography>}
+        {renderNetworkError()}
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
