@@ -1,5 +1,4 @@
 import { Box } from "@mui/system";
-import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Layout } from "../../components/Layout";
 import { useGlobalClasses } from "../../theme";
@@ -69,22 +68,5 @@ const JobDetails = () => {
     </Layout>
   );
 };
-
-export async function getServerSideProps(context: any) {
-  const session = await getSession(context);
-  // redirect if not authenticated
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { user: session?.user ?? null },
-  };
-}
 
 export default JobDetails;

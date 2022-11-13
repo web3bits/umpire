@@ -10,13 +10,22 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import makeBlockie from "ethereum-blockies-base64";
-import { useGlobalContext } from "../context/GlobalContext";
 import Link from "next/link";
 import { useGlobalClasses } from "../theme";
+import {
+  useAccount,
+  useDisconnect,
+  useEnsAvatar,
+  useEnsName,
+  useNetwork,
+} from "wagmi";
 
 const useHeader = () => {
-  const { user, setUser } = useGlobalContext();
-  const { address } = user ?? {};
+  const { disconnect } = useDisconnect();
+  const { address } = useAccount();
+  const { data: ensAvatar } = useEnsAvatar({ addressOrName: address });
+  const { data: ensName } = useEnsName({ address });
+  const { chain } = useNetwork();
 
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -31,7 +40,7 @@ const useHeader = () => {
   };
 
   const signOut = () => {
-    setUser(undefined);
+    disconnect();
     handleCloseUserMenu();
   };
 
@@ -48,29 +57,40 @@ const useHeader = () => {
   ];
 
   return {
-    address: address ?? null,
+    address,
     settings,
     handleOpenUserMenu,
     handleCloseUserMenu,
     anchorElUser,
+    ensAvatar,
+    ensName,
+    isSupportedNetwork: chain?.network === 'goerli',
   };
 };
 
 export const Header = () => {
   const classes = useGlobalClasses();
   const {
-    address,
     settings,
     handleOpenUserMenu,
     handleCloseUserMenu,
     anchorElUser,
+    address,
+    ensAvatar,
+    ensName,
+    isSupportedNetwork
   } = useHeader();
 
   const renderAvatar = () => {
     if (!address) {
       return null;
     }
-    return <Avatar alt={address} src={makeBlockie(address)} />;
+    return (
+      <>
+        <Typography>{ensName ? `${ensName} (${address})` : address}</Typography>
+        <Avatar alt={address} src={ensAvatar ?? makeBlockie(address)} />
+      </>
+    );
   };
 
   const renderMenuLink = (setting: any, children: any) => {
@@ -100,6 +120,7 @@ export const Header = () => {
         >
           Umpire
         </Typography>
+        {!isSupportedNetwork && <Typography variant="h5">Please switch to Goerli testnet</Typography>}
         <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

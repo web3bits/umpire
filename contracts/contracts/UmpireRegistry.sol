@@ -217,4 +217,23 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
         s_minimumMinutesBetweenActivationAndTimeout = _minimumMinutesBetweenActivationAndTimeout;
         s_minimumMinutesActivationOffset = _minimumMinutesActivationOffset;
     }
+
+    function getJobsByOwner(address _owner) public view returns (UmpireJob[] memory) {
+        uint myJobsCount = s_jobsByOwner[_owner].length;
+        if (myJobsCount == 0) {
+            revert("You have no jobs");
+        }
+
+        UmpireJob[] memory jobs = new UmpireJob[](myJobsCount);
+
+        for (uint i; i < myJobsCount; i++) {
+            jobs[i] = s_jobs[s_jobsByOwner[_owner][i]];
+        }
+
+        return jobs;
+    }
+
+    function getMyJobs() public view returns (UmpireJob[] memory) {
+        return getJobsByOwner(msg.sender);
+    }
 }

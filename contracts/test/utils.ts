@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers';
 import { PostfixNodeOperator, PostfixNodeType } from '../enums';
-import { PostfixNodeStruct } from '../typechain-types/UmpireFormulaResolver';
+import { PostfixNodeStruct } from '../typechain-types/contracts/UmpireFormulaResolver';
 import { toBn } from 'evm-bn';
 
 const pfOperatorMap = {

@@ -32,8 +32,7 @@ const useStyles: any = makeStyles((theme: any) => ({
 }));
 
 export const Layout = ({ children }: { children: any }) => {
-  const { user, isLoading } = useGlobalContext();
-  const requireAuth = !user;
+  const { isLoading } = useGlobalContext();
   const classes = useStyles();
 
   return (

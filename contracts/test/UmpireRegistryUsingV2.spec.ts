@@ -382,5 +382,8 @@ describe('UmpireRegistry with V2 resolver', function () {
 
     const job = await registry.s_jobs(0);
     expect(job.jobStatus).to.equal(UmpireJobStatus.REVERTED);
+
+    const myJobs = await registry.getMyJobs();
+    expect(myJobs[0].jobStatus).to.equal(UmpireJobStatus.REVERTED);
   });
 });

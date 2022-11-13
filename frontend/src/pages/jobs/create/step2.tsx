@@ -1,6 +1,5 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Layout } from "../../../components/Layout";
@@ -155,22 +154,5 @@ const CreateJobStep2 = () => {
     </Layout>
   );
 };
-
-export async function getServerSideProps(context: any) {
-  const session = await getSession(context);
-  // redirect if not authenticated
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { user: session?.user ?? null },
-  };
-}
 
 export default CreateJobStep2;
