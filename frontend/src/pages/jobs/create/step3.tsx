@@ -1,6 +1,5 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Layout } from "../../../components/Layout";
@@ -135,13 +134,5 @@ const CreateJobStep3 = () => {
     </Layout>
   );
 };
-
-export async function getServerSideProps(context: any) {
-  const session = await getSession(context);
-  console.log("Get server side props");
-  return {
-    props: { user: session?.user ?? null },
-  };
-}
 
 export default CreateJobStep3;

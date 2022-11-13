@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { getSession } from "next-auth/react";
 import { Button, Box } from "@mui/material";
 import { Layout } from "../../../components/Layout";
 import { useGlobalClasses } from "../../../theme";
 import UmpireTable from "../../../components/ui/UmpireTable";
-import { useContract } from "../../../hooks/useContract";
 import { useRouter } from "next/router";
 import { ICreateJob, useGlobalContext } from "../../../context/GlobalContext";
 import dayjs from "dayjs";
@@ -75,6 +73,7 @@ const TABLE_COLUMNS: string[] = [
 const ListJobs = ({ user }: { user: any }) => {
   const classes = useGlobalClasses();
   const { jobs, createNewJob } = useListJobs(user);
+
   return (
     <Layout>
       <Box className={classes.container}>
@@ -90,22 +89,5 @@ const ListJobs = ({ user }: { user: any }) => {
     </Layout>
   );
 };
-
-export async function getServerSideProps(context: any) {
-  const session = await getSession(context);
-  // redirect if not authenticated
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/signin",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { user: session?.user ?? null },
-  };
-}
 
 export default ListJobs;

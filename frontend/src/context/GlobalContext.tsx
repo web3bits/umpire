@@ -85,8 +85,7 @@ export const defaultGlobalContext: IGlobalContext = {
 export const GlobalContext: Context<IGlobalContext> =
   createContext<IGlobalContext>(defaultGlobalContext);
 
-// @ts-ignore
-export const GlobalContextProvider: React.FC = ({ children }) => {
+export const GlobalContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [user, setUser] = useState<IUser | undefined>();
