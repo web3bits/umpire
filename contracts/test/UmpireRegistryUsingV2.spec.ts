@@ -386,4 +386,45 @@ describe('UmpireRegistry with V2 resolver', function () {
     const myJobs = await registry.getMyJobs();
     expect(myJobs[0].jobStatus).to.equal(UmpireJobStatus.REVERTED);
   });
+
+  it('bad action address - not contract', async () => {
+    const { registry } = await loadFixture(deployContracts);
+
+    const timeoutDate = Math.round(+new Date() / 1000) + timeOffset;
+
+    await expect(registry.createJobFromNodes(
+      'job name',
+      [pfValueSD59x18(2)],
+      UmpireComparator.EQUAL,
+      [pfValueSD59x18(2)],
+      [],
+      0,
+      timeoutDate,
+      '0x0000000000000000000000000000000000000000'
+    )).to.be.revertedWith('Action must be a contract');
+  });
+
+  it('bad action address - not action interface', async () => {
+    const { registry } = await loadFixture(deployContracts);
+
+    const timeoutDate = Math.round(+new Date() / 1000) + timeOffset;
+    const jobCreationTx = await registry.createJobFromNodes(
+      'job name',
+      [pfValueSD59x18(2)],
+      UmpireComparator.EQUAL,
+      [pfValueSD59x18(2)],
+      [],
+      0,
+      timeoutDate,
+      registry.address
+    );
+    await jobCreationTx.wait();
+
+    // Run upkeep - should trigger an action
+    const runUpkeepTx = await registry.performUpkeep([]);
+    await runUpkeepTx.wait();
+
+    const job = await registry.s_jobs(0);
+    expect(job.jobStatus).to.equal(UmpireJobStatus.REVERTED);
+  });
 });

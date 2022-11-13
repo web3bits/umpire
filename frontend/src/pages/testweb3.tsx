@@ -48,7 +48,7 @@ const TestWeb3 = () => {
       [], // variables
       0,
       dayjs().add(1, "years").unix(),
-      ADDRESS_ZERO,
+      "0xA04BBF55fFcCac9Af713372dA77F7B0Ba2Ab4EF5",
     ],
     enabled: true,
   });
