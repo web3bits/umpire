@@ -24,7 +24,7 @@ const theme = createTheme({
 export const useGlobalClasses = makeStyles(
   createStyles({
     background: {
-      backgroundImage: "url('./assets/background.jpg')",
+      backgroundImage: "url('./assets/background.png')",
       backgroundSize: "cover",
       flex: 1,
       alignItems: "center",
