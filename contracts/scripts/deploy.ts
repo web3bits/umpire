@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat';
+import hre, { ethers } from 'hardhat';
 
 async function main() {
   const UmpireFormulaResolver = await ethers.getContractFactory('UmpireFormulaResolverV2');
@@ -13,7 +13,34 @@ async function main() {
 
   console.log(`UmpireRegistry deployed to ${registry.address}`);
 
-  // TODO auto-register for upkeep
+  console.log('Waiting...');
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  try {
+    console.log('Verifying resolver...');
+    await hre.run('verify:verify', {
+      address: resolver.address,
+      constructorArguments: [],
+    });
+  } catch(e) {
+    console.log(`Could not verify, but that's okay`);
+  }
+
+  console.log('Waiting...');
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+
+  try {
+    console.log('Verifying registry...');
+
+    await hre.run('verify:verify', {
+      address: registry.address,
+      constructorArguments: [resolver.address],
+    });
+  } catch(e) {
+    console.log(`Could not verify, but that's okay`);
+  }
+
+  console.log('DONE!');
 }
 
 // We recommend this pattern to be able to use async/await everywhere
