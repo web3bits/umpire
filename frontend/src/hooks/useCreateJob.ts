@@ -79,7 +79,7 @@ export const useCreateJob = ({
     setFullFormula(
       `${leftFormula} ${comparatorToString(comparator)} ${rightFormula}`
     );
-  }, [leftFormula, rightFormula]);
+  }, [leftFormula, rightFormula, comparator]);
 
   const {
     config,
