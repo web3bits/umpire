@@ -5,3 +5,11 @@ button.green {
   color: white!important;
   border: 0px!important;
 }
+span.MuiTabs-indicator {
+  left: 121.266px;
+  min-width: 150px!important;
+  height: 30px;
+  background: white;
+  bottom: 9px;
+  border-radius: 0.5rem;
+}
