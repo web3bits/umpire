@@ -230,6 +230,7 @@ const CreateJobStep4 = () => {
           color="primary"
           onClick={finishAndDeploy}
           disabled={missingData}
+          className="green"
         >
           Finish - deploy the job
         </Button>

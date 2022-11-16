@@ -1,5 +1,6 @@
 
 import * as React from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { makeStyles } from "@mui/styles";
@@ -16,6 +17,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import WorkIcon from "@mui/icons-material/Work";
+import UmpireStepper from "../ui/UmpireStepper";
+import Typography from "@mui/material/Typography";
+import {
+  useAccount,
+  useDisconnect,
+  useEnsAvatar,
+  useEnsName,
+  useNetwork,
+} from "wagmi";
 
 const useStyles: any = makeStyles((theme: any) => ({
   colorWhite: {
@@ -32,7 +42,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     padding: "1.5rem 2rem",
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   listItem: {
     padding: "0px",
@@ -70,11 +80,39 @@ const useStyles: any = makeStyles((theme: any) => ({
 }));
 
 const useDrawer = () => {
-  const { user, setUser, setLoading } = useGlobalContext();
-  const { address } = user ?? {};
+  const { disconnect } = useDisconnect();
+   const { address: wagmiAddress } = useAccount();
+  const { data: wagmiEnsAvatar } = useEnsAvatar({
+    addressOrName: wagmiAddress,
+  });
+  const { data: wagmiEnsName } = useEnsName({ address: wagmiAddress });
+  const { chain } = useNetwork();
+  const [ensName, setEnsName] = useState<any>();
+  const [ensAvatar, setEnsAvatar] = useState<any>();
+  const [isSupportedNetwork, setIsSupportedNetwork] = React.useState(false);
+  const [address, setAddress] = useState<any>();
+  useEffect(() => {
+    setAddress(wagmiAddress);
+  }, [wagmiAddress]);
+
+  useEffect(() => {
+    const isSupportedNetwork = chain?.network === "goerli";
+    setIsSupportedNetwork(isSupportedNetwork);
+  }, [chain]);
+
+  useEffect(() => {
+    setEnsAvatar(wagmiEnsAvatar);
+  }, [wagmiEnsAvatar]);
+
+  useEffect(() => {
+    setEnsName(wagmiEnsName);
+  }, [wagmiEnsName]);
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
+  );
 
   const signOut = () => {
-    setUser(undefined);
+    disconnect();
   };
 
   const settings = [
@@ -126,18 +164,24 @@ const useDrawer = () => {
 export const Drawer = () => {
   const router = useRouter();
   const classes = useStyles();
-  const { address, settings, steps } = useDrawer();
+  const {  settings,
+    anchorElUser,
+    address,
+    ensAvatar,
+    ensName,
+    isSupportedNetwork, steps } = useDrawer();
 
   const renderAvatar = () => {
     if (!address) {
-      return <Avatar />;
+      return null;
     }
     return (
-      <Avatar
-        className={classes.avatar}
-        alt={address}
-        src={makeBlockie(address)}
-      />
+      <>
+        {/* <Typography className={`${classes.whiteFont} ${classes.mr2}`}>
+          {ensName ? `${ensName} (${address})` : address}
+        </Typography> */}
+        <Avatar alt={address} src={ensAvatar ?? makeBlockie(address)} />
+      </>
     );
   };
 
@@ -154,12 +198,21 @@ export const Drawer = () => {
     );
   };
 
+  const renderNetworkError = () => {
+    if (isSupportedNetwork) {
+      return null;
+    }
+    return (
+      <Typography variant="h5">Please switch to Goerli testnet</Typography>
+    );
+  };
+
   const drawer = (
     <>
       <div className={classes.header}>
-        {renderAvatar()}
         <Logo />
       </div>
+      <div className={classes.header}>{renderAvatar()}</div>
       <div className={classes.hr}></div>
       <div>
         <List>
@@ -176,6 +229,7 @@ export const Drawer = () => {
               <ListItemText primary={step.title} />
             </ListItem>
           ))}
+          {/* <UmpireStepper /> */}
         </List>
         <div className={classes.hr}></div>
         <List>

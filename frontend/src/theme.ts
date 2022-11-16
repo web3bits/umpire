@@ -25,7 +25,9 @@ export const useGlobalClasses = makeStyles(
   createStyles({
     background: {
       backgroundImage: "url('./assets/background.png')",
-      backgroundSize: "cover",
+      backgroundSize: "100%",
+      backgroundColor: "#000",
+      backgroundRepeat: "no-repeat",
       flex: 1,
       alignItems: "center",
       justifyContent: "center",

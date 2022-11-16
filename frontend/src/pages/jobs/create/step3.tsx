@@ -127,6 +127,7 @@ const CreateJobStep3 = () => {
           color="primary"
           onClick={nextStep}
           disabled={errorInFormula}
+          className="green"
         >
           Next Step
         </Button>

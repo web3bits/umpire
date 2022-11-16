@@ -1,36 +1,27 @@
 import React from "react";
-import { Container, Box } from "@mui/material";
-import { GlobalSpinner } from "./GlobalSpinner"; // Import using relative path
+import { Box } from "@mui/material";
+import { GlobalSpinner } from "./GlobalSpinner";
 import { makeStyles } from "@mui/styles";
 import { useGlobalContext } from "../context/GlobalContext";
-import { Header } from "./Header";
 import { RequireAuth } from "./RequireAuth";
 import { Drawer } from "../components/drawer/Drawer";
+import {Container } from "@mui/material";
 
 const useStyles: any = makeStyles((theme: any) => ({
-  // root: {
-  //   maxWidth: '1200px',
-  // },
-  darkBg: {
-    background: theme.palette.primary.main,
-  },
-  secondaryBg: {
-    background: theme.palette.secondary.light,
-  },
-  greyBg: {
-    background: "#e4e4e4",
-  },
-  blackBg: {
-    background: "#000",
-  },
-  "@keyframes animate": {
-    "100%": {
-      backgroundPosition: "-3000px 0",
-    },
+  main: {
+    height: "calc(100vh - 2rem)",
+    width: "calc(100% - 18.625rem)",
+    margin: "1rem 1rem 1rem auto",
+    borderRadius: "0.75rem",
+    overflow: "auto",
   },
   container: {
-    marginLeft: "17.125rem",
-    padding: "0rem 0.5rem",
+    minHeight: "100%",
+    minWidth: "100%",
+    padding: "1rem",
+    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%)",
+    backgroundColor: "#ffffff",
+    
   },
   drawer: {
     display: "block",
@@ -58,20 +49,16 @@ export const Layout = ({ children }: { children: any }) => {
         {isLoading && <GlobalSpinner />}
         <Box
           component="aside"
-          // sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
           className={classes.drawer}
         >
           <Drawer />
         </Box>
         <Box
           component="main"
-          className={classes.container}
-          // sx={{width: {sm: containerWidth} }}
-          //sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+          className={classes.main}
         >
-          {children}
+          <Container className={classes.container}>{children}</Container>
         </Box>
-        {/* <Header /> */}
       </>
     </RequireAuth>
   );
