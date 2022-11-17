@@ -1,6 +1,26 @@
 import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
 import { makeStyles, createStyles } from "@mui/styles";
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#3D5A80",
+      light: "#E0FBFC",
+      dark: "#212939",
+      // contrastText: "#262f3e",
+    },
+    secondary: {
+      main: "#EC6C4D",
+      light: "#FFF",
+    },
+    error: {
+      main: red.A400,
+    },
+    background: {
+      paper: "#fff",
+    },
+  },
+});
 export const useGlobalClasses = makeStyles(
   createStyles({
     background: {
@@ -38,6 +58,19 @@ export const useGlobalClasses = makeStyles(
     row: {
       marginTop: "1rem",
     },
+    variableValue: {
+      width: 150,
+    },
+    flexRow: {
+      display: "flex",
+      marginTop: "1rem",
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "flex-start",
+    },
+    inlineBlock: {
+      display: "inline-block",
+    },
     container: {
       margin: "1rem",
     },
@@ -60,6 +93,9 @@ export const useGlobalClasses = makeStyles(
     mr2: {
       marginRight: "2rem",
     },
+    ml2: {
+      marginLeft: "2rem",
+    },
     mt2: {
       marginTop: "2rem",
     },
@@ -80,27 +116,23 @@ export const useGlobalClasses = makeStyles(
       alignItems: "center",
       justifyContent: "space-evenly",
     },
+    formulaInput: { width: "100%" },
+    formulaList: { marginTop: 5 },
+    formulaListValue: {
+      borderRadius: 4,
+      border: "1px solid #cccccc",
+      width: "100%",
+      padding: ".5rem 0",
+      "&:hover": {
+        color: "#ffffff",
+        background: theme.palette.primary.main,
+        cursor: "pointer",
+      },
+    },
+    formulaValue: {
+      fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+    },
   })
 );
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#3D5A80",
-      light: "#E0FBFC",
-      dark: "#212939",
-      // contrastText: "#262f3e",
-    },
-    secondary: {
-      main: "#EC6C4D",
-      light: "#FFF",
-    },
-    error: {
-      main: red.A400,
-    },
-    background: {
-      paper: "#fff",
-    },
-  },
-});
 
 export default theme;

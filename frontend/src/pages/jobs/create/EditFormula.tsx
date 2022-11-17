@@ -206,7 +206,7 @@ const EditFormula = ({
           <FormulaTextField
             id="formula-left-side"
             handleOnChange={handleLeftSideChange}
-            value={leftSide}
+            values={values}
           />
         </Box>
         <Box style={{ flex: 1, textAlign: "center" }}>
@@ -216,7 +216,7 @@ const EditFormula = ({
           <FormulaTextField
             id="formula-rightt-side"
             handleOnChange={handleRightSideChange}
-            value={rightSide}
+            values={values}
           />
         </Box>
       </Box>
