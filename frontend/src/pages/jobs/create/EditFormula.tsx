@@ -77,14 +77,12 @@ const useEditFormula = (
       debouncedTimer.cancel();
     }
     const debounceTimer = debounce(() => {
-      if (
+      const errorInFormula =
         leftSide.trim().length === 0 ||
         rightSide.trim().length === 0 ||
         !operator ||
-        operator.length === 0 ||
-        !isValidFormula(itemsCount, leftSide) ||
-        !isValidFormula(itemsCount, rightSide)
-      ) {
+        operator.length === 0;
+      if (errorInFormula) {
         setErrorInFormula(true);
       } else {
         handleFormulaCompleted({ leftSide, operator, rightSide });
