@@ -35,15 +35,15 @@ export enum EComparator {
 }
 export interface ICreateJob {
   formulaType?: EFormulaType;
-  values?: string[];
-  leftSide?: string;
+  variableFeeds?: string[];
+  leftFormula?: string;
   comparator?: EComparator;
-  rightSide?: string;
+  rightFormula?: string;
   jobName?: string;
   jobId?: string;
   actionAddress?: string;
-  activationDate?: number;
-  deadlineDate?: number;
+  activationTimestamp?: number;
+  timeoutTimestamp?: number;
   status?: EUmpireJobStatus;
   dateCreated?: number;
 }
@@ -85,7 +85,11 @@ export const defaultGlobalContext: IGlobalContext = {
 export const GlobalContext: Context<IGlobalContext> =
   createContext<IGlobalContext>(defaultGlobalContext);
 
-export const GlobalContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const GlobalContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [user, setUser] = useState<IUser | undefined>();

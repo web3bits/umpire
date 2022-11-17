@@ -14,8 +14,8 @@ const useCreateJobStep3 = () => {
   const router = useRouter();
   const { setCreateJobStepNumber, createJob, setCreateJob } =
     useGlobalContext();
-  const { values } = createJob ?? {
-    values: [],
+  const { variableFeeds } = createJob ?? {
+    variableFeeds: [],
   };
   const [formula, setFormula] = useState<string>("");
   const [errorInFormula, setErrorInFormula] = useState(false);
@@ -41,26 +41,26 @@ const useCreateJobStep3 = () => {
   };
 
   const handleSetFormula = (formula: IFormula) => {
-    const { leftSide, rightSide, operator } = formula;
-    if (!values) {
+    const { leftFormula, rightFormula, operator } = formula;
+    if (!variableFeeds) {
       return;
     }
     try {
-      const leftValue = replaceValues(leftSide, values);
-      const rightValue = replaceValues(rightSide, values);
+      const leftValue = replaceValues(leftFormula, variableFeeds);
+      const rightValue = replaceValues(rightFormula, variableFeeds);
       setFormula(`${leftValue} ${operator} ${rightValue}`);
       setCreateJob({
         ...createJob,
-        leftSide: leftValue,
+        leftFormula: leftValue,
         comparator: operator,
-        rightSide: rightValue,
+        rightFormula: rightValue,
       });
     } catch (err: any) {}
   };
   return {
     setCreateJobStepNumber,
     nextStep,
-    values,
+    variableFeeds,
     formula,
     setFormula: handleSetFormula,
     setErrorInFormula,
@@ -73,7 +73,7 @@ const CreateJobStep3 = () => {
   const {
     setCreateJobStepNumber,
     nextStep,
-    values,
+    variableFeeds,
     formula,
     setFormula,
     setErrorInFormula,
@@ -100,13 +100,13 @@ const CreateJobStep3 = () => {
       <Box className={classes.row}>
         <Typography variant="h6">
           List of variables you have selected
-          <ItemsSelected selectedValues={values ?? []} />
+          <ItemsSelected variableFeeds={variableFeeds ?? []} />
         </Typography>
       </Box>
       <EditFormula
         setFormula={setFormula}
         setErrorInFormula={setErrorInFormula}
-        values={values ?? []}
+        variableFeeds={variableFeeds ?? []}
       />
       <Box className={classes.row}>
         <Typography variant="h6">Formula Typed</Typography>

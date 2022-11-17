@@ -23,19 +23,97 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { v4 as uuidv4 } from "uuid";
-import { useCreateJob } from "../../../hooks/useCreateJob";
+import { UmpireComparator } from "../../../utils/model";
+import { IUseCreateJobProps, useCreateJob } from "../../../hooks/useCreateJob";
 const useCreateJobStep4 = () => {
   const router = useRouter();
   const { setCreateJobStepNumber, createJob, setCreateJob, addJob } =
     useGlobalContext();
-  const [activationDate, setActivationDate] = useState<Dayjs | null>(null);
+  const [activationTimestamp, setActivationTimestamp] = useState<Dayjs | null>(
+    null
+  );
   const [deadlineDate, setDeadlineDate] = useState<Dayjs | null>(null);
   const [useActivationDate, setUseActivationDate] = useState(false);
   const [jobName, setJobName] = useState("");
   const [actionAddress, setActionAddress] = useState("");
+  const [job, setJob] = useState<any>();
+  const getComparator = (comparator: EComparator) => {
+    switch (comparator) {
+      case EComparator.EQUAL:
+        return UmpireComparator.EQUAL;
+      case EComparator.DIFFERENT_FROM:
+        return UmpireComparator.NOT_EQUAL;
+      case EComparator.GREATER_THAN:
+        return UmpireComparator.GREATER_THAN;
+      case EComparator.GREATER_THAN_EQUAL:
+        return UmpireComparator.GREATER_THAN_EQUAL;
+      case EComparator.LOWER_THAN:
+        return UmpireComparator.LESS_THAN;
+      case EComparator.LOWER_THAN_EQUAL:
+        return UmpireComparator.LESS_THAN_EQUAL;
+    }
+  };
+
+  const {
+    isLeftValid,
+    isRightValid,
+    isLoading,
+    isSuccess,
+    transactionHash,
+    deployJob,
+    error,
+    isError,
+    prepareError,
+    isPrepareError,
+    fullFormula,
+  } = useCreateJob({
+    ...createJob,
+    jobName: createJob?.jobName ?? "",
+    leftFormula: createJob?.leftFormula ?? "",
+    rightFormula: createJob?.rightFormula ?? "",
+    comparator: getComparator(createJob?.comparator ?? EComparator.EQUAL),
+    actionAddress: createJob?.actionAddress ?? "",
+    variableFeeds: createJob?.variableFeeds ?? [],
+    activationTimestamp: activationTimestamp?.unix() ?? 0,
+    timeoutTimestamp: deadlineDate?.unix() ?? 0,
+  });
+
+  console.log(
+    isLeftValid,
+    isRightValid,
+    isLoading,
+    isSuccess,
+    transactionHash,
+    deployJob,
+    error,
+    isError,
+    prepareError,
+    isPrepareError,
+    fullFormula
+  );
+  useEffect(() => {
+    setCreateJob({ ...createJob, jobName });
+  }, [jobName]);
+
+  useEffect(() => {
+    setCreateJob({ ...createJob, actionAddress });
+  }, [actionAddress]);
+
+  useEffect(() => {
+    setCreateJob({ ...createJob, timeoutTimestamp: deadlineDate?.unix() ?? 0 });
+  }, [deadlineDate]);
+
+  useEffect(() => {
+    setCreateJob({
+      ...createJob,
+      activationTimestamp: activationTimestamp?.unix() ?? 0,
+    });
+  }, [activationTimestamp]);
+
+  console.log(createJob);
 
   const nextStep = () => {
-    router.push("/deploy");
+    router.push("/jobs/list");
   };
 
   const handleSetJobName = (event: any) => {
@@ -58,30 +136,17 @@ const useCreateJobStep4 = () => {
   };
 
   const handleActivationDateChange = (event: any) => {
-    const activationDate = `${event.$M + 1}/${event.$D}/${event.$y} ${
+    const activationTimestamp = `${event.$M + 1}/${event.$D}/${event.$y} ${
       event.$H
     }:${event.$m}`;
-    setActivationDate(dayjs(activationDate));
+    setActivationTimestamp(dayjs(activationTimestamp));
   };
 
-  const finishAndDeploy = () => {
-    //TODO call smart contract
-    const job: ICreateJob = {
-      ...createJob,
-      jobId: uuidv4(),
-      jobName,
-      actionAddress,
-      activationDate: activationDate?.unix() ?? undefined,
-      deadlineDate: deadlineDate?.unix() ?? undefined,
-      status: EUmpireJobStatus.NEW,
-      dateCreated: dayjs().unix(),
-    };
-    setCreateJob(job);
-    //TODO to be removed once smart contract call is implemented
-
-    addJob(job);
-    nextStep();
+  const finishAndDeploy = async () => {
+    debugger;
+    await deployJob();
   };
+
   return {
     setCreateJobStepNumber,
     nextStep,
@@ -92,8 +157,8 @@ const useCreateJobStep4 = () => {
     handleSetJobName,
     useActivationDate,
     handleUseActivationDateChange,
-    activationDate,
-    setActivationDate,
+    activationTimestamp,
+    setActivationTimestamp,
     deadlineDate,
     setDeadlineDate,
     handleDeadlineDateChange,
@@ -102,8 +167,18 @@ const useCreateJobStep4 = () => {
       jobName?.trim().length === 0 ||
       actionAddress?.trim().length === 0 ||
       !deadlineDate ||
-      (useActivationDate && !activationDate),
+      (useActivationDate && !activationTimestamp),
     finishAndDeploy,
+    isLeftValid,
+    isRightValid,
+    isLoading,
+    isSuccess,
+    transactionHash,
+    error,
+    isError,
+    prepareError,
+    isPrepareError,
+    fullFormula,
   };
 };
 
@@ -118,15 +193,25 @@ const CreateJobStep4 = () => {
     actionAddress,
     handleSetActionAddress,
     useActivationDate,
-    activationDate,
+    activationTimestamp,
     handleUseActivationDateChange,
     deadlineDate,
     handleActivationDateChange,
     handleDeadlineDateChange,
     missingData,
     finishAndDeploy,
+    isLeftValid,
+    isRightValid,
+    isLoading,
+    isSuccess,
+    transactionHash,
+    error,
+    isError,
+    prepareError,
+    isPrepareError,
+    fullFormula,
   } = useCreateJobStep4();
-  const { leftSide, comparator, rightSide } = createJob ?? {};
+  const { leftFormula, comparator, rightFormula } = createJob ?? {};
 
   const renderDeadlinePicker = () => {
     return (
@@ -136,7 +221,7 @@ const CreateJobStep4 = () => {
         onChange={handleDeadlineDateChange}
         renderInput={(params) => <TextField {...params} />}
         disablePast={true}
-        minDateTime={activationDate}
+        minDateTime={activationTimestamp}
       />
     );
   };
@@ -156,7 +241,7 @@ const CreateJobStep4 = () => {
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DateTimePicker
             label="Activation date & time"
-            value={activationDate}
+            value={activationTimestamp}
             onChange={handleActivationDateChange}
             renderInput={(params) => <TextField {...params} />}
             disablePast={true}
@@ -192,7 +277,7 @@ const CreateJobStep4 = () => {
         className={`${classes.centeredRow} ${classes.mt2} ${classes.withBorder}`}
       >
         <Typography variant="body1">
-          {leftSide} {comparator} {rightSide}
+          {leftFormula} {comparator} {rightFormula}
         </Typography>
       </Box>
       <Box className={classes.mt2}>
@@ -227,6 +312,26 @@ const CreateJobStep4 = () => {
         />
       </Box>
       {renderPickers()}
+      <Box className={classes.centeredRow}>
+        <pre>
+          {JSON.stringify(
+            {
+              isLeftValid,
+              isRightValid,
+              isLoading,
+              isSuccess,
+              transactionHash,
+              error,
+              isError,
+              prepareError,
+              isPrepareError,
+              fullFormula,
+            },
+            null,
+            2
+          )}
+        </pre>
+      </Box>
       <Box className={`${classes.centeredRow} ${classes.mt2}`}>
         <Button
           variant="outlined"

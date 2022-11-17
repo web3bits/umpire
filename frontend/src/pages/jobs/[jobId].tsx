@@ -19,11 +19,11 @@ const useJobDetails = (jobId: string) => {
     jobId,
     jobName: "Test",
     actionAddress: "x00a0000230230203",
-    leftSide: "[INCH / ETH]",
+    leftFormula: "[INCH / ETH]",
     comparator: EComparator.EQUAL,
-    rightSide: "12",
-    activationDate: dayjs().add(10, "minutes").unix(),
-    deadlineDate: dayjs().add(30, "minutes").unix(),
+    rightFormula: "12",
+    activationTimestamp: dayjs().add(10, "minutes").unix(),
+    timeoutTimestamp: dayjs().add(30, "minutes").unix(),
     status: EUmpireJobStatus.NEW,
   });
   return { job };
@@ -46,18 +46,22 @@ const JobDetails = () => {
         <UmpireDetailRow label="Action Address" value={job!.actionAddress!} />
         <UmpireDetailRow
           label="Formula"
-          value={`${job!.leftSide} ${job!.comparator} ${job!.rightSide}`}
+          value={`${job!.leftFormula} ${job!.comparator} ${job!.rightFormula}`}
         />
         <UmpireDetailRow
           label="Activation Date"
           value={`${
-            job?.activationDate ? dayjs(job!.activationDate).toISOString() : ""
+            job?.activationTimestamp
+              ? dayjs(job!.activationTimestamp).toISOString()
+              : ""
           } `}
         />
         <UmpireDetailRow
           label="Deadline Date"
           value={`${
-            job?.deadlineDate ? dayjs(job!.deadlineDate).toISOString() : ""
+            job?.timeoutTimestamp
+              ? dayjs(job!.timeoutTimestamp).toISOString()
+              : ""
           } `}
         />
         <UmpireDetailRow

@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useGlobalClasses } from "../../../theme";
 
 const FormulaList = ({
-  values,
+  variableFeeds,
   handleItemClick,
 }: {
-  values: string[];
+  variableFeeds: string[];
   handleItemClick: (event: any) => void;
 }) => {
   const classes = useGlobalClasses();
@@ -23,7 +23,7 @@ const FormulaList = ({
     );
   };
   const renderItems = () => {
-    return values?.map((value: string) => {
+    return variableFeeds?.map((value: string) => {
       return renderItem(value);
     });
   };
@@ -186,7 +186,7 @@ const useFormulaTextField = (
     if (previousChar === "." || /[a-zA-Z0-9\.]/g.test(`${previousChar}`)) {
       return false;
     }
-    if (["+", "-", "*", "/", ".", "(", ")"].includes(`${nextChar}`)) {
+    if (["^", "%", "+", "-", "*", "/", ".", "(", ")"].includes(`${nextChar}`)) {
       return false;
     }
     return true;
@@ -207,7 +207,7 @@ const useFormulaTextField = (
     const previousChar = previousString.charAt(previousString.length - 1);
 
     const nextChar = nextString.length > 0 ? nextString.charAt(0) : "";
-    if (["(", ")", ".", "+", "-", "/", "*"].includes(previousChar)) {
+    if (["^", "%", "(", ")", ".", "+", "-", "/", "*"].includes(previousChar)) {
       return false;
     }
     if (/[a-zA-Z[0-9]]/g.test(`${previousChar}`)) {
@@ -248,7 +248,9 @@ const useFormulaTextField = (
       return false;
     }
     const previousChar = previousString.charAt(previousString.length - 1);
-    if (["+", "-", "/", "*", "(", ")", "."].includes(`${previousChar}`)) {
+    if (
+      ["^", "%", "+", "-", "/", "*", "(", ")", "."].includes(`${previousChar}`)
+    ) {
       return false;
     }
     return true;
@@ -282,11 +284,11 @@ const useFormulaTextField = (
 const FormulaTextField = ({
   id,
   handleOnChange,
-  values,
+  variableFeeds,
 }: {
   id: string;
   handleOnChange: (event: any) => void;
-  values: string[];
+  variableFeeds: string[];
 }) => {
   const classes = useGlobalClasses();
   const {
@@ -302,7 +304,12 @@ const FormulaTextField = ({
     if (!displayList) {
       return null;
     }
-    return <FormulaList values={values} handleItemClick={handleItemClick} />;
+    return (
+      <FormulaList
+        variableFeeds={variableFeeds}
+        handleItemClick={handleItemClick}
+      />
+    );
   };
 
   return (
