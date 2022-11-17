@@ -111,6 +111,7 @@ export const UmpireList = ({
                       tabIndex={-1}
                       disableRipple
                       inputProps={{ "aria-labelledby": labelId }}
+                      sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
                     />
                   </ListItemIcon>
                   <ListItemText id={labelId} primary={id} />

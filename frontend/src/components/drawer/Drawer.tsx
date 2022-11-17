@@ -19,6 +19,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import WorkIcon from "@mui/icons-material/Work";
 import UmpireStepper from "../ui/UmpireStepper";
 import Typography from "@mui/material/Typography";
+import { Box } from "@mui/system";
 import {
   useAccount,
   useDisconnect,
@@ -26,6 +27,7 @@ import {
   useEnsName,
   useNetwork,
 } from "wagmi";
+import { STEPS, STEP_NAVIGATION, STEPS_TITLE } from "../../constants";
 
 const useStyles: any = makeStyles((theme: any) => ({
   colorWhite: {
@@ -66,7 +68,8 @@ const useStyles: any = makeStyles((theme: any) => ({
     },
   },
   active: {
-    backgroundImage: "linear-gradient(195deg,#66bb6a,#43a047)",
+    // backgroundImage: "linear-gradient(195deg,#66bb6a,#43a047)",
+    backgroundImage: "linear-gradient(195deg,#ec407a,#d81b60)",
   },
   link: {
     textDecoration: "none",
@@ -77,6 +80,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     fontSize: "1rem",
     lineHeight: "1.5",
   },
+
 }));
 
 const useDrawer = () => {
@@ -162,6 +166,7 @@ const useDrawer = () => {
 };
 
 export const Drawer = () => {
+  const { setCreateJobStepNumber, createJobStepNumber } = useGlobalContext();
   const router = useRouter();
   const classes = useStyles();
   const {  settings,
@@ -170,10 +175,11 @@ export const Drawer = () => {
     ensAvatar,
     ensName,
     isSupportedNetwork, steps } = useDrawer();
+    const stepNumber = 0;
 
   const renderAvatar = () => {
     if (!address) {
-      return null;
+      return <Avatar/>;
     }
     return (
       <>
@@ -207,6 +213,9 @@ export const Drawer = () => {
     );
   };
 
+  const indexs = STEP_NAVIGATION.map(i => i.includes(router.asPath));
+  const stepNo = indexs?.indexOf(true);
+
   const drawer = (
     <>
       <div className={classes.header}>
@@ -215,7 +224,7 @@ export const Drawer = () => {
       <div className={classes.header}>{renderAvatar()}</div>
       <div className={classes.hr}></div>
       <div>
-        <List>
+        {/* <List>
           {steps.map((step, index) => (
             <ListItem
               key={index}
@@ -229,8 +238,15 @@ export const Drawer = () => {
               <ListItemText primary={step.title} />
             </ListItem>
           ))}
-          {/* <UmpireStepper /> */}
-        </List>
+        </List> */}
+        <div className={classes.stepper}>
+        <UmpireStepper
+          stepNumber={stepNo}
+          steps={STEPS_TITLE}
+          setStepNumber={setCreateJobStepNumber}
+          stepNavigation={STEP_NAVIGATION}
+        />
+        </div>
         <div className={classes.hr}></div>
         <List>
           {settings.map((setting) => {

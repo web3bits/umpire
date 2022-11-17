@@ -4,15 +4,12 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Layout } from "../../../components/Layout";
 import { UmpireList } from "../../../components/ui/UmpireList";
-import UmpireStepper from "../../../components/ui/UmpireStepper";
 import { UmpireTabs } from "../../../components/ui/UmpireTabs";
 import {
   COMMODITIES_ITEMS,
   CRYPTO_ITEMS,
   EQUITIES_ITEMS,
   FOREX_ITEMS,
-  STEPS,
-  STEP_NAVIGATION,
 } from "../../../constants";
 import { EFormulaType, useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
@@ -23,10 +20,9 @@ const useCreateJobStep2 = (classes: any) => {
   const [listItems, setListItems] = useState<any[]>([]);
 
   const router = useRouter();
-  const { setCreateJobStepNumber, createJob, setCreateJob } =
+  const { setCreateJob } =
     useGlobalContext();
   const nextStep = () => {
-    setCreateJobStepNumber(2);
     setCreateJob({
       values: selectedValues,
     });
@@ -61,7 +57,6 @@ const useCreateJobStep2 = (classes: any) => {
   }, [activeTab]);
 
   return {
-    setCreateJobStepNumber,
     nextStep,
     activeTab,
     setActiveTab,
@@ -80,7 +75,6 @@ const TABS = [
 const CreateJobStep2 = () => {
   const classes = useGlobalClasses();
   const {
-    setCreateJobStepNumber,
     nextStep,
     activeTab,
     setActiveTab,
@@ -109,14 +103,6 @@ const CreateJobStep2 = () => {
   };
   return (
     <Layout>
-      <Box className={classes.centeredRow}>
-        <UmpireStepper
-          stepNumber={1}
-          steps={STEPS}
-          setStepNumber={setCreateJobStepNumber}
-          stepNavigation={STEP_NAVIGATION}
-        />
-      </Box>
       <Box className={`${classes.centeredRow} ${classes.mt3}`}>
         <Typography variant="h4">Step 2 - select input variables</Typography>
       </Box>
@@ -142,11 +128,9 @@ const CreateJobStep2 = () => {
       </Box>
       <Box className={classes.centeredRow}>
         <Button
-          variant="outlined"
-          color="primary"
           onClick={nextStep}
           disabled={false}
-          className="green"
+          className="pink"
         >
           Next Step
         </Button>

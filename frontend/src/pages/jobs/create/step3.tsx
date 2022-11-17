@@ -3,8 +3,6 @@ import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Layout } from "../../../components/Layout";
-import UmpireStepper from "../../../components/ui/UmpireStepper";
-import { STEPS, STEP_NAVIGATION } from "../../../constants";
 import { useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
 import EditFormula, { IFormula } from "./EditFormula";
@@ -12,7 +10,7 @@ import ItemsSelected from "./ItemsSelected";
 import { Alert } from "@mui/material";
 const useCreateJobStep3 = () => {
   const router = useRouter();
-  const { setCreateJobStepNumber, createJob, setCreateJob } =
+  const { createJob, setCreateJob } =
     useGlobalContext();
   const { values } = createJob ?? {
     values: [],
@@ -21,7 +19,6 @@ const useCreateJobStep3 = () => {
   const [errorInFormula, setErrorInFormula] = useState(false);
 
   const nextStep = () => {
-    setCreateJobStepNumber(3);
     router.push("/jobs/create/step4");
   };
 
@@ -58,7 +55,6 @@ const useCreateJobStep3 = () => {
     } catch (err: any) {}
   };
   return {
-    setCreateJobStepNumber,
     nextStep,
     values,
     formula,
@@ -71,7 +67,6 @@ const useCreateJobStep3 = () => {
 const CreateJobStep3 = () => {
   const classes = useGlobalClasses();
   const {
-    setCreateJobStepNumber,
     nextStep,
     values,
     formula,
@@ -81,14 +76,6 @@ const CreateJobStep3 = () => {
   } = useCreateJobStep3();
   return (
     <Layout>
-      <Box className={classes.centeredRow}>
-        <UmpireStepper
-          stepNumber={2}
-          steps={STEPS}
-          setStepNumber={setCreateJobStepNumber}
-          stepNavigation={STEP_NAVIGATION}
-        />
-      </Box>
       <Box className={`${classes.centeredRow} ${classes.mt3}`}>
         <Typography variant="h4">Step 3 - define formula</Typography>
       </Box>
@@ -116,18 +103,16 @@ const CreateJobStep3 = () => {
       </Box>
       <Box className={`${classes.row} ${classes.mt2}`}>
         {errorInFormula && (
-          <Alert severity="warning">
+          <Alert severity="warning" sx={{borderRadius: "0.75rem"}}>
             The formula typed is not valid, please fix it.
           </Alert>
         )}
       </Box>
       <Box className={classes.centeredRow}>
         <Button
-          variant="outlined"
-          color="primary"
           onClick={nextStep}
           disabled={errorInFormula}
-          className="green"
+          className="pink"
         >
           Next Step
         </Button>

@@ -130,11 +130,15 @@ export const useGlobalClasses = makeStyles(
         background: theme.palette.primary.main,
         cursor: "pointer",
       },
+      // pink: "linear-gradient(195deg,#ec407a,#d81b60)",
     },
     formulaValue: {
       fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
     },
-  })
-);
+    background: {
+      paper: "#fff",
+    },
+  }
+));
 
 export default theme;

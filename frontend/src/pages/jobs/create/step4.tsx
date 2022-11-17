@@ -10,8 +10,6 @@ import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Layout } from "../../../components/Layout";
-import UmpireStepper from "../../../components/ui/UmpireStepper";
-import { STEPS, STEP_NAVIGATION } from "../../../constants";
 import {
   EUmpireJobStatus,
   ICreateJob,
@@ -24,7 +22,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { v4 as uuidv4 } from "uuid";
 const useCreateJobStep4 = () => {
   const router = useRouter();
-  const { setCreateJobStepNumber, createJob, setCreateJob, addJob } =
+  const { createJob, setCreateJob, addJob } =
     useGlobalContext();
   const [activationDate, setActivationDate] = useState<Dayjs | null>(null);
   const [deadlineDate, setDeadlineDate] = useState<Dayjs | null>(null);
@@ -80,8 +78,6 @@ const useCreateJobStep4 = () => {
     nextStep();
   };
   return {
-    setCreateJobStepNumber,
-    nextStep,
     createJob,
     actionAddress,
     handleSetActionAddress,
@@ -107,8 +103,6 @@ const useCreateJobStep4 = () => {
 const CreateJobStep4 = () => {
   const classes = useGlobalClasses();
   const {
-    setCreateJobStepNumber,
-    nextStep,
     createJob,
     jobName,
     handleSetJobName,
@@ -166,14 +160,6 @@ const CreateJobStep4 = () => {
 
   return (
     <Layout>
-      <Box className={classes.centeredRow}>
-        <UmpireStepper
-          stepNumber={2}
-          steps={STEPS}
-          setStepNumber={setCreateJobStepNumber}
-          stepNavigation={STEP_NAVIGATION}
-        />
-      </Box>
       <Box className={`${classes.centeredRow} ${classes.mt3}`}>
         <Typography variant="h4">Step 4 - final step</Typography>
       </Box>
@@ -226,11 +212,9 @@ const CreateJobStep4 = () => {
       {renderPickers()}
       <Box className={`${classes.centeredRow} ${classes.mt2}`}>
         <Button
-          variant="outlined"
-          color="primary"
           onClick={finishAndDeploy}
           disabled={missingData}
-          className="green"
+          className="pink"
         >
           Finish - deploy the job
         </Button>

@@ -58,7 +58,7 @@ const renderTabPanels = (id: string, value: number, contents: any[]) => {
 const renderTabs = (id: string, tabs: string[]) => {
   return tabs?.map((tab: string, index: number) => {
     const key = `${id}-tab-${index}`;
-    return <Tab disableRipple label={tab} {...a11yProps(id, index)} key={key} sx={{ zIndex: "9" }}/>;
+    return <Tab disableRipple label={tab} {...a11yProps(id, index)} key={key} sx={{ zIndex: "9", opacity: "1", width: `calc(100%/${tabs.length})` }}/>;
   });
 };
 
@@ -81,8 +81,8 @@ export const UmpireTabs = ({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderRadius: 2, background: "#f8f9fa" }}>
-        <Tabs value={activeTab} onChange={handleChange} id={id}>
+      <Box sx={{ borderRadius: 2, background: "#f8f9fa", padding: "0px 4px" }}>
+        <Tabs value={activeTab} onChange={handleChange} id={id} textColor="inherit" sx={{overflow: "visible"}}>
           {renderTabs(id, tabs)}
         </Tabs>
       </Box>

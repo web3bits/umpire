@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { Layout } from "../../../components/Layout";
 import { useGlobalClasses } from "../../../theme";
 import UmpireTable from "../../../components/ui/UmpireTable";
 import { useRouter } from "next/router";
-import { ICreateJob, useGlobalContext } from "../../../context/GlobalContext";
 import { useFetchJobs } from "../../../hooks/useFetchJobs";
 import { UmpireJob } from "../../../utils/model";
 import {
@@ -67,11 +66,6 @@ const ListJobs = () => {
   return (
     <Layout>
       <Box className={classes.container}>
-        <Box className={classes.centeredRow}>
-          <Button variant="outlined" onClick={createNewJob}>
-            Create a new Job
-          </Button>
-        </Box>
         <Box className={classes.centeredRow}>
           <UmpireTable tableId="jobs" rows={jobs} columns={TABLE_COLUMNS} />
         </Box>

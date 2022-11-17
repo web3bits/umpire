@@ -140,31 +140,37 @@ const renderRadioGroup = (
           value={EComparator.EQUAL}
           control={<Radio />}
           label={EComparator.EQUAL}
+          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.GREATER_THAN}
           control={<Radio />}
           label={EComparator.GREATER_THAN}
+          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.GREATER_THAN_EQUAL}
           control={<Radio />}
           label={EComparator.GREATER_THAN_EQUAL}
+          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.LOWER_THAN}
           control={<Radio />}
           label={EComparator.LOWER_THAN}
+          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.LOWER_THAN_EQUAL}
           control={<Radio />}
           label={EComparator.LOWER_THAN_EQUAL}
+          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.DIFFERENT_FROM}
           control={<Radio />}
           label={EComparator.DIFFERENT_FROM}
+          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
       </RadioGroup>
     </FormControl>
