@@ -100,7 +100,7 @@ const CreateJobStep3 = () => {
       <Box className={classes.row}>
         <Typography variant="h6">
           List of variables you have selected
-          <ItemsSelected selectedValues={values ?? []} selectable={true} />
+          <ItemsSelected selectedValues={values ?? []} />
         </Typography>
       </Box>
       <EditFormula
