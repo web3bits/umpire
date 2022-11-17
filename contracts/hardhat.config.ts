@@ -9,10 +9,9 @@ dotenv.config();
 const config: HardhatUserConfig = {
   solidity: "0.8.17",
   networks: {
-    goerli: {
-      url: process.env.GOERLI_RPC_URL || "",
+    mumbai: {
+      url: process.env.MUMBAI_RPC_URL || "",
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-      chainId: 5,
     },
   },
   gasReporter: {
@@ -20,7 +19,7 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.POLYGONSCAN_API_KEY,
   },
   paths: {
     artifacts: "../frontend/src/artifacts",

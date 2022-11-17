@@ -6,15 +6,15 @@
 npx hardhat test
 REPORT_GAS=true npx hardhat test
 npx hardhat run scripts/deploy.ts # deploys locally
-npx hardhat run scripts/deploy.ts --network goerli # deploys to Goerli testnet
+npx hardhat run scripts/deploy.ts --network mumbai # deploys to Polygon Mumbai testnet
 ```
 
-## Last deployment @ Goerli:
+## Last deployment @ Mumbai:
 
 ```
-UmpireFormulaResolverV2 deployed to 0x771C28284Ab85eDE5a21F8a2aF7e5099A7E69EeD
-UmpireRegistry deployed to 0x43ec2F5db9c212B9AA951bcd2a32708be46b40E7
-Upkeep: https://automation.chain.link/goerli/21956633897700056567197195187774014463512861996312274220975047940390377490382 
+UmpireFormulaResolverV2 deployed to 0xF438eb88Aa5A5E494f6196710dDe9858E5ca1672
+UmpireRegistry deployed to 0xE2EB9874468E26DB1B114eF7ba85567D17436d61
+Upkeep: https://automation.chain.link/mumbai/0x97868eaec31eb78439245ddc483c1f1a47e18a8a25cedb573757c3f56f6890cc 
 ```
 
 ## Running frontend

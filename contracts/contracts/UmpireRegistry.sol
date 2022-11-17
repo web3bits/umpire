@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import "./UmpireModel.sol";
-import "./UmpireFormulaResolver.sol";
 import "./UmpireActionInterface.sol";
 import "./AbstractUmpireFormulaResolver.sol";
 
