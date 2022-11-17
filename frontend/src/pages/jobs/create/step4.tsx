@@ -8,11 +8,12 @@ import {
 import dayjs, { Dayjs } from "dayjs";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "../../../components/Layout";
 import UmpireStepper from "../../../components/ui/UmpireStepper";
 import { STEPS, STEP_NAVIGATION } from "../../../constants";
 import {
+  EComparator,
   EUmpireJobStatus,
   ICreateJob,
   useGlobalContext,
@@ -22,6 +23,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { v4 as uuidv4 } from "uuid";
+import { useCreateJob } from "../../../hooks/useCreateJob";
 const useCreateJobStep4 = () => {
   const router = useRouter();
   const { setCreateJobStepNumber, createJob, setCreateJob, addJob } =
@@ -33,7 +35,7 @@ const useCreateJobStep4 = () => {
   const [actionAddress, setActionAddress] = useState("");
 
   const nextStep = () => {
-    router.push("/jobs/list");
+    router.push("/deploy");
   };
 
   const handleSetJobName = (event: any) => {
@@ -76,6 +78,7 @@ const useCreateJobStep4 = () => {
     };
     setCreateJob(job);
     //TODO to be removed once smart contract call is implemented
+
     addJob(job);
     nextStep();
   };
