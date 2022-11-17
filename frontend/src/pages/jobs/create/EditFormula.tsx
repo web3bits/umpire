@@ -13,17 +13,17 @@ import FormulaTextField from "./FormulaTextField";
 import { debounce } from "lodash";
 
 export interface IFormula {
-  leftSide: string;
+  leftFormula: string;
   operator: EComparator;
-  rightSide: string;
+  rightFormula: string;
 }
 const useEditFormula = (
   handleFormulaCompleted: (formula: IFormula) => void,
   setErrorInFormula: (errorInFormula: boolean) => void,
   itemsCount: number
 ) => {
-  const [leftSide, setLeftSide] = useState<string>("");
-  const [rightSide, setRightSide] = useState<string>("");
+  const [leftFormula, setLeftFormula] = useState<string>("");
+  const [rightFormula, setRightFormula] = useState<string>("");
   const [operator, setOperator] = useState<EComparator | null>(null);
   const [debouncedTimer, setDebouncedTimer] = useState<any>(undefined);
 
@@ -78,28 +78,28 @@ const useEditFormula = (
     }
     const debounceTimer = debounce(() => {
       const errorInFormula =
-        leftSide.trim().length === 0 ||
-        rightSide.trim().length === 0 ||
+        leftFormula.trim().length === 0 ||
+        rightFormula.trim().length === 0 ||
         !operator ||
         operator.length === 0;
       if (errorInFormula) {
         setErrorInFormula(true);
       } else {
-        handleFormulaCompleted({ leftSide, operator, rightSide });
+        handleFormulaCompleted({ leftFormula, operator, rightFormula });
         setErrorInFormula(false);
       }
     }, 2000);
     setDebouncedTimer(debounceTimer);
   };
 
-  const handleLeftSideChange = (event: any) => {
+  const handleLeftFormulaChange = (event: any) => {
     const { value } = event.target;
-    setLeftSide(value);
+    setLeftFormula(value);
   };
 
-  const handleRightSideChange = (event: any) => {
+  const handleRightFormulaChange = (event: any) => {
     const { value } = event.target;
-    setRightSide(value);
+    setRightFormula(value);
   };
 
   const handleOperatorChange = (event: any) => {
@@ -110,14 +110,14 @@ const useEditFormula = (
   useEffect(() => {
     isFormulaComplete();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [leftSide, rightSide, operator]);
+  }, [leftFormula, rightFormula, operator]);
   return {
-    handleLeftSideChange,
-    handleRightSideChange,
+    handleLeftFormulaChange,
+    handleRightFormulaChange,
     handleOperatorChange,
     operator,
-    leftSide,
-    rightSide,
+    leftFormula,
+    rightFormula,
   };
 };
 
@@ -169,23 +169,23 @@ const renderRadioGroup = (
   );
 };
 const EditFormula = ({
-  values,
+  variableFeeds,
   setErrorInFormula,
   setFormula,
 }: {
-  values: string[];
+  variableFeeds: string[];
   setErrorInFormula: (errorInFormula: boolean) => void;
   setFormula: (formula: IFormula) => void;
 }) => {
   const classes = useGlobalClasses();
   const {
-    handleLeftSideChange,
-    handleRightSideChange,
+    handleLeftFormulaChange,
+    handleRightFormulaChange,
     handleOperatorChange,
     operator,
-    leftSide,
-    rightSide,
-  } = useEditFormula(setFormula, setErrorInFormula, values?.length ?? 0);
+    leftFormula,
+    rightFormula,
+  } = useEditFormula(setFormula, setErrorInFormula, variableFeeds?.length ?? 0);
   return (
     <Box className={`${classes.container} ${classes.mt3}`}>
       <Box className={classes.centeredRow}>
@@ -203,8 +203,8 @@ const EditFormula = ({
         <Box style={{ flex: 2, textAlign: "center" }}>
           <FormulaTextField
             id="formula-left-side"
-            handleOnChange={handleLeftSideChange}
-            values={values}
+            handleOnChange={handleLeftFormulaChange}
+            variableFeeds={variableFeeds}
           />
         </Box>
         <Box style={{ flex: 1, textAlign: "center" }}>
@@ -213,8 +213,8 @@ const EditFormula = ({
         <Box style={{ flex: 2, textAlign: "center" }}>
           <FormulaTextField
             id="formula-rightt-side"
-            handleOnChange={handleRightSideChange}
-            values={values}
+            handleOnChange={handleRightFormulaChange}
+            variableFeeds={variableFeeds}
           />
         </Box>
       </Box>

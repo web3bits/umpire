@@ -2,7 +2,7 @@ import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useGlobalClasses } from "../../../theme";
 import AddIcon from "@mui/icons-material/Add";
-const ItemsSelected = ({ selectedValues }: { selectedValues: string[] }) => {
+const ItemsSelected = ({ variableFeeds }: { variableFeeds: string[] }) => {
   const classes = useGlobalClasses();
 
   const renderItem = (leftItem: string, index: number) => {
@@ -15,7 +15,7 @@ const ItemsSelected = ({ selectedValues }: { selectedValues: string[] }) => {
     );
   };
   const renderItems = () => {
-    return selectedValues?.map((item: string, index: number) =>
+    return variableFeeds?.map((item: string, index: number) =>
       renderItem(item, index)
     );
   };

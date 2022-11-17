@@ -19,7 +19,7 @@ import { useGlobalClasses } from "../../../theme";
 import ItemsSelected from "./ItemsSelected";
 const useCreateJobStep2 = (classes: any) => {
   const [activeTab, setActiveTab] = useState(0);
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  const [variableFeeds, setVariableFeeds] = useState<string[]>([]);
   const [listItems, setListItems] = useState<any[]>([]);
 
   const router = useRouter();
@@ -28,7 +28,7 @@ const useCreateJobStep2 = (classes: any) => {
   const nextStep = () => {
     setCreateJobStepNumber(2);
     setCreateJob({
-      values: selectedValues,
+      variableFeeds,
     });
     router.push("/jobs/create/step3");
   };
@@ -65,9 +65,9 @@ const useCreateJobStep2 = (classes: any) => {
     nextStep,
     activeTab,
     setActiveTab,
-    selectedValues,
+    variableFeeds,
     listItems,
-    setSelectedValues,
+    setVariableFeeds,
   };
 };
 
@@ -84,9 +84,9 @@ const CreateJobStep2 = () => {
     nextStep,
     activeTab,
     setActiveTab,
-    selectedValues,
+    variableFeeds,
     listItems,
-    setSelectedValues,
+    setVariableFeeds,
   } = useCreateJobStep2(classes);
 
   const renderContent = () => {
@@ -95,8 +95,8 @@ const CreateJobStep2 = () => {
         <UmpireList
           listId="listFrom"
           listItems={listItems}
-          setOptionsSelected={setSelectedValues}
-          selected={selectedValues}
+          setOptionsSelected={setVariableFeeds}
+          selected={variableFeeds}
           disabled={false}
         />
       </Box>
@@ -138,7 +138,7 @@ const CreateJobStep2 = () => {
       </Box>
       <Box className={classes.mt2}>
         <Typography variant="h6">List of values selected</Typography>
-        <ItemsSelected selectedValues={selectedValues} />
+        <ItemsSelected variableFeeds={variableFeeds} />
       </Box>
       <Box className={classes.centeredRow}>
         <Button
