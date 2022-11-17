@@ -1,131 +1,72 @@
-import { useEffect, useState } from "react";
 import { Button, Box } from "@mui/material";
 import { useGlobalClasses } from "../theme";
 import { Layout } from "../components/Layout";
-import {
-  useAccount,
-  useContractRead,
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
-} from "wagmi";
-import { useGlobalContext } from "../context/GlobalContext";
-import { ADDRESS_ZERO, registryAddress } from "../utils";
-import UmpireRegistry from "../artifacts/contracts/UmpireRegistry.sol/UmpireRegistry.json";
 import dayjs from "dayjs";
 import { useFetchJobs } from "../hooks/useFetchJobs";
+import { useCreateJob } from "../hooks/useCreateJob";
 
 const TestWeb3 = () => {
   const classes = useGlobalClasses();
-  const { address } = useAccount();
-  const { setLoading } = useGlobalContext();
-  const [readRawResult, setReadRawResult] = useState<any>();
-  const [writeRawResult, setWriteRawResult] = useState<any>();
   const { jobs } = useFetchJobs(true);
-  const { data: resultFetchJobs, refetch: fetchJobs } = useContractRead({
-    address: registryAddress,
-    abi: UmpireRegistry.abi,
-    functionName: "getJobsByOwner",
-    enabled: false,
-    args: [address],
-  });
 
   const {
-    config,
-    error: prepareError,
-    isError: isPrepareError,
-  } = usePrepareContractWrite({
-    address: registryAddress,
-    abi: UmpireRegistry.abi,
-    functionName: "createJobFromNodes",
-    args: [
-      "Some job name", // name
-      [
-        [2, 0, 0, 0],
-        [2, 0, 0, 0],
-        [0, 2, 0, 0],
-      ], // left
-      0, // comparator
-      [[4, 0, 0, 0]], // right
-      [], // variables
-      0,
-      dayjs().add(1, "years").unix(),
-      "0xA04BBF55fFcCac9Af713372dA77F7B0Ba2Ab4EF5", // broken action, should cause job revert
-    ],
-    enabled: true,
-  });
-
-  const {
-    data: resultAddJob,
+    isLeftValid,
+    isRightValid,
+    isLoading,
+    isSuccess,
+    transactionHash,
+    deployJob,
     error,
     isError,
-    write,
-    // @ts-ignore
-  } = useContractWrite(config);
-
-  const { isLoading, isSuccess } = useWaitForTransaction({
-    hash: resultAddJob?.hash,
+    prepareError,
+    isPrepareError,
+    fullFormula,
+  } = useCreateJob({
+    jobName: `Some job name`,
+    leftFormula: "2 + 2",
+    comparator: 0,
+    rightFormula: "4",
+    variableFeeds: [],
+    activationTimestamp: 0,
+    timeoutTimestamp: dayjs().add(1, "years").unix(),
+    actionAddress: "0x02CCD14445e3647c5af140cD7dDF7D3d1b7cAdD5", // basic action on Mumbai, but not initialized so it'll revert
   });
 
-  const fetchMyJobs = async () => {
-    setLoading(true);
-    const x = await fetchJobs();
-    console.log(x);
-    setReadRawResult(x);
-    setLoading(false);
-  };
-  const runCalculation = async () => {
-    setLoading(true);
-    // @ts-ignore
-    const x = await write();
-    console.log(x);
-    setWriteRawResult(x);
-    setLoading(false);
+  const add224 = async () => {
+    await deployJob();
   };
 
   return (
     <Layout>
       <Box className={classes.container}>
-        <Box className={classes.centeredRow}>
-          <pre>{JSON.stringify(jobs, null, 2)}</pre>
-        </Box>
-        <hr />
-        <Box className={classes.centeredRow}>
-          <Button variant="outlined" onClick={fetchMyJobs}>
-            Fetch my jobs
-          </Button>
-        </Box>
-        <Box className={classes.centeredRow}>
-          <pre>
-            {JSON.stringify({ readRawResult, resultFetchJobs }, null, 2)}
-          </pre>
-        </Box>
-        <hr />
-        <Box className={classes.centeredRow}>
-          <Button variant="outlined" onClick={runCalculation}>
-            Create a `2 + 2 = 4` job
-          </Button>
-          <p>Well actually 0.000000000000000002 + 0.000000000000000002 = 0.000000000000000004 </p>
-        </Box>
-        <Box className={classes.centeredRow}>
-          <pre>
-            {JSON.stringify(
-              {
-                writeRawResult,
-                resultAddJob,
-                prepareError,
-                isPrepareError,
-                error,
-                isError,
-                isLoading,
-                isSuccess,
-              },
-              null,
-              2
-            )}
-          </pre>
-        </Box>
-        <hr />
+        <Button variant="contained" onClick={add224}>
+          Create a 2 + 2 = 4 job
+        </Button>
+      </Box>
+      <hr />
+      <Box className={classes.centeredRow}>
+        <pre>
+          {JSON.stringify(
+            {
+              isLeftValid,
+              isRightValid,
+              isLoading,
+              isSuccess,
+              transactionHash,
+              error,
+              isError,
+              prepareError,
+              isPrepareError,
+              fullFormula,
+            },
+            null,
+            2
+          )}
+        </pre>
+      </Box>
+      <hr />
+      <Box className={classes.centeredRow}>
+        <pre>{JSON.stringify(jobs, null, 2)}</pre>
       </Box>
     </Layout>
   );

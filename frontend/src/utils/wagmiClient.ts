@@ -1,14 +1,17 @@
-import { createClient, configureChains, defaultChains } from "wagmi";
-import { infuraProvider } from "wagmi/providers/infura";
-import { publicProvider } from "wagmi/providers/public";
+import { createClient, configureChains, chain } from "wagmi";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 
-const { chains, provider, webSocketProvider } = configureChains(defaultChains, [
-  infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_KEY }),
-  publicProvider(),
-]);
+const { chains, provider, webSocketProvider } = configureChains(
+  [chain.polygonMumbai],
+  [
+    jsonRpcProvider({
+      rpc: () => ({ http: process.env.NEXT_PUBLIC_RPC_URL! }),
+    }),
+  ]
+);
 
 export const wagmiClient = createClient({
   autoConnect: true,

@@ -36,7 +36,7 @@ export enum UmpireComparator {
   LESS_THAN_EQUAL,
 }
 
-const pfOperatorMap = {
+export const pfOperatorMap = {
   "+": PostfixNodeOperator.ADD,
   "-": PostfixNodeOperator.SUB,
   "*": PostfixNodeOperator.MUL,
@@ -45,9 +45,47 @@ const pfOperatorMap = {
   "^": PostfixNodeOperator.POW,
 };
 
-const pfReverseOperatorMap = Object.keys(pfOperatorMap).reduce(
+export const comparatorToString = (comparator: UmpireComparator): string => {
+  switch (comparator) {
+    case UmpireComparator.EQUAL: return "=";
+    case UmpireComparator.NOT_EQUAL: return "!=";
+    case UmpireComparator.GREATER_THAN: return ">";
+    case UmpireComparator.GREATER_THAN_EQUAL: return ">=";
+    case UmpireComparator.LESS_THAN: return "<";
+    case UmpireComparator.LESS_THAN_EQUAL: return "<=";
+  }
+  return "?";
+}
+
+export function getOperatorPrecedence(operator: PostfixNodeOperator): number {
+  switch (operator) {
+    case PostfixNodeOperator.ADD:
+      return 1;
+    case PostfixNodeOperator.SUB:
+      return 1;
+    case PostfixNodeOperator.MUL:
+      return 2;
+    case PostfixNodeOperator.DIV:
+      return 2;
+    case PostfixNodeOperator.MOD:
+      return 2;
+    case PostfixNodeOperator.POW:
+      return 3;
+  }
+
+  // @todo
+  throw new Error("Operator not supported");
+}
+
+export function isRightAssociative(operator: PostfixNodeOperator): boolean {
+  return operator === PostfixNodeOperator.POW;
+}
+
+export type OperatorSymbol = "+" | "-" | "*" | "/" | "%" | "^";
+
+export const pfReverseOperatorMap = Object.keys(pfOperatorMap).reduce(
   (map, operator) => {
-    return { ...map, [pfOperatorMap[operator as "+" | "-" |  "*" | "/" | "%" | "^"]]: operator };
+    return { ...map, [pfOperatorMap[operator as OperatorSymbol]]: operator };
   },
   {}
 );
@@ -78,8 +116,10 @@ export const pfValueSD59x18 = (value: BigNumber | number) =>
   getNode(toBn(String(Number(value))));
 export const pfVariable = (variableIndex: number) =>
   getNode(0, PostfixNodeType.VARIABLE, 0, variableIndex);
-export const pfOperator = (operator: keyof typeof pfOperatorMap) =>
+export const pfOperatorFromString = (operator: keyof typeof pfOperatorMap) =>
   getNode(0, PostfixNodeType.OPERATOR, pfOperatorMap[operator]);
+export const pfOperator = (operator: PostfixNodeOperator) =>
+  getNode(0, PostfixNodeType.OPERATOR, operator);
 export const numToSD59x18 = (value: BigNumber | number) => toBn(String(value));
 
 export interface UmpireJob {
@@ -128,4 +168,18 @@ export const tupleToFormula = (inputs: any[]): PostfixNodeStruct[] => {
         variableIndex: input[3],
       } as PostfixNodeStruct)
   );
+};
+
+export type PostfixNodeTuple = [
+  number | BigNumber,
+  number | BigNumber,
+  number | BigNumber,
+  number | BigNumber
+];
+
+export const postfixNodeToTuple = (
+  node: PostfixNodeStruct
+): PostfixNodeTuple => {
+
+  return [node.value, node.nodeType, node.operator, node.variableIndex];
 };

@@ -15,21 +15,13 @@ import { useGlobalClasses } from "../theme";
 import {
   useAccount,
   useDisconnect,
-  useEnsAvatar,
-  useEnsName,
   useNetwork,
 } from "wagmi";
 
 const useHeader = () => {
   const { disconnect } = useDisconnect();
   const { address: wagmiAddress } = useAccount();
-  const { data: wagmiEnsAvatar } = useEnsAvatar({
-    addressOrName: wagmiAddress,
-  });
-  const { data: wagmiEnsName } = useEnsName({ address: wagmiAddress });
   const { chain } = useNetwork();
-  const [ensName, setEnsName] = useState<any>();
-  const [ensAvatar, setEnsAvatar] = useState<any>();
   const [isSupportedNetwork, setIsSupportedNetwork] = React.useState(false);
   const [address, setAddress] = useState<any>();
   useEffect(() => {
@@ -37,17 +29,10 @@ const useHeader = () => {
   }, [wagmiAddress]);
 
   useEffect(() => {
-    const isSupportedNetwork = chain?.network === "goerli";
+    const isSupportedNetwork = chain?.network === "maticmum";
     setIsSupportedNetwork(isSupportedNetwork);
   }, [chain]);
 
-  useEffect(() => {
-    setEnsAvatar(wagmiEnsAvatar);
-  }, [wagmiEnsAvatar]);
-
-  useEffect(() => {
-    setEnsName(wagmiEnsName);
-  }, [wagmiEnsName]);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -83,8 +68,6 @@ const useHeader = () => {
     handleOpenUserMenu,
     handleCloseUserMenu,
     anchorElUser,
-    ensAvatar,
-    ensName,
     isSupportedNetwork,
   };
 };
@@ -97,8 +80,6 @@ export const Header = () => {
     handleCloseUserMenu,
     anchorElUser,
     address,
-    ensAvatar,
-    ensName,
     isSupportedNetwork,
   } = useHeader();
 
@@ -109,9 +90,9 @@ export const Header = () => {
     return (
       <>
         <Typography className={`${classes.whiteFont} ${classes.mr2}`}>
-          {ensName ? `${ensName} (${address})` : address}
+          {address}
         </Typography>
-        <Avatar alt={address} src={ensAvatar ?? makeBlockie(address)} />
+        <Avatar alt={address} src={makeBlockie(address)} />
       </>
     );
   };
@@ -128,7 +109,9 @@ export const Header = () => {
       return null;
     }
     return (
-      <Typography variant="h5">Please switch to Goerli testnet</Typography>
+      <Typography variant="h5">
+        Please switch to Polygon Mumbai testnet
+      </Typography>
     );
   };
   return (
