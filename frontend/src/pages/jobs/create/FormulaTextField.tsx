@@ -65,7 +65,13 @@ const useFormulaTextField = (
   };
 
   const handleKeyDown = (event: any) => {
+    console.log(event.which);
     switch (event.which) {
+      case 8:
+      case 37:
+      case 39:
+      case 46:
+        return false;
       case 32:
         event.preventDefault();
         return false;
@@ -94,6 +100,19 @@ const useFormulaTextField = (
           return false;
         }
         break;
+      case 56:
+        if (event.key === "*") {
+          if (!isValidOperator()) {
+            event.preventDefault();
+            return false;
+          }
+          return;
+        }
+        if (!isValidNumber()) {
+          event.preventDefault();
+          return false;
+        }
+        break;
       case 49:
       case 50:
       case 51:
@@ -101,7 +120,6 @@ const useFormulaTextField = (
       case 53:
       case 54:
       case 55:
-      case 56:
       case 57:
         if (!isValidNumber()) {
           event.preventDefault();
@@ -112,6 +130,9 @@ const useFormulaTextField = (
       case 109:
       case 111:
       case 106:
+      case 189:
+      case 187:
+      case 191:
         if (!isValidOperator()) {
           event.preventDefault();
           return false;
@@ -119,6 +140,7 @@ const useFormulaTextField = (
         break;
 
       default:
+        event.preventDefault();
         return false;
     }
   };
@@ -243,7 +265,7 @@ const useFormulaTextField = (
 
   const customHandleOnChange = (event: any) => {
     setValue(event.target.value);
-    handleOnChange({ target: { value } });
+    handleOnChange(event);
   };
 
   return {
