@@ -29,7 +29,7 @@ const TestWeb3 = () => {
     variableFeeds: [],
     activationTimestamp: 0,
     timeoutTimestamp: dayjs().add(1, "years").unix(),
-    actionAddress: "0xA04BBF55fFcCac9Af713372dA77F7B0Ba2Ab4EF5", // broken action, should cause job revert
+    actionAddress: "0x02CCD14445e3647c5af140cD7dDF7D3d1b7cAdD5", // basic action on Mumbai, but not initialized so it'll revert
   });
 
   const add224 = async () => {
