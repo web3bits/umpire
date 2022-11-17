@@ -87,7 +87,7 @@ describe('UmpireRegistry with V2 resolver', function () {
     await expect(action.negativeAction()).to.be.revertedWith('Not allowed');
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     actionStatus = await action.s_status();
@@ -128,7 +128,8 @@ describe('UmpireRegistry with V2 resolver', function () {
     await (await action.actionSetup(registry.address, 0)).wait();
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    const upkeepNeeded = await registry.checkUpkeep([]);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const actionStatus = await action.s_status();
@@ -158,7 +159,8 @@ describe('UmpireRegistry with V2 resolver', function () {
     await (await action.actionSetup(registry.address, 0)).wait();
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    const upkeepNeeded = await registry.checkUpkeep([]);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const actionStatus = await action.s_status();
@@ -187,14 +189,16 @@ describe('UmpireRegistry with V2 resolver', function () {
     await jobCreationTx.wait();
     await (await action.actionSetup(registry.address, 0)).wait();
 
-    const upkeepNeeded = await registry.checkUpkeep([]);
+    let upkeepNeeded = await registry.checkUpkeep([]);
     expect(upkeepNeeded.upkeepNeeded).to.equal(false);
 
     await network.provider.send('evm_increaseTime', [timeOffset + 1]);
     await network.provider.send('evm_mine');
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    upkeepNeeded = await registry.checkUpkeep([]);
+    expect(upkeepNeeded.upkeepNeeded).to.equal(true);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const actionStatus = await action.s_status();
@@ -221,14 +225,16 @@ describe('UmpireRegistry with V2 resolver', function () {
     await jobCreationTx.wait();
     await (await action.actionSetup(registry.address, 0)).wait();
 
-    const upkeepNeeded = await registry.checkUpkeep([]);
+    let upkeepNeeded = await registry.checkUpkeep([]);
     expect(upkeepNeeded.upkeepNeeded).to.equal(false);
 
     await network.provider.send('evm_increaseTime', [timeOffset + 1]);
     await network.provider.send('evm_mine');
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    upkeepNeeded = await registry.checkUpkeep([]);
+    expect(upkeepNeeded.upkeepNeeded).to.equal(true);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const actionStatus = await action.s_status();
@@ -255,14 +261,16 @@ describe('UmpireRegistry with V2 resolver', function () {
     await jobCreationTx.wait();
     await (await action.actionSetup(registry.address, 0)).wait();
 
-    const upkeepNeeded = await registry.checkUpkeep([]);
+    let upkeepNeeded = await registry.checkUpkeep([]);
     expect(upkeepNeeded.upkeepNeeded).to.equal(false);
 
     await network.provider.send('evm_increaseTime', [timeOffset + 1]);
     await network.provider.send('evm_mine');
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    upkeepNeeded = await registry.checkUpkeep([]);
+    expect(upkeepNeeded.upkeepNeeded).to.equal(true);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const actionStatus = await action.s_status();
@@ -290,7 +298,8 @@ describe('UmpireRegistry with V2 resolver', function () {
     await (await action.actionSetup(registry.address, 0)).wait();
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    const upkeepNeeded = await registry.checkUpkeep([]);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const actionStatus = await action.s_status();
@@ -320,7 +329,8 @@ describe('UmpireRegistry with V2 resolver', function () {
     await (await action.actionSetup(registry.address, 0)).wait();
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    const upkeepNeeded = await registry.checkUpkeep([]);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const actionStatus = await action.s_status();
@@ -349,7 +359,8 @@ describe('UmpireRegistry with V2 resolver', function () {
     await (await brokenAction.actionSetup(registry.address, 0)).wait();
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    const upkeepNeeded = await registry.checkUpkeep([]);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const job = await registry.s_jobs(0);
@@ -377,7 +388,8 @@ describe('UmpireRegistry with V2 resolver', function () {
     await network.provider.send('evm_mine');
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    const upkeepNeeded = await registry.checkUpkeep([]);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const job = await registry.s_jobs(0);
@@ -421,7 +433,8 @@ describe('UmpireRegistry with V2 resolver', function () {
     await jobCreationTx.wait();
 
     // Run upkeep - should trigger an action
-    const runUpkeepTx = await registry.performUpkeep([]);
+    const upkeepNeeded = await registry.checkUpkeep([]);
+    const runUpkeepTx = await registry.performUpkeep(upkeepNeeded.performData);
     await runUpkeepTx.wait();
 
     const job = await registry.s_jobs(0);

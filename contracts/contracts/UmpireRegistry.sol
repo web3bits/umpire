@@ -133,10 +133,10 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
     override
     returns (
         bool upkeepNeeded,
-        bytes memory /* performData */
+        bytes memory performData
     )
     {
-        // @todo optimization: run performUpkeep with jobIds in checkData, so this should only return jobIds that require upkeep
+        uint jobsToFinalizeCounter;
         for (uint i; i < s_counterJobs; i++) {
             if (s_jobs[i].jobStatus != UmpireJobStatus.NEW) {
                 continue;
@@ -144,65 +144,91 @@ contract UmpireRegistry is KeeperCompatibleInterface, Ownable {
 
             if (block.timestamp > s_jobs[i].timeoutDate) {
                 upkeepNeeded = true;
-                break;
+                jobsToFinalizeCounter++;
+                continue;
             }
 
             if (block.timestamp >= s_jobs[i].activationDate) {
                 (bool evaluationResult,,) = evaluateJob(i);
                 if (evaluationResult == true) {
                     upkeepNeeded = true;
-                    break;
+                    jobsToFinalizeCounter++;
+                    continue;
                 }
             }
         }
 
-        return (upkeepNeeded, "");
-    }
+        uint[] memory jobIndexes = new uint256[](jobsToFinalizeCounter);
+        uint indexCounter;
 
-    /**
-     * @notice Performs the work on the contract, if instructed by :checkUpkeep():
-     */
-    function performUpkeep(
-        bytes calldata /* performData */
-    ) external override {
-        (bool upkeepNeeded,) = checkUpkeep("");
-        // @todo evaluate each processed job again, revert if not needed for some/all
-        require(upkeepNeeded, "Upkeep not needed");
-
-        // @todo optimization: run only for each job from performData
         for (uint i; i < s_counterJobs; i++) {
             if (s_jobs[i].jobStatus != UmpireJobStatus.NEW) {
                 continue;
             }
 
             if (block.timestamp > s_jobs[i].timeoutDate) {
-                s_jobs[i].jobStatus = UmpireJobStatus.NEGATIVE;
-                try UmpireActionInterface(s_jobs[i].action).negativeAction() {
-                    emit UmpireJobCompleted(i, s_jobs[i].owner, s_jobs[i].action, UmpireJobStatus.NEGATIVE);
-                } catch Error(string memory /*_err*/) {
-                    s_jobs[i].jobStatus = UmpireJobStatus.REVERTED;
-                } catch (bytes memory /*_err*/) {
-                    s_jobs[i].jobStatus = UmpireJobStatus.REVERTED;
-                }
+                jobIndexes[indexCounter] = i;
+                indexCounter++;
                 continue;
             }
 
             if (block.timestamp >= s_jobs[i].activationDate) {
+                (bool evaluationResult,,) = evaluateJob(i);
+                if (evaluationResult == true) {
+                    jobIndexes[indexCounter] = i;
+                    indexCounter++;
+                    continue;
+                }
+            }
+        }
+
+        performData = abi.encode(jobIndexes);
+
+        return (upkeepNeeded, performData);
+    }
+
+    /**
+     * @notice Performs the work on the contract, if instructed by :checkUpkeep():
+     */
+    function performUpkeep(
+        bytes calldata  performData
+    ) external override {
+        (uint[] memory jobIndexes) = abi.decode(
+            performData,
+            (uint[])
+        );
+        for (uint i; i < jobIndexes.length; i++) {
+            require(jobIndexes[i] <= s_counterJobs, "Job index out of bounds");
+            require(s_jobs[jobIndexes[i]].jobStatus == UmpireJobStatus.NEW, "Job already finalized");
+
+            if (block.timestamp > s_jobs[jobIndexes[i]].timeoutDate) {
+                s_jobs[jobIndexes[i]].jobStatus = UmpireJobStatus.NEGATIVE;
+                try UmpireActionInterface(s_jobs[jobIndexes[i]].action).negativeAction() {
+                    emit UmpireJobCompleted(i, s_jobs[jobIndexes[i]].owner, s_jobs[jobIndexes[i]].action, UmpireJobStatus.NEGATIVE);
+                } catch Error(string memory /*_err*/) {
+                    s_jobs[jobIndexes[i]].jobStatus = UmpireJobStatus.REVERTED;
+                } catch (bytes memory /*_err*/) {
+                    s_jobs[jobIndexes[i]].jobStatus = UmpireJobStatus.REVERTED;
+                }
+                continue;
+            }
+
+            if (block.timestamp >= s_jobs[jobIndexes[i]].activationDate) {
                 (
                 bool evaluationResult,
                 int leftValue,
                 int rightValue
-                ) = evaluateJob(i);
+                ) = evaluateJob(jobIndexes[i]);
                 if (evaluationResult == true) {
-                    s_jobs[i].jobStatus = UmpireJobStatus.POSITIVE;
-                    s_jobs[i].leftValue = leftValue;
-                    s_jobs[i].rightValue = rightValue;
-                    try UmpireActionInterface(s_jobs[i].action).positiveAction() {
-                        emit UmpireJobCompleted(i, s_jobs[i].owner, s_jobs[i].action, UmpireJobStatus.POSITIVE);
+                    s_jobs[jobIndexes[i]].jobStatus = UmpireJobStatus.POSITIVE;
+                    s_jobs[jobIndexes[i]].leftValue = leftValue;
+                    s_jobs[jobIndexes[i]].rightValue = rightValue;
+                    try UmpireActionInterface(s_jobs[jobIndexes[i]].action).positiveAction() {
+                        emit UmpireJobCompleted(i, s_jobs[jobIndexes[i]].owner, s_jobs[jobIndexes[i]].action, UmpireJobStatus.POSITIVE);
                     } catch Error(string memory /*_err*/) {
-                        s_jobs[i].jobStatus = UmpireJobStatus.REVERTED;
+                        s_jobs[jobIndexes[i]].jobStatus = UmpireJobStatus.REVERTED;
                     } catch (bytes memory /*_err*/) {
-                        s_jobs[i].jobStatus = UmpireJobStatus.REVERTED;
+                        s_jobs[jobIndexes[i]].jobStatus = UmpireJobStatus.REVERTED;
                     }
                     continue;
                 }
