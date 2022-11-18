@@ -47,15 +47,21 @@ export const pfOperatorMap = {
 
 export const comparatorToString = (comparator: UmpireComparator): string => {
   switch (comparator) {
-    case UmpireComparator.EQUAL: return "=";
-    case UmpireComparator.NOT_EQUAL: return "!=";
-    case UmpireComparator.GREATER_THAN: return ">";
-    case UmpireComparator.GREATER_THAN_EQUAL: return ">=";
-    case UmpireComparator.LESS_THAN: return "<";
-    case UmpireComparator.LESS_THAN_EQUAL: return "<=";
+    case UmpireComparator.EQUAL:
+      return "=";
+    case UmpireComparator.NOT_EQUAL:
+      return "!=";
+    case UmpireComparator.GREATER_THAN:
+      return ">";
+    case UmpireComparator.GREATER_THAN_EQUAL:
+      return ">=";
+    case UmpireComparator.LESS_THAN:
+      return "<";
+    case UmpireComparator.LESS_THAN_EQUAL:
+      return "<=";
   }
   return "?";
-}
+};
 
 export function getOperatorPrecedence(operator: PostfixNodeOperator): number {
   switch (operator) {
@@ -180,6 +186,10 @@ export type PostfixNodeTuple = [
 export const postfixNodeToTuple = (
   node: PostfixNodeStruct
 ): PostfixNodeTuple => {
-
   return [node.value, node.nodeType, node.operator, node.variableIndex];
 };
+
+export interface UmpireVariable {
+  id: string;
+  address: string;
+}

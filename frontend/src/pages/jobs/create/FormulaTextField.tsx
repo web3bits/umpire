@@ -2,12 +2,13 @@ import { TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useGlobalClasses } from "../../../theme";
+import { UmpireVariable } from "../../../utils/model";
 
 const FormulaList = ({
   variableFeeds,
   handleItemClick,
 }: {
-  variableFeeds: string[];
+  variableFeeds: UmpireVariable[];
   handleItemClick: (event: any) => void;
 }) => {
   const classes = useGlobalClasses();
@@ -16,14 +17,15 @@ const FormulaList = ({
       <Box
         className={classes.formulaListValue}
         onClick={handleItemClick}
-        data-id={value}>
+        data-id={value}
+      >
         <span className={classes.formulaValue}>{value}</span>
       </Box>
     );
   };
   const renderItems = () => {
-    return variableFeeds?.map((value: string) => {
-      return renderItem(value);
+    return variableFeeds?.map((value: UmpireVariable) => {
+      return renderItem(value.id);
     });
   };
   return <Box className={classes.formulaList}>{renderItems()}</Box>;
@@ -118,8 +120,25 @@ const useFormulaTextField = (
       case 52:
       case 53:
       case 54:
+        if (event.key === "^" || event.key === "%") {
+          if (!isValidOperator()) {
+            event.preventDefault();
+            return false;
+          }
+          break;
+        }
       case 55:
       case 57:
+      case 96:
+      case 97:
+      case 98:
+      case 99:
+      case 100:
+      case 101:
+      case 102:
+      case 103:
+      case 104:
+      case 105:
         if (!isValidNumber()) {
           event.preventDefault();
           return false;
@@ -247,9 +266,7 @@ const useFormulaTextField = (
       return false;
     }
     const previousChar = previousString.charAt(previousString.length - 1);
-    if (
-      ["^", "%", "+", "-", "/", "*", "(", ")", "."].includes(`${previousChar}`)
-    ) {
+    if (["^", "%", "+", "-", "/", "*", "."].includes(`${previousChar}`)) {
       return false;
     }
     return true;
@@ -287,7 +304,7 @@ const FormulaTextField = ({
 }: {
   id: string;
   handleOnChange: (event: any) => void;
-  variableFeeds: string[];
+  variableFeeds: UmpireVariable[];
 }) => {
   const classes = useGlobalClasses();
   const {

@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 import { Layout } from "../../../components/Layout";
 import { UmpireList } from "../../../components/ui/UmpireList";
 import { UmpireTabs } from "../../../components/ui/UmpireTabs";
-import { STEPS, STEP_NAVIGATION } from "../../../constants";
-import { EVariableType, useGlobalContext } from "../../../context/GlobalContext";
+import {
+  EVariableType,
+  useGlobalContext,
+} from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
 import ItemsSelected from "./ItemsSelected";
 import {
@@ -16,10 +18,11 @@ import {
   POLYGON_MUMBAI_FOREX_ITEMS,
   POLYGON_MUMBAI_META,
 } from "../../../constants/polygon-mumbai";
+import { UmpireVariable } from "../../../utils/model";
 
 const useCreateJobStep2 = (classes: any) => {
   const [activeTab, setActiveTab] = useState(0);
-  const [variableFeeds, setVariableFeeds] = useState<string[]>([]);
+  const [variableFeeds, setVariableFeeds] = useState<UmpireVariable[]>([]);
   const [listItems, setListItems] = useState<any[]>([]);
 
   const router = useRouter();
@@ -114,11 +117,12 @@ const CreateJobStep2 = () => {
       <Box className={`${classes.centeredRow} ${classes.mt3}`}>
         <Typography variant="h4">Step 2 - select input variables</Typography>
       </Box>
-      <Box className={classes.centeredRow}>
+      <Box className={`${classes.mt2} ${classes.px6}`}>
         <Typography variant="body1">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Assumenda
-          est maiores dicta dolore aspernatur iusto quisquam, sequi eaque
-          aliquam quaerat. quasi.
+          In the formula that triggers positive action of your job, you can use
+          variables provided by hyper-reliable Chainlink&apos;s Decentralized Oracle
+          Networks. The selection below is limited to feeds available on Polygon
+          Mumbai testnet.
         </Typography>
       </Box>
       <Box className={classes.centeredRow}>
@@ -131,14 +135,13 @@ const CreateJobStep2 = () => {
         />
       </Box>
       <Box className={classes.mt2}>
-        <Typography variant="h6">List of values selected</Typography>
+        <Typography variant="h6">
+          List of input variables you&apos;ll be able to use in your formula:
+        </Typography>
         <ItemsSelected variableFeeds={variableFeeds} />
       </Box>
       <Box className={classes.centeredRow}>
-        <Button
-          onClick={nextStep}
-          disabled={false}
-          className="pink">
+        <Button onClick={nextStep} disabled={false} className="pink">
           Next Step
         </Button>
       </Box>

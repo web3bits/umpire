@@ -7,7 +7,7 @@ export const STEP_NAVIGATION = [
 ];
 
 export const STEPS_TITLE = [
-  "Create a contract",
+  "Deploy an action",
   "Select input variables",
   "Define formula",
   "Deploy the job",

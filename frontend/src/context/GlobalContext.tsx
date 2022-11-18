@@ -5,7 +5,8 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import {useAccount, useNetwork} from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
+import { UmpireVariable } from "../utils/model";
 
 interface IUser {
   address: string;
@@ -19,6 +20,7 @@ export enum EUmpireJobStatus {
   REVERTED = "REVERTED",
   NEGATIVE = "NEGATIVE",
 }
+
 export enum EVariableType {
   CRYPTO_USD = "Crypto/USD",
   EQUITIES = "Equities",
@@ -35,9 +37,10 @@ export enum EComparator {
   LOWER_THAN_EQUAL = "<=",
   DIFFERENT_FROM = "!=",
 }
+
 export interface ICreateJob {
   formulaType?: EVariableType;
-  variableFeeds?: string[];
+  variableFeeds?: UmpireVariable[];
   leftFormula?: string;
   comparator?: EComparator;
   rightFormula?: string;
@@ -103,10 +106,10 @@ export const GlobalContextProvider = ({
   useEffect(() => {
     if (isConnected && !isSupportedNetwork) {
       setLoading(true);
-      setLoadingMessage('Please switch to a Polygon Mumbai testnet account');
+      setLoadingMessage("Please switch to a Polygon Mumbai testnet account");
     } else {
       setLoading(false);
-      setLoadingMessage('');
+      setLoadingMessage("");
     }
   }, [isConnected, isSupportedNetwork]);
 
@@ -140,7 +143,8 @@ export const GlobalContextProvider = ({
         setCreateJob,
         jobs,
         addJob,
-      }}>
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   );

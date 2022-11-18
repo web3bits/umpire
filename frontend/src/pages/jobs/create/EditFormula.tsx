@@ -11,12 +11,14 @@ import { EComparator } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
 import FormulaTextField from "./FormulaTextField";
 import { debounce } from "lodash";
+import { UmpireVariable } from "../../../utils/model";
 
 export interface IFormula {
   leftFormula: string;
   operator: EComparator;
   rightFormula: string;
 }
+
 const useEditFormula = (
   handleFormulaCompleted: (formula: IFormula) => void,
   setErrorInFormula: (errorInFormula: boolean) => void,
@@ -24,7 +26,7 @@ const useEditFormula = (
 ) => {
   const [leftFormula, setLeftFormula] = useState<string>("");
   const [rightFormula, setRightFormula] = useState<string>("");
-  const [operator, setOperator] = useState<EComparator | null>(null);
+  const [comparator, setComparator] = useState<EComparator | null>(null);
   const [debouncedTimer, setDebouncedTimer] = useState<any>(undefined);
 
   const isNumber = (element: string) => {
@@ -80,15 +82,19 @@ const useEditFormula = (
       const errorInFormula =
         leftFormula.trim().length === 0 ||
         rightFormula.trim().length === 0 ||
-        !operator ||
-        operator.length === 0;
+        !comparator ||
+        comparator.length === 0;
       if (errorInFormula) {
         setErrorInFormula(true);
       } else {
-        handleFormulaCompleted({ leftFormula, operator, rightFormula });
+        handleFormulaCompleted({
+          leftFormula,
+          operator: comparator,
+          rightFormula,
+        });
         setErrorInFormula(false);
       }
-    }, 2000);
+    }, 1000);
     setDebouncedTimer(debounceTimer);
   };
 
@@ -102,20 +108,21 @@ const useEditFormula = (
     setRightFormula(value);
   };
 
-  const handleOperatorChange = (event: any) => {
+  const handleComparatorChange = (event: any) => {
     const { value } = event.target;
-    setOperator(value);
+    setComparator(value);
   };
 
   useEffect(() => {
     isFormulaComplete();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [leftFormula, rightFormula, operator]);
+  }, [leftFormula, rightFormula, comparator]);
+
   return {
     handleLeftFormulaChange,
     handleRightFormulaChange,
-    handleOperatorChange,
-    operator,
+    handleComparatorChange,
+    comparator,
     leftFormula,
     rightFormula,
   };
@@ -175,7 +182,7 @@ const EditFormula = ({
   setErrorInFormula,
   setFormula,
 }: {
-  variableFeeds: string[];
+  variableFeeds: UmpireVariable[];
   setErrorInFormula: (errorInFormula: boolean) => void;
   setFormula: (formula: IFormula) => void;
 }) => {
@@ -183,8 +190,8 @@ const EditFormula = ({
   const {
     handleLeftFormulaChange,
     handleRightFormulaChange,
-    handleOperatorChange,
-    operator,
+    handleComparatorChange,
+    comparator,
     leftFormula,
     rightFormula,
   } = useEditFormula(setFormula, setErrorInFormula, variableFeeds?.length ?? 0);
@@ -210,7 +217,7 @@ const EditFormula = ({
           />
         </Box>
         <Box style={{ flex: 1, textAlign: "center" }}>
-          {renderRadioGroup(handleOperatorChange, operator)}
+          {renderRadioGroup(handleComparatorChange, comparator)}
         </Box>
         <Box style={{ flex: 2, textAlign: "center" }}>
           <FormulaTextField

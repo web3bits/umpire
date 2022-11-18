@@ -8,10 +8,11 @@ import { useGlobalClasses } from "../../../theme";
 import EditFormula, { IFormula } from "./EditFormula";
 import ItemsSelected from "./ItemsSelected";
 import { Alert } from "@mui/material";
+import { UmpireVariable } from "../../../utils/model";
+
 const useCreateJobStep3 = () => {
   const router = useRouter();
-  const { setCreateJobStepNumber, createJob, setCreateJob } =
-    useGlobalContext();
+  const { createJob, setCreateJob } = useGlobalContext();
   const { variableFeeds } = createJob ?? {
     variableFeeds: [],
   };
@@ -22,7 +23,7 @@ const useCreateJobStep3 = () => {
     router.push("/jobs/create/step4");
   };
 
-  const replaceValues = (formula: string, items: string[]) => {
+  const replaceValues = (formula: string, items: UmpireVariable[]) => {
     let finalValue = "";
     let newFormula = formula;
     const chunks = formula.split("]");
@@ -30,7 +31,7 @@ const useCreateJobStep3 = () => {
       const squareBracketIndex = chunk.indexOf("[");
       if (squareBracketIndex > -1) {
         const value = chunk.substring(squareBracketIndex + 1, chunk.length);
-        finalValue = items[parseInt(value) - 1];
+        finalValue = items[parseInt(value) - 1].id;
         newFormula = newFormula.replace(`[${value}]`, `[${finalValue}]`);
       }
     }
@@ -79,14 +80,25 @@ const CreateJobStep3 = () => {
       <Box className={`${classes.centeredRow} ${classes.mt3}`}>
         <Typography variant="h4">Step 3 - define formula</Typography>
       </Box>
-      <Box className={`${classes.centeredRow} ${classes.mt2}`}>
-        <Typography variant="h5">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+      <Box className={`${classes.mt2} ${classes.px6}`}>
+        <Typography variant="body1">
+          Now for the fun part! Below you can define a formula, a condition
+          which is going to be evaluated to determine when to finalize your job.
+          In this MVP the formula is defined as a simple comparison, in the
+          future we&apos;ll support a more complex evaluation engine similar to Excel
+          formulas.
         </Typography>
       </Box>
-      <Box className={classes.row}>
-        <Typography variant="h6">
-          List of variables you have selected
+      <Box className={`${classes.mt2} ${classes.px6}`}>
+        <Typography variant="body1">
+          Feel free to use integers, real numbers, arithmetic operators and
+          variables selected in the previous step. To insert a variable, press{" "}
+          <strong>\</strong> key and select your variable.
+        </Typography>
+      </Box>
+      <Box className={`${classes.mt2} ${classes.px6}`}>
+        <Typography variant="body2">
+          List of variables you may use in your formula:
           <ItemsSelected variableFeeds={variableFeeds ?? []} />
         </Typography>
       </Box>
@@ -103,18 +115,13 @@ const CreateJobStep3 = () => {
       </Box>
       <Box className={`${classes.row} ${classes.mt2}`}>
         {errorInFormula && (
-          <Alert
-            severity="warning"
-            sx={{ borderRadius: "0.75rem" }}>
+          <Alert severity="warning" sx={{ borderRadius: "0.75rem" }}>
             The formula typed is not valid, please fix it.
           </Alert>
         )}
       </Box>
       <Box className={classes.centeredRow}>
-        <Button
-          onClick={nextStep}
-          disabled={errorInFormula}
-          className="pink">
+        <Button onClick={nextStep} disabled={errorInFormula} className="pink">
           Next Step
         </Button>
       </Box>

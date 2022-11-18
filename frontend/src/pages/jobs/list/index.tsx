@@ -7,12 +7,12 @@ import { useRouter } from "next/router";
 import { useFetchJobs } from "../../../hooks/useFetchJobs";
 import { UmpireJob } from "../../../utils/model";
 import {
-  formatBN,
   formatComparator,
   formatFormula,
   formatJobStatus,
   formatTimestamp,
 } from "../../../utils/formatting";
+import { BigNumber } from "ethers";
 
 const useListJobs = () => {
   const { jobs } = useFetchJobs(true);
@@ -22,7 +22,7 @@ const useListJobs = () => {
 
   const formatRow = (row: UmpireJob): any => {
     return {
-      jobId: formatBN(row.id),
+      jobId: BigNumber.from(row.id).toNumber(),
       jobName: row.jobName,
       status: formatJobStatus(row.jobStatus),
       formula: `${formatFormula(row.formulaLeft)} ${formatComparator(
@@ -58,11 +58,7 @@ const ListJobs = () => {
     <Layout>
       <Box className={classes.container}>
         <Box className={classes.centeredRow}>
-          <UmpireTable
-            tableId="jobs"
-            rows={jobs}
-            columns={TABLE_COLUMNS}
-          />
+          <UmpireTable tableId="jobs" rows={jobs} columns={TABLE_COLUMNS} />
         </Box>
       </Box>
     </Layout>
