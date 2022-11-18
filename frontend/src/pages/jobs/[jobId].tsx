@@ -4,80 +4,52 @@ import { Layout } from "../../components/Layout";
 import { useGlobalClasses } from "../../theme";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Link from "next/link";
-import { Typography } from "@mui/material";
-import { useState } from "react";
-import {
-  EComparator,
-  EUmpireJobStatus,
-  ICreateJob,
-} from "../../context/GlobalContext";
 import dayjs from "dayjs";
-import UmpireTable from "../../components/ui/UmpireTable";
 import UmpireDetailRow from "../../components/ui/UmpireDetailRow";
-const useJobDetails = (jobId: string) => {
-  const [job, setJob] = useState<ICreateJob | undefined>({
-    jobId,
-    jobName: "Test",
-    actionAddress: "x00a0000230230203",
-    leftFormula: "[INCH / ETH]",
-    comparator: EComparator.EQUAL,
-    rightFormula: "12",
-    activationTimestamp: dayjs().add(10, "minutes").unix(),
-    timeoutTimestamp: dayjs().add(30, "minutes").unix(),
-    status: EUmpireJobStatus.NEW,
-  });
-  return { job };
+import { useFetchJobDetails } from "../../hooks/useFetchJobDetails";
+import { BigNumber } from "ethers";
+
+const maybeString = (obj: unknown, key: string): string => {
+  return (obj as any)?.[key] ?? "?";
+};
+const maybeDate = (obj: unknown, key: string): string => {
+  return dayjs(
+    BigNumber.from((obj as any)?.[key] ?? "0").toNumber() * 1000
+  ).toISOString();
 };
 const JobDetails = () => {
   const router = useRouter();
   const { jobId } = router.query;
-  const { job } = useJobDetails(jobId as string);
+  const { rawData } = useFetchJobDetails(jobId as string);
   const classes = useGlobalClasses();
   return (
     <Layout>
       <Box className={classes.container}>
         <Box className={classes.mt2}>
-          <Link
-            href="/jobs/list"
-            title="Job list">
+          <Link href="/jobs/list" title="Job list">
             <ArrowBackIcon className={classes.primaryFont} />
           </Link>
         </Box>
-        <UmpireDetailRow
-          label="Job Id"
-          value={jobId as string}
-        />
+        <UmpireDetailRow label="Job Id" value={jobId as string} />
         <UmpireDetailRow
           label="Job Name"
-          value={job!.jobName!}
+          value={maybeString(rawData, "jobName")}
         />
         <UmpireDetailRow
           label="Action Address"
-          value={job!.actionAddress!}
-        />
-        <UmpireDetailRow
-          label="Formula"
-          value={`${job!.leftFormula} ${job!.comparator} ${job!.rightFormula}`}
+          value={maybeString(rawData, "action")}
         />
         <UmpireDetailRow
           label="Activation Date"
-          value={`${
-            job?.activationTimestamp
-              ? dayjs(job!.activationTimestamp).toISOString()
-              : ""
-          } `}
+          value={maybeDate(rawData, "activationDate")}
         />
         <UmpireDetailRow
           label="Deadline Date"
-          value={`${
-            job?.timeoutTimestamp
-              ? dayjs(job!.timeoutTimestamp).toISOString()
-              : ""
-          } `}
+          value={maybeDate(rawData, "timeoutDate")}
         />
         <UmpireDetailRow
           label="Created at"
-          value={`${dayjs(job!.dateCreated).toISOString()}`}
+          value={maybeDate(rawData, "createdAt")}
         />
       </Box>
     </Layout>
