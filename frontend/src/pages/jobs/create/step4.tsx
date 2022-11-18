@@ -12,19 +12,14 @@ import { useEffect, useState } from "react";
 import { Layout } from "../../../components/Layout";
 import UmpireStepper from "../../../components/ui/UmpireStepper";
 import { STEPS, STEP_NAVIGATION } from "../../../constants";
-import {
-  EComparator,
-  EUmpireJobStatus,
-  ICreateJob,
-  useGlobalContext,
-} from "../../../context/GlobalContext";
+import { EComparator, useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { v4 as uuidv4 } from "uuid";
 import { UmpireComparator } from "../../../utils/model";
-import { IUseCreateJobProps, useCreateJob } from "../../../hooks/useCreateJob";
+import { useCreateJob } from "../../../hooks/useCreateJob";
+
 const useCreateJobStep4 = () => {
   const router = useRouter();
   const { setCreateJobStepNumber, createJob, setCreateJob, addJob } =
@@ -36,7 +31,6 @@ const useCreateJobStep4 = () => {
   const [useActivationDate, setUseActivationDate] = useState(false);
   const [jobName, setJobName] = useState("");
   const [actionAddress, setActionAddress] = useState("");
-  const [job, setJob] = useState<any>();
   const getComparator = (comparator: EComparator) => {
     switch (comparator) {
       case EComparator.EQUAL:
@@ -67,7 +61,6 @@ const useCreateJobStep4 = () => {
     isPrepareError,
     fullFormula,
   } = useCreateJob({
-    ...createJob,
     jobName: createJob?.jobName ?? "",
     leftFormula: createJob?.leftFormula ?? "",
     rightFormula: createJob?.rightFormula ?? "",
@@ -78,19 +71,6 @@ const useCreateJobStep4 = () => {
     timeoutTimestamp: deadlineDate?.unix() ?? 0,
   });
 
-  console.log(
-    isLeftValid,
-    isRightValid,
-    isLoading,
-    isSuccess,
-    transactionHash,
-    deployJob,
-    error,
-    isError,
-    prepareError,
-    isPrepareError,
-    fullFormula
-  );
   useEffect(() => {
     setCreateJob({ ...createJob, jobName });
   }, [jobName]);
@@ -109,8 +89,6 @@ const useCreateJobStep4 = () => {
       activationTimestamp: activationTimestamp?.unix() ?? 0,
     });
   }, [activationTimestamp]);
-
-  console.log(createJob);
 
   const nextStep = () => {
     router.push("/jobs/list");
@@ -143,7 +121,6 @@ const useCreateJobStep4 = () => {
   };
 
   const finishAndDeploy = async () => {
-    debugger;
     await deployJob();
   };
 
@@ -186,7 +163,6 @@ const CreateJobStep4 = () => {
   const classes = useGlobalClasses();
   const {
     setCreateJobStepNumber,
-    nextStep,
     createJob,
     jobName,
     handleSetJobName,

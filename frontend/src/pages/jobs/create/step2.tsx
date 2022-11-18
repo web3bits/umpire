@@ -6,17 +6,18 @@ import { Layout } from "../../../components/Layout";
 import { UmpireList } from "../../../components/ui/UmpireList";
 import UmpireStepper from "../../../components/ui/UmpireStepper";
 import { UmpireTabs } from "../../../components/ui/UmpireTabs";
-import {
-  COMMODITIES_ITEMS,
-  CRYPTO_ITEMS,
-  EQUITIES_ITEMS,
-  FOREX_ITEMS,
-  STEPS,
-  STEP_NAVIGATION,
-} from "../../../constants";
-import { EFormulaType, useGlobalContext } from "../../../context/GlobalContext";
+import { STEPS, STEP_NAVIGATION } from "../../../constants";
+import { EVariableType, useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
 import ItemsSelected from "./ItemsSelected";
+import {
+  POLYGON_MUMBAI_COMMODITIES_ITEMS,
+  POLYGON_MUMBAI_CRYPTO_ITEMS,
+  POLYGON_MUMBAI_EQUITIES_ITEMS,
+  POLYGON_MUMBAI_FOREX_ITEMS,
+  POLYGON_MUMBAI_META,
+} from "../../../constants/polygon-mumbai";
+
 const useCreateJobStep2 = (classes: any) => {
   const [activeTab, setActiveTab] = useState(0);
   const [variableFeeds, setVariableFeeds] = useState<string[]>([]);
@@ -36,16 +37,19 @@ const useCreateJobStep2 = (classes: any) => {
   const setListContent = (): void => {
     switch (activeTab) {
       case 0:
-        setListItems(CRYPTO_ITEMS);
+        setListItems(POLYGON_MUMBAI_CRYPTO_ITEMS);
         break;
       case 1:
-        setListItems(EQUITIES_ITEMS);
+        setListItems(POLYGON_MUMBAI_EQUITIES_ITEMS);
         break;
       case 2:
-        setListItems(FOREX_ITEMS);
+        setListItems(POLYGON_MUMBAI_FOREX_ITEMS);
         break;
       case 3:
-        setListItems(COMMODITIES_ITEMS);
+        setListItems(POLYGON_MUMBAI_COMMODITIES_ITEMS);
+        break;
+      case 4:
+        setListItems(POLYGON_MUMBAI_META);
       default:
     }
   };
@@ -72,10 +76,11 @@ const useCreateJobStep2 = (classes: any) => {
 };
 
 const TABS = [
-  EFormulaType.CRYPTO_USD,
-  EFormulaType.EQUITIES,
-  EFormulaType.FOREX,
-  EFormulaType.COMMODITIES,
+  EVariableType.CRYPTO_USD,
+  EVariableType.EQUITIES,
+  EVariableType.FOREX,
+  EVariableType.COMMODITIES,
+  EVariableType.META,
 ];
 const CreateJobStep2 = () => {
   const classes = useGlobalClasses();

@@ -40,7 +40,7 @@ const UmpireTable = ({
           {rows.map((row, rowIndex) => {
             return (
               <TableRow
-                key={row.name}
+                key={rowIndex}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 {Object.keys(row).map((key: string, index: number) => (
