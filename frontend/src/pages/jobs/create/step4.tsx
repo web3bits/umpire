@@ -10,8 +10,6 @@ import { Box } from "@mui/system";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Layout } from "../../../components/Layout";
-import UmpireStepper from "../../../components/ui/UmpireStepper";
-import { STEPS, STEP_NAVIGATION } from "../../../constants";
 import { EComparator, useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -125,8 +123,6 @@ const useCreateJobStep4 = () => {
   };
 
   return {
-    setCreateJobStepNumber,
-    nextStep,
     createJob,
     actionAddress,
     handleSetActionAddress,
@@ -162,7 +158,6 @@ const useCreateJobStep4 = () => {
 const CreateJobStep4 = () => {
   const classes = useGlobalClasses();
   const {
-    setCreateJobStepNumber,
     createJob,
     jobName,
     handleSetJobName,
@@ -195,7 +190,12 @@ const CreateJobStep4 = () => {
         label="Deadline date & time"
         value={deadlineDate}
         onChange={handleDeadlineDateChange}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            className={classes.inputFieldDate}
+          />
+        )}
         disablePast={true}
         minDateTime={activationTimestamp}
       />
@@ -219,7 +219,12 @@ const CreateJobStep4 = () => {
             label="Activation date & time"
             value={activationTimestamp}
             onChange={handleActivationDateChange}
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                className={classes.inputFieldDate}
+              />
+            )}
             disablePast={true}
           />
           {renderDeadlinePicker()}
@@ -230,14 +235,6 @@ const CreateJobStep4 = () => {
 
   return (
     <Layout>
-      <Box className={classes.centeredRow}>
-        <UmpireStepper
-          stepNumber={2}
-          steps={STEPS}
-          setStepNumber={setCreateJobStepNumber}
-          stepNavigation={STEP_NAVIGATION}
-        />
-      </Box>
       <Box className={`${classes.centeredRow} ${classes.mt3}`}>
         <Typography variant="h4">Step 4 - final step</Typography>
       </Box>
@@ -250,8 +247,7 @@ const CreateJobStep4 = () => {
         <Typography variant="h5">Your formula looks like:</Typography>
       </Box>
       <Box
-        className={`${classes.centeredRow} ${classes.mt2} ${classes.withBorder}`}
-      >
+        className={`${classes.centeredRow} ${classes.mt2} ${classes.withBorder}`}>
         <Typography variant="body1">
           {leftFormula} {comparator} {rightFormula}
         </Typography>
@@ -261,7 +257,7 @@ const CreateJobStep4 = () => {
           id="jobName"
           label="Job name"
           variant="outlined"
-          className={classes.fullWidth}
+          className={classes.inputField}
           value={jobName}
           onChange={handleSetJobName}
         />
@@ -271,7 +267,7 @@ const CreateJobStep4 = () => {
           id="action-address"
           label="Action address"
           variant="outlined"
-          className={classes.fullWidth}
+          className={classes.inputField}
           value={actionAddress}
           onChange={handleSetActionAddress}
         />
@@ -282,6 +278,12 @@ const CreateJobStep4 = () => {
             <Checkbox
               id="use-activation-date"
               onChange={handleUseActivationDateChange}
+              disableRipple
+              sx={{
+                "& .MuiSvgIcon-root": {
+                  color: "#ec407a",
+                },
+              }}
             />
           }
           label="Use activation date"
@@ -310,11 +312,9 @@ const CreateJobStep4 = () => {
       </Box>
       <Box className={`${classes.centeredRow} ${classes.mt2}`}>
         <Button
-          variant="outlined"
-          color="primary"
           onClick={finishAndDeploy}
           disabled={missingData}
-        >
+          className="pink">
           Finish - deploy the job
         </Button>
       </Box>

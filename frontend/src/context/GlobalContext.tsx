@@ -121,8 +121,7 @@ export const GlobalContextProvider = ({
         setCreateJob,
         jobs,
         addJob,
-      }}
-    >
+      }}>
       {children}
     </GlobalContext.Provider>
   );

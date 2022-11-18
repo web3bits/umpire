@@ -24,8 +24,10 @@ const theme = createTheme({
 export const useGlobalClasses = makeStyles(
   createStyles({
     background: {
-      backgroundImage: "url('./assets/background.jpg')",
-      backgroundSize: "cover",
+      backgroundImage: "url('./assets/background.png')",
+      backgroundSize: "100%",
+      backgroundColor: "#000",
+      backgroundRepeat: "no-repeat",
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
@@ -114,7 +116,7 @@ export const useGlobalClasses = makeStyles(
     activationDateRow: {
       display: "flex",
       alignItems: "center",
-      justifyContent: "space-evenly",
+      justifyContent: "space-between",
     },
     formulaInput: { width: "100%" },
     formulaList: { marginTop: 5 },
@@ -131,6 +133,46 @@ export const useGlobalClasses = makeStyles(
     },
     formulaValue: {
       fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
+    },
+    inputField: {
+      width: "100%",
+      "& label.Mui-focused": {
+        color: "#191919",
+      },
+      "& .MuiInput-underline:after": {
+        borderBottomColor: "#191919",
+      },
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: "#191919",
+        },
+        "&:hover fieldset": {
+          borderColor: "#191919",
+        },
+        "&.Mui-focused fieldset": {
+          borderColor: "#191919",
+        },
+      },
+    },
+    inputFieldDate: {
+      width: "49%",
+      "& label.Mui-focused": {
+        color: "#191919",
+      },
+      "& .MuiInput-underline:after": {
+        borderBottomColor: "#191919",
+      },
+      "& .MuiOutlinedInput-root": {
+        "& fieldset": {
+          borderColor: "#191919",
+        },
+        "&:hover fieldset": {
+          borderColor: "#191919",
+        },
+        "&.Mui-focused fieldset": {
+          borderColor: "#191919",
+        },
+      },
     },
   })
 );

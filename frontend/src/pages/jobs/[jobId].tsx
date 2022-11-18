@@ -37,13 +37,24 @@ const JobDetails = () => {
     <Layout>
       <Box className={classes.container}>
         <Box className={classes.mt2}>
-          <Link href="/jobs/list" title="Job list">
+          <Link
+            href="/jobs/list"
+            title="Job list">
             <ArrowBackIcon className={classes.primaryFont} />
           </Link>
         </Box>
-        <UmpireDetailRow label="Job Id" value={jobId as string} />
-        <UmpireDetailRow label="Job Name" value={job!.jobName!} />
-        <UmpireDetailRow label="Action Address" value={job!.actionAddress!} />
+        <UmpireDetailRow
+          label="Job Id"
+          value={jobId as string}
+        />
+        <UmpireDetailRow
+          label="Job Name"
+          value={job!.jobName!}
+        />
+        <UmpireDetailRow
+          label="Action Address"
+          value={job!.actionAddress!}
+        />
         <UmpireDetailRow
           label="Formula"
           value={`${job!.leftFormula} ${job!.comparator} ${job!.rightFormula}`}

@@ -6,6 +6,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
+import { makeStyles } from "@mui/styles";
 
 const steps = [
   "Select campaign settings",
@@ -19,12 +20,25 @@ interface IUmpireStepper {
   stepNavigation: string[];
   setStepNumber: (stepNumber: number) => void;
 }
+
+const useStyles: any = makeStyles((theme: any) => ({
+  stepper: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "space-evenly",
+    height: "170px",
+    margin: "22px 0px 22px 24px",
+    color: "#fff",
+  },
+}));
 const UmpireStepper = ({
   steps,
   stepNumber,
   setStepNumber,
   stepNavigation,
 }: IUmpireStepper) => {
+  const classes = useStyles();
   const router = useRouter();
   const handleNext = () => {
     router.push(stepNavigation[stepNumber]);
@@ -40,15 +54,19 @@ const UmpireStepper = ({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Stepper activeStep={stepNumber}>
-        {steps.map((label, index) => {
+      <Stepper
+        activeStep={stepNumber}
+        className={classes.stepper}>
+        {steps?.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
           const labelProps: {
             optional?: React.ReactNode;
           } = {};
 
           return (
-            <Step key={label} {...stepProps}>
+            <Step
+              key={label}
+              {...stepProps}>
               <StepLabel {...labelProps}>{label}</StepLabel>
             </Step>
           );

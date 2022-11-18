@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Layout } from "../../../components/Layout";
 import { UmpireList } from "../../../components/ui/UmpireList";
-import UmpireStepper from "../../../components/ui/UmpireStepper";
 import { UmpireTabs } from "../../../components/ui/UmpireTabs";
 import { STEPS, STEP_NAVIGATION } from "../../../constants";
 import { EVariableType, useGlobalContext } from "../../../context/GlobalContext";
@@ -65,7 +64,6 @@ const useCreateJobStep2 = (classes: any) => {
   }, [activeTab]);
 
   return {
-    setCreateJobStepNumber,
     nextStep,
     activeTab,
     setActiveTab,
@@ -85,7 +83,6 @@ const TABS = [
 const CreateJobStep2 = () => {
   const classes = useGlobalClasses();
   const {
-    setCreateJobStepNumber,
     nextStep,
     activeTab,
     setActiveTab,
@@ -114,14 +111,6 @@ const CreateJobStep2 = () => {
   };
   return (
     <Layout>
-      <Box className={classes.centeredRow}>
-        <UmpireStepper
-          stepNumber={1}
-          steps={STEPS}
-          setStepNumber={setCreateJobStepNumber}
-          stepNavigation={STEP_NAVIGATION}
-        />
-      </Box>
       <Box className={`${classes.centeredRow} ${classes.mt3}`}>
         <Typography variant="h4">Step 2 - select input variables</Typography>
       </Box>
@@ -147,11 +136,9 @@ const CreateJobStep2 = () => {
       </Box>
       <Box className={classes.centeredRow}>
         <Button
-          variant="outlined"
-          color="primary"
           onClick={nextStep}
           disabled={false}
-        >
+          className="pink">
           Next Step
         </Button>
       </Box>

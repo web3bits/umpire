@@ -13,7 +13,10 @@ const UmpireDetailRow = ({
   return (
     <Box className={`${classes.centeredRow} ${classes.mt2}`}>
       <Box style={{ flex: 1 }}>
-        <Typography variant="body1" component="b" className={classes.bold}>
+        <Typography
+          variant="body1"
+          component="b"
+          className={classes.bold}>
           {label}
         </Typography>
       </Box>
