@@ -44,7 +44,7 @@ const useStyles: any = makeStyles((theme: any) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    "&:nth-child(2)": {
+    "&:nth-child(3)": {
       padding: "0.8rem 2rem 1.5rem",
     },
   },
@@ -89,6 +89,13 @@ const useStyles: any = makeStyles((theme: any) => ({
   },
   address: {
     marginTop: "20px",
+    textAlign: "center",
+    wordBreak: "break-all",
+    padding: "6px",
+    width: "100px",
+    background: "white",
+    color: "black",
+    borderRadius: "0.75rem",
   },
 }));
 
@@ -204,13 +211,8 @@ export const Drawer = () => {
   const { setCreateJobStepNumber, createJobStepNumber } = useGlobalContext();
   const router = useRouter();
   const classes = useStyles();
-  const {
-    settings,
-    address,
-    ensAvatar,
-    // ensName,
-    // isSupportedNetwork
-  } = useDrawer();
+  const { settings, address, ensAvatar, ensName, isSupportedNetwork } =
+    useDrawer();
 
   const renderAvatar = () => {
     if (!address) {
@@ -228,9 +230,9 @@ export const Drawer = () => {
             sx={{ width: 56, height: 56 }}
           />
         </StyledBadge>
-        {/* <Typography className={classes.address}>
+        <Typography className={classes.address}>
           {ensName ? `${ensName} (${address})` : address}
-        </Typography> */}
+        </Typography>
       </div>
     );
   };
