@@ -20,9 +20,6 @@ import Typography from "@mui/material/Typography";
 import {
   useAccount,
   useDisconnect,
-  useEnsAvatar,
-  useEnsName,
-  useNetwork,
 } from "wagmi";
 import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
@@ -102,31 +99,11 @@ const useStyles: any = makeStyles((theme: any) => ({
 const useDrawer = () => {
   const { disconnect } = useDisconnect();
   const { address: wagmiAddress } = useAccount();
-  const { data: wagmiEnsAvatar } = useEnsAvatar({
-    addressOrName: wagmiAddress,
-  });
-  const { data: wagmiEnsName } = useEnsName({ address: wagmiAddress });
-  const { chain } = useNetwork();
-  const [ensName, setEnsName] = useState<any>();
-  const [ensAvatar, setEnsAvatar] = useState<any>();
-  const [isSupportedNetwork, setIsSupportedNetwork] = React.useState(false);
+
   const [address, setAddress] = useState<any>();
   useEffect(() => {
     setAddress(wagmiAddress);
   }, [wagmiAddress]);
-
-  useEffect(() => {
-    const isSupportedNetwork = chain?.network === "goerli";
-    setIsSupportedNetwork(isSupportedNetwork);
-  }, [chain]);
-
-  useEffect(() => {
-    setEnsAvatar(wagmiEnsAvatar);
-  }, [wagmiEnsAvatar]);
-
-  useEffect(() => {
-    setEnsName(wagmiEnsName);
-  }, [wagmiEnsName]);
 
   const signOut = () => {
     disconnect();
@@ -211,7 +188,7 @@ export const Drawer = () => {
   const { setCreateJobStepNumber } = useGlobalContext();
   const router = useRouter();
   const classes = useStyles();
-  const { settings, address, ensAvatar, ensName, isSupportedNetwork } =
+  const { settings, address } =
     useDrawer();
 
   const renderAvatar = () => {
@@ -226,12 +203,12 @@ export const Drawer = () => {
           variant="dot">
           <Avatar
             alt={address}
-            src={ensAvatar ?? makeBlockie(address)}
+            src={makeBlockie(address)}
             sx={{ width: 56, height: 56 }}
           />
         </StyledBadge>
         <Typography className={classes.address}>
-          {ensName ? `${ensName} (${address})` : address}
+          {address}
         </Typography>
       </div>
     );
@@ -247,16 +224,6 @@ export const Drawer = () => {
         href={setting.href}>
         {children}
       </Link>
-    );
-  };
-
-  const renderNetworkError = () => {
-    if (isSupportedNetwork) {
-      return null;
-    }
-
-    return (
-      <Typography variant="h5">Please switch to Goerli testnet</Typography>
     );
   };
 

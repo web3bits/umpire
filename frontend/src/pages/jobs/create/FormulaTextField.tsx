@@ -312,7 +312,7 @@ const FormulaTextField = ({
   };
 
   return (
-    <Box>
+    <Box style={{ border: "1px #000 solid" }}>
       <TextField
         id={id}
         label=""

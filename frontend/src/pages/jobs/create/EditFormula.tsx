@@ -217,7 +217,6 @@ const EditFormula = ({
             id="formula-rightt-side"
             handleOnChange={handleRightFormulaChange}
             variableFeeds={variableFeeds}
-            style={{ border: "1px #000 solid" }}
           />
         </Box>
       </Box>
