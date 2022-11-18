@@ -1,6 +1,7 @@
 import { createTheme } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
 import { makeStyles, createStyles } from "@mui/styles";
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -106,6 +107,18 @@ export const useGlobalClasses = makeStyles(
     },
     mt4: {
       marginTop: "4rem",
+    },
+    px1: {
+      paddingLeft: "2rem",
+      paddingRight: "2rem",
+    },
+    px3: {
+      paddingLeft: "6rem",
+      paddingRight: "6rem",
+    },
+    px6: {
+      paddingLeft: "12rem",
+      paddingRight: "12rem",
     },
     withBorder: {
       border: "1px solid black",

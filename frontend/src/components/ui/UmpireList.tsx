@@ -8,6 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
 import { Box, TextField } from "@mui/material";
 import { useGlobalClasses } from "../../theme";
+import { UmpireVariable } from "../../utils/model";
 
 interface IListItem {
   id: string;
@@ -56,16 +57,17 @@ export const UmpireList = ({
 }: {
   listId: string;
   listItems: IListItem[];
-  setOptionsSelected: (selected: string[]) => void;
-  selected: string[];
+  setOptionsSelected: (selected: UmpireVariable[]) => void;
+  selected: UmpireVariable[];
   disabled: boolean;
 }) => {
   const { filteredListItems, filter, quickSearch } = useUmpireList(listItems);
-  const handleToggle = (value: string) => () => {
-    const currentIndex = selected.indexOf(value);
+  const handleToggle = (variableId: string) => () => {
+    const variable = listItems.find((item) => item.id === variableId);
+    const currentIndex = selected.findIndex((item) => item.id === variableId);
     const newChecked = [...selected];
     if (currentIndex === -1 && !disabled) {
-      newChecked.push(value);
+      newChecked.push(variable!);
     }
     if (currentIndex > -1) {
       newChecked.splice(currentIndex, 1);
@@ -91,23 +93,25 @@ export const UmpireList = ({
             bgcolor: "background.paper",
             maxHeight: 500,
             overflowY: "scroll",
-          }}>
+          }}
+        >
           {filteredListItems.map((listItem: IListItem) => {
             const { id } = listItem;
             const labelId = `${listId}-list-label-${id}`;
 
             return (
-              <ListItem
-                key={labelId}
-                disablePadding>
+              <ListItem key={labelId} disablePadding>
                 <ListItemButton
                   role={undefined}
                   onClick={handleToggle(id)}
-                  dense>
+                  dense
+                >
                   <ListItemIcon>
                     <Checkbox
                       edge="start"
-                      checked={selected.indexOf(id) !== -1}
+                      checked={
+                        selected.findIndex((item) => item.id === id) !== -1
+                      }
                       tabIndex={-1}
                       disableRipple
                       inputProps={{ "aria-labelledby": labelId }}
@@ -118,10 +122,7 @@ export const UmpireList = ({
                       }}
                     />
                   </ListItemIcon>
-                  <ListItemText
-                    id={labelId}
-                    primary={id}
-                  />
+                  <ListItemText id={labelId} primary={id} />
                 </ListItemButton>
               </ListItem>
             );

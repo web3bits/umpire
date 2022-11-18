@@ -2,12 +2,13 @@ import { TextField } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { useGlobalClasses } from "../../../theme";
+import { UmpireVariable } from "../../../utils/model";
 
 const FormulaList = ({
   variableFeeds,
   handleItemClick,
 }: {
-  variableFeeds: string[];
+  variableFeeds: UmpireVariable[];
   handleItemClick: (event: any) => void;
 }) => {
   const classes = useGlobalClasses();
@@ -16,14 +17,15 @@ const FormulaList = ({
       <Box
         className={classes.formulaListValue}
         onClick={handleItemClick}
-        data-id={value}>
+        data-id={value}
+      >
         <span className={classes.formulaValue}>{value}</span>
       </Box>
     );
   };
   const renderItems = () => {
-    return variableFeeds?.map((value: string) => {
-      return renderItem(value);
+    return variableFeeds?.map((value: UmpireVariable) => {
+      return renderItem(value.id);
     });
   };
   return <Box className={classes.formulaList}>{renderItems()}</Box>;
@@ -287,7 +289,7 @@ const FormulaTextField = ({
 }: {
   id: string;
   handleOnChange: (event: any) => void;
-  variableFeeds: string[];
+  variableFeeds: UmpireVariable[];
 }) => {
   const classes = useGlobalClasses();
   const {

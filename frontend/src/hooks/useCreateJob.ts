@@ -13,6 +13,7 @@ import {
   PostfixNodeTuple,
   UmpireComparator,
 } from "../utils/model";
+import { isAddress } from "ethers/lib/utils";
 
 export interface IUseCreateJobProps {
   jobName: string;
@@ -89,7 +90,7 @@ export const useCreateJob = ({
     address: registryAddress,
     abi: UmpireRegistry.abi,
     functionName: "createJobFromNodes",
-    enabled: isLeftValid && isRightValid,
+    enabled: isLeftValid && isRightValid && isAddress(actionAddress),
     args: [
       jobName,
       leftAsTuples,

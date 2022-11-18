@@ -64,7 +64,7 @@ const useCreateJobStep4 = () => {
     rightFormula: createJob?.rightFormula ?? "",
     comparator: getComparator(createJob?.comparator ?? EComparator.EQUAL),
     actionAddress: createJob?.actionAddress ?? "",
-    variableFeeds: createJob?.variableFeeds ?? [],
+    variableFeeds: (createJob?.variableFeeds ?? []).map((feed) => feed.address),
     activationTimestamp: activationTimestamp?.unix() ?? 0,
     timeoutTimestamp: deadlineDate?.unix() ?? 0,
   });
@@ -182,10 +182,7 @@ const CreateJobStep4 = () => {
         value={deadlineDate}
         onChange={handleDeadlineDateChange}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            className={classes.inputFieldDate}
-          />
+          <TextField {...params} className={classes.inputFieldDate} />
         )}
         disablePast={true}
         minDateTime={activationTimestamp}
@@ -211,10 +208,7 @@ const CreateJobStep4 = () => {
             value={activationTimestamp}
             onChange={handleActivationDateChange}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                className={classes.inputFieldDate}
-              />
+              <TextField {...params} className={classes.inputFieldDate} />
             )}
             disablePast={true}
           />
@@ -238,7 +232,8 @@ const CreateJobStep4 = () => {
         <Typography variant="h5">Your formula looks like:</Typography>
       </Box>
       <Box
-        className={`${classes.centeredRow} ${classes.mt2} ${classes.withBorder}`}>
+        className={`${classes.centeredRow} ${classes.mt2} ${classes.withBorder}`}
+      >
         <Typography variant="body1">
           {leftFormula} {comparator} {rightFormula}
         </Typography>
@@ -285,7 +280,8 @@ const CreateJobStep4 = () => {
         <Button
           onClick={finishAndDeploy}
           disabled={missingData}
-          className="pink">
+          className="pink"
+        >
           Finish - deploy the job
         </Button>
       </Box>
