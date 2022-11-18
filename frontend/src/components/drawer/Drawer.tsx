@@ -208,7 +208,7 @@ export const Drawer = () => {
     },
   }));
 
-  const { setCreateJobStepNumber, createJobStepNumber } = useGlobalContext();
+  const { setCreateJobStepNumber } = useGlobalContext();
   const router = useRouter();
   const classes = useStyles();
   const { settings, address, ensAvatar, ensName, isSupportedNetwork } =
