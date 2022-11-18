@@ -11,14 +11,15 @@ This project has been created for Chainlink 2022 Fall Hackathon. We hope you lik
 
 Please note, this is a proof of concept and should be treated as such, code is provided as is, do not use in production with real funds!
 
-## Umpire contracts
+## Deploying Umpire contracts
 
 ```shell
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat run scripts/deploy.ts # deploys locally
-npx hardhat run scripts/deploy.ts --network mumbai # deploys to Polygon Mumbai testnet
+cd contracts
+npx hardhat run scripts/deploy.ts --network mumbai # deploys ResolverV2 and Registry to Polygon Mumbai testnet
+npx hardhat run scripts/deployTestAction.ts --network mumbai # deploys a test action, convenient for testing
 ```
+
+There are relatively extensive tests in the `contracts/test` directory, but they should not be run in parallel - run one by one.
 
 ## Last deployment @ Mumbai:
 
