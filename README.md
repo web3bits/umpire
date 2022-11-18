@@ -26,9 +26,9 @@ There are relatively extensive tests in the `contracts/test` directory, but they
 ## Last deployment @ Mumbai:
 
 ```
-UmpireFormulaResolverV2 deployed to 0xF438eb88Aa5A5E494f6196710dDe9858E5ca1672
-UmpireRegistry deployed to 0xE2EB9874468E26DB1B114eF7ba85567D17436d61
-Upkeep: https://automation.chain.link/mumbai/0x97868eaec31eb78439245ddc483c1f1a47e18a8a25cedb573757c3f56f6890cc 
+UmpireFormulaResolverV2 deployed to 0x2921e494DD0Ccc5AEdaF6e57640028Dc12165e8e
+UmpireRegistry deployed to 0x8B0Eb23290b4C7d159AFd4854Ca676e70740dECe
+Upkeep: https://automation.chain.link/mumbai/42817439792740538657215435735332854623359948778852290302201139228819821179935 
 ```
 
 ## Running frontend
