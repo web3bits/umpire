@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import {useAccount, useNetwork} from "wagmi";
 
 interface IUser {
   address: string;
@@ -91,6 +92,24 @@ export const GlobalContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { chain } = useNetwork();
+  const { isConnecting, isReconnecting, isConnected } = useAccount();
+  const [isSupportedNetwork, setIsSupportedNetwork] = useState(false);
+  useEffect(() => {
+    const isSupportedNetwork = chain?.network === "maticmum";
+    setIsSupportedNetwork(isSupportedNetwork);
+  }, [chain]);
+
+  useEffect(() => {
+    if (isConnected && !isSupportedNetwork) {
+      setLoading(true);
+      setLoadingMessage('Please switch to a Polygon Mumbai testnet account');
+    } else {
+      setLoading(false);
+      setLoadingMessage('');
+    }
+  }, [isConnected, isSupportedNetwork]);
+
   const [isLoading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [user, setUser] = useState<IUser | undefined>();
@@ -107,7 +126,7 @@ export const GlobalContextProvider = ({
   return (
     <GlobalContext.Provider
       value={{
-        isLoading,
+        isLoading: isLoading || isConnecting || isReconnecting,
         setLoading,
         loadingMessage,
         setLoadingMessage,

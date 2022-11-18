@@ -171,15 +171,6 @@ const CreateJobStep4 = () => {
     handleDeadlineDateChange,
     missingData,
     finishAndDeploy,
-    isLeftValid,
-    isRightValid,
-    isLoading,
-    isSuccess,
-    transactionHash,
-    error,
-    isError,
-    prepareError,
-    isPrepareError,
     fullFormula,
   } = useCreateJobStep4();
   const { leftFormula, comparator, rightFormula } = createJob ?? {};
@@ -290,26 +281,6 @@ const CreateJobStep4 = () => {
         />
       </Box>
       {renderPickers()}
-      <Box className={classes.centeredRow}>
-        <pre>
-          {JSON.stringify(
-            {
-              isLeftValid,
-              isRightValid,
-              isLoading,
-              isSuccess,
-              transactionHash,
-              error,
-              isError,
-              prepareError,
-              isPrepareError,
-              fullFormula,
-            },
-            null,
-            2
-          )}
-        </pre>
-      </Box>
       <Box className={`${classes.centeredRow} ${classes.mt2}`}>
         <Button
           onClick={finishAndDeploy}

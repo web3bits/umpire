@@ -11,7 +11,7 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
     if (!isConnected && !isLoading) {
       push("/").then();
     }
-  }, [isConnected, isLoading]);
+  }, [isConnected, isLoading, push]);
 
   return children;
 };
