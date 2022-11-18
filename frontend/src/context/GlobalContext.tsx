@@ -18,11 +18,12 @@ export enum EUmpireJobStatus {
   REVERTED = "REVERTED",
   NEGATIVE = "NEGATIVE",
 }
-export enum EFormulaType {
+export enum EVariableType {
   CRYPTO_USD = "Crypto/USD",
   EQUITIES = "Equities",
   FOREX = "Forex",
   COMMODITIES = "Commodities",
+  META = "Metadata",
 }
 
 export enum EComparator {
@@ -34,7 +35,7 @@ export enum EComparator {
   DIFFERENT_FROM = "!=",
 }
 export interface ICreateJob {
-  formulaType?: EFormulaType;
+  formulaType?: EVariableType;
   variableFeeds?: string[];
   leftFormula?: string;
   comparator?: EComparator;
@@ -120,8 +121,7 @@ export const GlobalContextProvider = ({
         setCreateJob,
         jobs,
         addJob,
-      }}
-    >
+      }}>
       {children}
     </GlobalContext.Provider>
   );

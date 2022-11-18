@@ -5,21 +5,22 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract UmpireConstantPi is AggregatorV3Interface {
     int256 i_value = 314159265359;
-    function decimals() external pure returns (uint8) {
+    function decimals() external pure override returns (uint8) {
         return 11;
     }
 
-    function description() external pure returns (string memory) {
+    function description() external pure override returns (string memory) {
         return "Pi";
     }
 
-    function version() external pure returns (uint256) {
+    function version() external pure override returns (uint256) {
         return 1;
     }
 
     function getRoundData(uint80 _roundId)
     external
     view
+    override
     returns (
         uint80 roundId,
         int256 answer,
@@ -33,6 +34,7 @@ contract UmpireConstantPi is AggregatorV3Interface {
     function latestRoundData()
     external
     view
+    override
     returns (
         uint80 roundId,
         int256 answer,

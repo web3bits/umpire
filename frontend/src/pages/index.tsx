@@ -26,7 +26,7 @@ const useIndex = () => {
   }, [wagmiConnectors]);
   useEffect(() => {
     if (isConnected) {
-      push("/jobs/list").then();
+      push("/jobs/create/step1").then();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
@@ -59,7 +59,7 @@ function Index() {
         <Button
           disabled={!connector.ready || isConnected || isLoading}
           onClick={() => handleConnect({ connector })}
-          variant="outlined"
+          variant="contained"
           className={classes.whiteButton}
         >
           Sign in using {connector.name}
@@ -90,7 +90,6 @@ function Index() {
               Umpire is a low-code backend solution for building hybrid dApps.
             </Typography>
           </Box>
-
           {renderConnectors()}
         </Box>
       </Box>

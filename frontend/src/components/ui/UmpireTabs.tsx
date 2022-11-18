@@ -26,8 +26,7 @@ export const TabPanel = ({
       role="tabpanel"
       hidden={value !== index}
       id={id}
-      aria-labelledby={`${id}-${index}`}
-    >
+      aria-labelledby={`${id}-${index}`}>
       {value === index && (
         <Box sx={{ p: 3 }}>
           <Typography>{children}</Typography>
@@ -48,7 +47,11 @@ const renderTabPanels = (id: string, value: number, contents: any[]) => {
   return contents?.map((content: any, index: number) => {
     const key = `${id}-tp-${index}`;
     return (
-      <TabPanel value={value} index={index} id={key} key={key}>
+      <TabPanel
+        value={value}
+        index={index}
+        id={key}
+        key={key}>
         {content}
       </TabPanel>
     );
@@ -58,7 +61,15 @@ const renderTabPanels = (id: string, value: number, contents: any[]) => {
 const renderTabs = (id: string, tabs: string[]) => {
   return tabs?.map((tab: string, index: number) => {
     const key = `${id}-tab-${index}`;
-    return <Tab label={tab} {...a11yProps(id, index)} key={key} />;
+    return (
+      <Tab
+        disableRipple
+        label={tab}
+        {...a11yProps(id, index)}
+        key={key}
+        sx={{ zIndex: "9", opacity: "1", width: `calc(100%/${tabs.length})` }}
+      />
+    );
   });
 };
 
@@ -81,8 +92,13 @@ export const UmpireTabs = ({
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={activeTab} onChange={handleChange} id={id}>
+      <Box sx={{ borderRadius: 2, background: "#f8f9fa", padding: "0px 4px" }}>
+        <Tabs
+          value={activeTab}
+          onChange={handleChange}
+          id={id}
+          textColor="inherit"
+          sx={{ overflow: "visible" }}>
           {renderTabs(id, tabs)}
         </Tabs>
       </Box>

@@ -133,35 +133,37 @@ const renderRadioGroup = (
         defaultValue={""}
         onChange={handleOperatorChange}
         value={currentFormulaOperator}
-      >
+        sx={{
+          "& .MuiSvgIcon-root": { color: "#ec407a" },
+        }}>
         <FormControlLabel
           value={EComparator.EQUAL}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.EQUAL}
         />
         <FormControlLabel
           value={EComparator.GREATER_THAN}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.GREATER_THAN}
         />
         <FormControlLabel
           value={EComparator.GREATER_THAN_EQUAL}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.GREATER_THAN_EQUAL}
         />
         <FormControlLabel
           value={EComparator.LOWER_THAN}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.LOWER_THAN}
         />
         <FormControlLabel
           value={EComparator.LOWER_THAN_EQUAL}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.LOWER_THAN_EQUAL}
         />
         <FormControlLabel
           value={EComparator.DIFFERENT_FROM}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.DIFFERENT_FROM}
         />
       </RadioGroup>
@@ -215,6 +217,7 @@ const EditFormula = ({
             id="formula-rightt-side"
             handleOnChange={handleRightFormulaChange}
             variableFeeds={variableFeeds}
+            style={{ border: "1px #000 solid" }}
           />
         </Box>
       </Box>

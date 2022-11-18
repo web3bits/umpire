@@ -1,36 +1,22 @@
 import { Button, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { useRouter } from "next/router";
-import { Header } from "../../../components/Header";
 import { Layout } from "../../../components/Layout";
-import UmpireStepper from "../../../components/ui/UmpireStepper";
-import { STEPS, STEP_NAVIGATION } from "../../../constants";
-import { useGlobalContext } from "../../../context/GlobalContext";
 import { useGlobalClasses } from "../../../theme";
 
 const useCreateJobStep1 = () => {
   const router = useRouter();
-  const { setCreateJobStepNumber } = useGlobalContext();
   const nextStep = () => {
-    setCreateJobStepNumber(1);
     router.push("/jobs/create/step2");
   };
-  return { setCreateJobStepNumber, nextStep };
+  return { nextStep };
 };
 
 const CreateJobStep1 = () => {
   const classes = useGlobalClasses();
-  const { setCreateJobStepNumber, nextStep } = useCreateJobStep1();
+  const { nextStep } = useCreateJobStep1();
   return (
     <Layout>
-      <Box className={classes.centeredRow}>
-        <UmpireStepper
-          stepNumber={0}
-          steps={STEPS}
-          setStepNumber={setCreateJobStepNumber}
-          stepNavigation={STEP_NAVIGATION}
-        />
-      </Box>
       <Box className={`${classes.centeredRow} ${classes.mt3}`}>
         <Typography variant="h4">Step 1 - create an action contract</Typography>
       </Box>
@@ -48,7 +34,9 @@ const CreateJobStep1 = () => {
         </Typography>
       </Box>
       <Box className={classes.centeredRow}>
-        <Button variant="outlined" color="primary" onClick={nextStep}>
+        <Button
+          className="pink"
+          onClick={nextStep}>
           Next Step
         </Button>
       </Box>
