@@ -16,6 +16,19 @@ const buildTableHeader = (tableId: string, columns: string[]) => {
   ));
 };
 
+const buildNoRows = (columns: string[], rows: any[]) => {
+  if (rows.length) {
+    return null;
+  }
+  return (
+    <TableRow>
+      <TableCell component="th" scope="row" colSpan={columns.length + 1}>
+        Sorry, nothing to show here!
+      </TableCell>
+    </TableRow>
+  );
+};
+
 const UmpireTable = ({
   tableId,
   columns,
@@ -28,10 +41,7 @@ const UmpireTable = ({
   const classes = useGlobalClasses();
   return (
     <TableContainer component={Paper}>
-      <Table
-        sx={{ minWidth: 650 }}
-        aria-label="simple table"
-        id={tableId}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table" id={tableId}>
         <TableHead>
           <TableRow>
             {buildTableHeader(tableId, columns)}
@@ -39,27 +49,28 @@ const UmpireTable = ({
           </TableRow>
         </TableHead>
         <TableBody>
+          {buildNoRows(columns, rows)}
           {rows.map((row, rowIndex) => {
             return (
               <TableRow
                 key={rowIndex}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
                 {Object.keys(row).map((key: string, index: number) => (
                   <TableCell
                     component="th"
                     scope="row"
-                    key={`${key}-${index}-row`}>
+                    key={`${key}-${index}-row`}
+                  >
                     {row[key]}
                   </TableCell>
                 ))}
-                <TableCell
-                  component="th"
-                  scope="row"
-                  key={`view-${rowIndex}`}>
+                <TableCell component="th" scope="row" key={`view-${rowIndex}`}>
                   <Link
                     href={`/jobs/${row.jobId}`}
                     className={classes.link}
-                    title="View Job Details">
+                    title="View Job Details"
+                  >
                     <VisibilityIcon />
                   </Link>
                 </TableCell>

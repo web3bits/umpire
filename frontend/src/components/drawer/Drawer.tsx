@@ -17,10 +17,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import WorkIcon from "@mui/icons-material/Work";
 import UmpireStepper from "../ui/UmpireStepper";
 import Typography from "@mui/material/Typography";
-import {
-  useAccount,
-  useDisconnect,
-} from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 import Badge from "@mui/material/Badge";
 import { styled } from "@mui/material/styles";
 import { STEP_NAVIGATION, STEPS_TITLE } from "../../constants";
@@ -188,8 +185,7 @@ export const Drawer = () => {
   const { setCreateJobStepNumber } = useGlobalContext();
   const router = useRouter();
   const classes = useStyles();
-  const { settings, address } =
-    useDrawer();
+  const { settings, address } = useDrawer();
 
   const renderAvatar = () => {
     if (!address) {
@@ -200,16 +196,15 @@ export const Drawer = () => {
         <StyledBadge
           overlap="circular"
           anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-          variant="dot">
+          variant="dot"
+        >
           <Avatar
             alt={address}
             src={makeBlockie(address)}
             sx={{ width: 56, height: 56 }}
           />
         </StyledBadge>
-        <Typography className={classes.address}>
-          {address}
-        </Typography>
+        <Typography className={classes.address}>{address}</Typography>
       </div>
     );
   };
@@ -219,9 +214,7 @@ export const Drawer = () => {
       return children;
     }
     return (
-      <Link
-        className={classes.link}
-        href={setting.href}>
+      <Link className={classes.link} href={setting.href}>
         {children}
       </Link>
     );
@@ -230,14 +223,12 @@ export const Drawer = () => {
   const indexs = STEP_NAVIGATION.map((i) => i.includes(router.asPath));
   const stepNo = indexs?.indexOf(true);
 
-  const drawer = (
-    <>
-      <div className={classes.header}>
-        <Logo />
-      </div>
-      <div className={classes.header}>{renderAvatar()}</div>
-      <div className={classes.hr}></div>
-      <div>
+  const renderStepper = () => {
+    if (stepNo === -1) {
+      return null;
+    }
+    return (
+      <>
         <div className={classes.stepper}>
           <UmpireStepper
             stepNumber={stepNo}
@@ -247,6 +238,19 @@ export const Drawer = () => {
           />
         </div>
         <div className={classes.hr}></div>
+      </>
+    );
+  };
+
+  const drawer = (
+    <>
+      <div className={classes.header}>
+        <Logo />
+      </div>
+      <div className={classes.header}>{renderAvatar()}</div>
+      <div className={classes.hr}></div>
+      <div>
+        {renderStepper()}
         <List>
           {settings.map((setting) => {
             const { action, title, icon, href } = setting;
@@ -256,17 +260,15 @@ export const Drawer = () => {
                 onClick={action}
                 className={classes.listItem}
                 selected={router.asPath === href ? true : false}
-                classes={{ selected: classes.active }}>
+                classes={{ selected: classes.active }}
+              >
                 {renderMenuLink(
                   setting,
                   <ListItemButton className={classes.colorWhite}>
                     <ListItemIcon className={classes.colorWhite}>
                       {icon}
                     </ListItemIcon>
-                    <ListItemText
-                      primary={title}
-                      className={classes.text}
-                    />
+                    <ListItemText primary={title} className={classes.text} />
                   </ListItemButton>
                 )}
               </ListItem>

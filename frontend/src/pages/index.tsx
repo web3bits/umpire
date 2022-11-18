@@ -26,7 +26,7 @@ const useIndex = () => {
   }, [wagmiConnectors]);
   useEffect(() => {
     if (isConnected) {
-      push("/jobs/create/step1").then();
+      push("/jobs/list").then();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
@@ -39,6 +39,7 @@ const useIndex = () => {
     pendingConnector,
   };
 };
+
 function Index() {
   const classes = useGlobalClasses();
   const {
