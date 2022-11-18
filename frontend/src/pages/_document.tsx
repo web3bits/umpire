@@ -36,6 +36,7 @@ class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Pacifico|Raleway:100,400,400i,700|Roboto:300,400,500,700&display=swap"
           />
           <style>{`html: { height: 100%} body { margin: 0; height: 100%; background-color: #f0f2f5; } #__next {height: 100%;}`}</style>
+          <title>Umpire - low-code backend for hybrid dApps</title>
         </Head>
         <body>
           <Main />

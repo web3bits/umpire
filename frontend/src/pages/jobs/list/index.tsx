@@ -14,15 +14,6 @@ import {
   formatTimestamp,
 } from "../../../utils/formatting";
 
-interface IUmpireJob {
-  jobId: string;
-  jobName: string;
-  status: string;
-  formula: string;
-  dateCreated: string;
-  timeout: string;
-}
-
 const useListJobs = () => {
   const { jobs } = useFetchJobs(true);
   const router = useRouter();
@@ -61,7 +52,7 @@ const TABLE_COLUMNS: string[] = [
 
 const ListJobs = () => {
   const classes = useGlobalClasses();
-  const { jobs, createNewJob } = useListJobs();
+  const { jobs } = useListJobs();
 
   return (
     <Layout>
