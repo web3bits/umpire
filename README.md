@@ -1,4 +1,15 @@
-# Umpire POC
+# Umpire
+
+https://umpire.vercel.app/
+
+###TL;DR
+Umpire is a low-code tool for quickly setting up backends for hybrid dApps. To see how it works, take a look at the tests:
+https://github.com/web3bits/umpire/blob/main/contracts/test/PYMWYMI.spec.ts
+https://github.com/web3bits/umpire/blob/main/contracts/test/UmpireRegistryUsingV2.spec.ts
+
+This project has been created for Chainlink 2022 Fall Hackathon. We hope you like it, all criticism, feedback or contributions are welcome.
+
+Please note, this is a proof of concept and should be treated as such, code is provided as is, do not use in production with real funds!
 
 ## Umpire contracts
 
