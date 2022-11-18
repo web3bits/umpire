@@ -120,8 +120,25 @@ const useFormulaTextField = (
       case 52:
       case 53:
       case 54:
+        if (event.key === "^" || event.key === "%") {
+          if (!isValidOperator()) {
+            event.preventDefault();
+            return false;
+          }
+          break;
+        }
       case 55:
       case 57:
+      case 96:
+      case 97:
+      case 98:
+      case 99:
+      case 100:
+      case 101:
+      case 102:
+      case 103:
+      case 104:
+      case 105:
         if (!isValidNumber()) {
           event.preventDefault();
           return false;
@@ -249,9 +266,7 @@ const useFormulaTextField = (
       return false;
     }
     const previousChar = previousString.charAt(previousString.length - 1);
-    if (
-      ["^", "%", "+", "-", "/", "*", "(", ")", "."].includes(`${previousChar}`)
-    ) {
+    if (["^", "%", "+", "-", "/", "*", "."].includes(`${previousChar}`)) {
       return false;
     }
     return true;

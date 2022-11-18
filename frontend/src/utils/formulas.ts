@@ -4,9 +4,11 @@ import {
   OperatorSymbol,
   pfOperator,
   pfOperatorMap,
-  pfValueSD59x18, pfVariable,
+  pfValueSD59x18,
+  pfVariable,
   PostfixNodeOperator,
   PostfixNodeStruct,
+  UmpireVariable,
 } from "./model";
 
 type InfixOperator = PostfixNodeOperator | "(" | ")";
@@ -69,7 +71,7 @@ export function infixToPostfix(input: string): PostfixNodeStruct[] {
     }
 
     if (isVariable(node)) {
-      formula.push(pfVariable(parseInt(node.replace(/\D/g, ''), 10) - 1));
+      formula.push(pfVariable(parseInt(node.replace(/\D/g, ""), 10) - 1));
       continue;
     }
 
@@ -122,3 +124,15 @@ export function infixToPostfix(input: string): PostfixNodeStruct[] {
 
   return formula;
 }
+
+export const interpolateVariables = (
+  formula: string,
+  feeds: UmpireVariable[]
+): string => {
+  feeds.forEach((feed, idx) => {
+    const feedId = feed.id.replace(/\s/g, "");
+    const pattern = new RegExp(feedId, "gm");
+    formula = formula.replace(pattern, `[${idx + 1}]`);
+  });
+  return formula;
+};

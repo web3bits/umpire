@@ -17,11 +17,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { UmpireComparator } from "../../../utils/model";
 import { useCreateJob } from "../../../hooks/useCreateJob";
+import { interpolateVariables } from "../../../utils/formulas";
 
 const useCreateJobStep4 = () => {
   const router = useRouter();
-  const { setCreateJobStepNumber, createJob, setCreateJob, addJob } =
-    useGlobalContext();
+  const { createJob, setCreateJob, setLoading } = useGlobalContext();
   const [activationTimestamp, setActivationTimestamp] = useState<Dayjs | null>(
     null
   );
@@ -60,8 +60,14 @@ const useCreateJobStep4 = () => {
     fullFormula,
   } = useCreateJob({
     jobName: createJob?.jobName ?? "",
-    leftFormula: createJob?.leftFormula ?? "",
-    rightFormula: createJob?.rightFormula ?? "",
+    leftFormula: interpolateVariables(
+      createJob?.leftFormula ?? "",
+      createJob?.variableFeeds ?? []
+    ),
+    rightFormula: interpolateVariables(
+      createJob?.rightFormula ?? "",
+      createJob?.variableFeeds ?? []
+    ),
     comparator: getComparator(createJob?.comparator ?? EComparator.EQUAL),
     actionAddress: createJob?.actionAddress ?? "",
     variableFeeds: (createJob?.variableFeeds ?? []).map((feed) => feed.address),
@@ -87,6 +93,14 @@ const useCreateJobStep4 = () => {
       activationTimestamp: activationTimestamp?.unix() ?? 0,
     });
   }, [activationTimestamp]);
+
+  useEffect(() => {
+    console.log({ isSuccess, isLoading, transactionHash });
+    if (isSuccess && transactionHash) {
+      setLoading(false);
+      nextStep();
+    }
+  }, [transactionHash, isSuccess]);
 
   const nextStep = () => {
     router.push("/jobs/list");
@@ -119,6 +133,7 @@ const useCreateJobStep4 = () => {
   };
 
   const finishAndDeploy = async () => {
+    setLoading(true);
     await deployJob();
   };
 
@@ -224,12 +239,12 @@ const CreateJobStep4 = () => {
         <Typography variant="h4">Step 4 - final step</Typography>
       </Box>
       <Box className={`${classes.centeredRow} ${classes.mt2}`}>
-        <Typography variant="h5">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+        <Typography variant="body1">
+          To deploy your job, please fill in the remaining data below.
         </Typography>
       </Box>
       <Box className={`${classes.centeredRow} ${classes.mt2}`}>
-        <Typography variant="h5">Your formula looks like:</Typography>
+        <Typography variant="h5">Your formula looks like this:</Typography>
       </Box>
       <Box
         className={`${classes.centeredRow} ${classes.mt2} ${classes.withBorder}`}
@@ -237,6 +252,7 @@ const CreateJobStep4 = () => {
         <Typography variant="body1">
           {leftFormula} {comparator} {rightFormula}
         </Typography>
+        <pre>{JSON.stringify({ fullFormula, createJob }, null, 2)}</pre>
       </Box>
       <Box className={classes.mt2}>
         <TextField
