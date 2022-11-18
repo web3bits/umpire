@@ -252,7 +252,6 @@ const CreateJobStep4 = () => {
         <Typography variant="body1">
           {leftFormula} {comparator} {rightFormula}
         </Typography>
-        <pre>{JSON.stringify({ fullFormula, createJob }, null, 2)}</pre>
       </Box>
       <Box className={classes.mt2}>
         <TextField

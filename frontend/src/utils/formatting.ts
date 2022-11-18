@@ -1,7 +1,14 @@
-import {BigNumber} from "ethers";
-import {fromBn} from "evm-bn";
+import { BigNumber } from "ethers";
+import { fromBn } from "evm-bn";
 import dayjs from "dayjs";
-import {PostfixNodeStruct, PostfixNodeType} from "./model";
+import { PostfixNodeStruct, PostfixNodeType } from "./model";
+import {
+  POLYGON_MUMBAI_COMMODITIES_ITEMS,
+  POLYGON_MUMBAI_CRYPTO_ITEMS,
+  POLYGON_MUMBAI_EQUITIES_ITEMS,
+  POLYGON_MUMBAI_FOREX_ITEMS,
+  POLYGON_MUMBAI_META,
+} from "../constants/polygon-mumbai";
 
 export const formatOperator = (input: any): string => {
   const i = b2n(input);
@@ -82,18 +89,39 @@ export const formatTimestamp = (input: BigNumber | number): string => {
   );
 };
 
-export const formatFormula = (input: PostfixNodeStruct[]): string => {
-  let formula = "";
+export const formatFormula = (
+  input: PostfixNodeStruct[],
+  dataFeeds: string[] = []
+): string => {
+  const stack: string[] = [];
+
   for (const node of input) {
     const nodeType = b2n(node.nodeType) as PostfixNodeType;
-    if (nodeType === PostfixNodeType.VALUE) {
-      formula += formatBN(node.value) + " ";
-    } else if (nodeType === PostfixNodeType.OPERATOR) {
-      formula += formatOperator(node.operator) + " ";
+
+    if (nodeType === PostfixNodeType.OPERATOR) {
+      const o1 = stack.pop();
+      const o2 = stack.pop();
+      stack.push(`(${o2}${formatOperator(node.operator)}${o1})`);
     } else {
-      formula += `[${b2n(node.variableIndex)}] `;
+      if (nodeType === PostfixNodeType.VALUE) {
+        stack.push(formatBN(node.value));
+      } else {
+        const variableId = b2n(node.variableIndex);
+        const feedAddress = dataFeeds[variableId];
+        const feed = [
+          ...POLYGON_MUMBAI_META,
+          ...POLYGON_MUMBAI_CRYPTO_ITEMS,
+          ...POLYGON_MUMBAI_COMMODITIES_ITEMS,
+          ...POLYGON_MUMBAI_EQUITIES_ITEMS,
+          ...POLYGON_MUMBAI_FOREX_ITEMS,
+        ].find((item) => item.address === feedAddress);
+        const variableName = feed?.id
+          ? feed.id.replace(/\s/gm, "")
+          : String(variableId);
+        stack.push(`[${variableName}]`);
+      }
     }
   }
 
-  return formula;
+  return stack[stack.length - 1];
 };

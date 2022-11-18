@@ -25,9 +25,9 @@ const useListJobs = () => {
       jobId: BigNumber.from(row.id).toNumber(),
       jobName: row.jobName,
       status: formatJobStatus(row.jobStatus),
-      formula: `${formatFormula(row.formulaLeft)} ${formatComparator(
+      formula: `${formatFormula(row.formulaLeft, row.dataFeeds)} ${formatComparator(
         row.comparator
-      )} ${formatFormula(row.formulaRight)}`,
+      )} ${formatFormula(row.formulaRight, row.dataFeeds)}`,
       dateCreated: formatTimestamp(row.createdAt),
       timeout: formatTimestamp(row.timeoutDate),
     };
