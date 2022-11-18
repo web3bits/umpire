@@ -85,7 +85,7 @@ const CreateJobStep3 = () => {
           Now for the fun part! Below you can define a formula, a condition
           which is going to be evaluated to determine when to finalize your job.
           In this MVP the formula is defined as a simple comparison, in the
-          future we'll support a more complex evaluation engine similar to Excel
+          future we&apos;ll support a more complex evaluation engine similar to Excel
           formulas.
         </Typography>
       </Box>

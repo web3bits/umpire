@@ -120,7 +120,7 @@ const CreateJobStep2 = () => {
       <Box className={`${classes.mt2} ${classes.px6}`}>
         <Typography variant="body1">
           In the formula that triggers positive action of your job, you can use
-          variables provided by hyper-reliable Chainlink's Decentralized Oracle
+          variables provided by hyper-reliable Chainlink&apos;s Decentralized Oracle
           Networks. The selection below is limited to feeds available on Polygon
           Mumbai testnet.
         </Typography>
@@ -136,7 +136,7 @@ const CreateJobStep2 = () => {
       </Box>
       <Box className={classes.mt2}>
         <Typography variant="h6">
-          List of input variables you'll be able to use in your formula:
+          List of input variables you&apos;ll be able to use in your formula:
         </Typography>
         <ItemsSelected variableFeeds={variableFeeds} />
       </Box>

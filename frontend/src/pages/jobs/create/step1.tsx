@@ -37,6 +37,7 @@ const CreateJobStep1 = () => {
           <a
             href="https://github.com/web3bits/umpire/blob/main/contracts/contracts/UmpireActionInterface.sol"
             target="_blank"
+            rel="noreferrer"
           >
             UmpireActionInterface
           </a>{" "}
@@ -44,30 +45,32 @@ const CreateJobStep1 = () => {
           <a
             href="https://github.com/web3bits/umpire/blob/main/contracts/contracts/AbstractUmpireAction.sol"
             target="_blank"
+            rel="noreferrer"
           >
             AbstractUmpireAction
           </a>{" "}
           contract. Please note, if your contract action throws an error
           (reverts), the job will finalize with a REVERTED status! Additionally,
           if the gas limit is exceeded, the action will not be executed, so make
-          sure it's lean.
+          sure it&apos;s lean.
         </Typography>
       </Box>
       <Box className={`${classes.mt2} ${classes.px6}`}>
         <Typography variant="body1">
-          A typical use case for Umpire would be to create a "Put Your Money
-          Where Your Mouth Is" job, which is a basic betting contract. For
+          A typical use case for Umpire would be to create a&quot;Put Your Money
+          Where Your Mouth Is&quot; job, which is a basic betting contract. For
           example, you could deploy PYMWYMI action contract with a formula being
           an equivalent of saying:{" "}
           <em>
-            "I bet [BTC/USD] price will be greater than $18,000 on December 1st"
+            &quot;I bet [BTC/USD] price will be greater than $18,000 on December 1st&quot;
           </em>
           ; if the price reaches that point before the deadline, everyone who
-          put a "positive" bet wins an amount proportional to their share of all
+          put a &quot;positive&quot; bet wins an amount proportional to their share of all
           positive bets. Otherwise, those who bet on the negative action win.{" "}
           <a
             href="https://github.com/web3bits/umpire/blob/main/contracts/contracts/examples/PYMWYMI.sol"
             target="_blank"
+            rel="noreferrer"
           >
             Click here
           </a>{" "}
