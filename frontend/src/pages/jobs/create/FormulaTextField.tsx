@@ -16,8 +16,7 @@ const FormulaList = ({
       <Box
         className={classes.formulaListValue}
         onClick={handleItemClick}
-        data-id={value}
-      >
+        data-id={value}>
         <span className={classes.formulaValue}>{value}</span>
       </Box>
     );
@@ -280,7 +279,12 @@ const FormulaTextField = ({
     if (!displayList) {
       return null;
     }
-    return <FormulaList values={values} handleItemClick={handleItemClick} />;
+    return (
+      <FormulaList
+        values={values}
+        handleItemClick={handleItemClick}
+      />
+    );
   };
 
   return (
@@ -294,7 +298,7 @@ const FormulaTextField = ({
         onKeyUp={handleKeyUp}
         onClick={handleSelectionEnd}
         value={value}
-        className={classes.formulaInput}
+        className={classes.inputField}
       />
       {renderFormulaList()}
     </Box>

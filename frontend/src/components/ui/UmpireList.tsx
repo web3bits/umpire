@@ -81,7 +81,7 @@ export const UmpireList = ({
           label="Quick Search"
           onChange={quickSearch}
           value={filter}
-          className={classes.fullWidth}
+          className={classes.inputField}
         />
       </Box>
       <Box className={classes.mt2}>
@@ -91,19 +91,19 @@ export const UmpireList = ({
             bgcolor: "background.paper",
             maxHeight: 500,
             overflowY: "scroll",
-          }}
-        >
+          }}>
           {filteredListItems.map((listItem: IListItem) => {
             const { id } = listItem;
             const labelId = `${listId}-list-label-${id}`;
 
             return (
-              <ListItem key={labelId} disablePadding>
+              <ListItem
+                key={labelId}
+                disablePadding>
                 <ListItemButton
                   role={undefined}
                   onClick={handleToggle(id)}
-                  dense
-                >
+                  dense>
                   <ListItemIcon>
                     <Checkbox
                       edge="start"
@@ -111,10 +111,17 @@ export const UmpireList = ({
                       tabIndex={-1}
                       disableRipple
                       inputProps={{ "aria-labelledby": labelId }}
-                      sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          color: "#ec407a",
+                        },
+                      }}
                     />
                   </ListItemIcon>
-                  <ListItemText id={labelId} primary={id} />
+                  <ListItemText
+                    id={labelId}
+                    primary={id}
+                  />
                 </ListItemButton>
               </ListItem>
             );

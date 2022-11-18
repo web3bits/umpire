@@ -20,8 +20,7 @@ const useCreateJobStep2 = (classes: any) => {
   const [listItems, setListItems] = useState<any[]>([]);
 
   const router = useRouter();
-  const { setCreateJob } =
-    useGlobalContext();
+  const { setCreateJob } = useGlobalContext();
   const nextStep = () => {
     setCreateJob({
       values: selectedValues,
@@ -130,8 +129,7 @@ const CreateJobStep2 = () => {
         <Button
           onClick={nextStep}
           disabled={false}
-          className="pink"
-        >
+          className="pink">
           Next Step
         </Button>
       </Box>

@@ -34,7 +34,9 @@ const CreateJobStep1 = () => {
         </Typography>
       </Box>
       <Box className={classes.centeredRow}>
-        <Button className="pink" onClick={nextStep}>
+        <Button
+          className="pink"
+          onClick={nextStep}>
           Next Step
         </Button>
       </Box>

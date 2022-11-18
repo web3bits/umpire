@@ -59,7 +59,7 @@ function Index() {
         <Button
           disabled={!connector.ready || isConnected || isLoading}
           onClick={() => handleConnect({ connector })}
-          variant="outlined"
+          variant="contained"
           className={classes.whiteButton}
         >
           Sign in using {connector.name}

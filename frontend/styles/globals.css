@@ -1,11 +1,12 @@
 button.pink {
-  width: 100%!important;
-  height: 50px!important;
-  background-image: linear-gradient(195deg,#ec407a,#d81b60);
-  color: white!important;
-  border: 0px!important;
+  width: 100% !important;
+  height: 50px !important;
+  background-image: linear-gradient(195deg, #ec407a, #d81b60);
+  color: white !important;
+  border: 0px !important;
   border-radius: 0.75rem;
-  box-shadow: 0 4px 20px 0 rgba(0,0,0,.14),0 7px 10px -5px rgba(233,30,99,.4)!important;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14),
+    0 7px 10px -5px rgba(233, 30, 99, 0.4) !important;
 }
 span.MuiTabs-indicator {
   height: 40px;
@@ -14,8 +15,8 @@ span.MuiTabs-indicator {
   border-radius: 0.5rem;
   box-shadow: rgb(0 0 0 / 10%) 0px 4px 12px;
 }
-div.MuiTabs-scroller  {
-  overflow: visible!important;
+div.MuiTabs-scroller {
+  overflow: visible !important;
 }
 .Mui-selected {
   font-weight: 500;
@@ -23,8 +24,9 @@ div.MuiTabs-scroller  {
 span.MuiStepLabel-iconContainer {
   margin-right: 24px;
 }
-svg.Mui-active, svg.Mui-completed {
-  color: #ec407a!important;
+svg.Mui-active,
+svg.Mui-completed {
+  color: #ec407a !important;
 }
 span svg.MuiStepIcon-root {
   color: #ffffff;
@@ -35,18 +37,13 @@ text.MuiStepIcon-text {
 svg.Mui-active text.MuiStepIcon-text {
   fill: #ffffff;
 }
-span.Mui-completed, span.Mui-active {
-  color: #fff!important;
-  font-weight: 400!important;
+span.Mui-completed,
+span.Mui-active {
+  color: #fff !important;
+  font-weight: 400 !important;
 }
 span.Mui-disabled {
-  color: #fff!important;
-  font-weight: 400!important;
+  color: #fff !important;
+  font-weight: 400 !important;
   opacity: 0.6;
 }
-/* span.MuiStep-horizontal {
-  width: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-} */

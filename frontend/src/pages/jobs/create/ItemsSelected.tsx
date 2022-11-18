@@ -8,7 +8,9 @@ const ItemsSelected = ({ selectedValues }: { selectedValues: string[] }) => {
   const renderItem = (leftItem: string, index: number) => {
     return (
       <Box className={classes.flexRow}>
-        <Typography variant="body1" className={classes.variableValue}>
+        <Typography
+          variant="body1"
+          className={classes.variableValue}>
           {index + 1}. {leftItem}
         </Typography>
       </Box>

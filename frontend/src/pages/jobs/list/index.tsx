@@ -67,7 +67,11 @@ const ListJobs = () => {
     <Layout>
       <Box className={classes.container}>
         <Box className={classes.centeredRow}>
-          <UmpireTable tableId="jobs" rows={jobs} columns={TABLE_COLUMNS} />
+          <UmpireTable
+            tableId="jobs"
+            rows={jobs}
+            columns={TABLE_COLUMNS}
+          />
         </Box>
       </Box>
     </Layout>

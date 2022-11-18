@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -14,12 +13,10 @@ import ListItemText from "@mui/material/ListItemText";
 import Avatar from "@mui/material/Avatar";
 import makeBlockie from "ethereum-blockies-base64";
 import LogoutIcon from "@mui/icons-material/Logout";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import WorkIcon from "@mui/icons-material/Work";
 import UmpireStepper from "../ui/UmpireStepper";
 import Typography from "@mui/material/Typography";
-import { Box } from "@mui/system";
 import {
   useAccount,
   useDisconnect,
@@ -27,7 +24,9 @@ import {
   useEnsName,
   useNetwork,
 } from "wagmi";
-import { STEPS, STEP_NAVIGATION, STEPS_TITLE } from "../../constants";
+import Badge from "@mui/material/Badge";
+import { styled } from "@mui/material/styles";
+import { STEP_NAVIGATION, STEPS_TITLE } from "../../constants";
 
 const useStyles: any = makeStyles((theme: any) => ({
   colorWhite: {
@@ -41,10 +40,13 @@ const useStyles: any = makeStyles((theme: any) => ({
     opacity: ".25",
   },
   header: {
-    padding: "1.5rem 2rem",
+    padding: "1.5rem 2rem 0.5rem",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    "&:nth-child(2)": {
+      padding: "0.8rem 2rem 1.5rem",
+    },
   },
   listItem: {
     padding: "0px",
@@ -68,7 +70,6 @@ const useStyles: any = makeStyles((theme: any) => ({
     },
   },
   active: {
-    // backgroundImage: "linear-gradient(195deg,#66bb6a,#43a047)",
     backgroundImage: "linear-gradient(195deg,#ec407a,#d81b60)",
   },
   link: {
@@ -80,12 +81,20 @@ const useStyles: any = makeStyles((theme: any) => ({
     fontSize: "1rem",
     lineHeight: "1.5",
   },
-
+  account: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    width: "100px",
+  },
+  address: {
+    marginTop: "20px",
+  },
 }));
 
 const useDrawer = () => {
   const { disconnect } = useDisconnect();
-   const { address: wagmiAddress } = useAccount();
+  const { address: wagmiAddress } = useAccount();
   const { data: wagmiEnsAvatar } = useEnsAvatar({
     addressOrName: wagmiAddress,
   });
@@ -111,9 +120,6 @@ const useDrawer = () => {
   useEffect(() => {
     setEnsName(wagmiEnsName);
   }, [wagmiEnsName]);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  );
 
   const signOut = () => {
     disconnect();
@@ -166,28 +172,66 @@ const useDrawer = () => {
 };
 
 export const Drawer = () => {
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+    "& .MuiBadge-badge": {
+      backgroundColor: "#44b700",
+      color: "#44b700",
+      boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+      "&::after": {
+        position: "absolute",
+        top: -1,
+        left: -1,
+        width: "100%",
+        height: "100%",
+        borderRadius: "50%",
+        animation: "ripple 1.2s infinite ease-in-out",
+        border: "1px solid currentColor",
+        content: '""',
+      },
+    },
+    "@keyframes ripple": {
+      "0%": {
+        transform: "scale(.8)",
+        opacity: 1,
+      },
+      "100%": {
+        transform: "scale(2.4)",
+        opacity: 0,
+      },
+    },
+  }));
+
   const { setCreateJobStepNumber, createJobStepNumber } = useGlobalContext();
   const router = useRouter();
   const classes = useStyles();
-  const {  settings,
-    anchorElUser,
+  const {
+    settings,
     address,
     ensAvatar,
-    ensName,
-    isSupportedNetwork, steps } = useDrawer();
-    const stepNumber = 0;
+    // ensName,
+    // isSupportedNetwork
+  } = useDrawer();
 
   const renderAvatar = () => {
     if (!address) {
-      return <Avatar/>;
+      return <Avatar sx={{ width: 56, height: 56 }} />;
     }
     return (
-      <>
-        {/* <Typography className={`${classes.whiteFont} ${classes.mr2}`}>
+      <div className={classes.account}>
+        <StyledBadge
+          overlap="circular"
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+          variant="dot">
+          <Avatar
+            alt={address}
+            src={ensAvatar ?? makeBlockie(address)}
+            sx={{ width: 56, height: 56 }}
+          />
+        </StyledBadge>
+        {/* <Typography className={classes.address}>
           {ensName ? `${ensName} (${address})` : address}
         </Typography> */}
-        <Avatar alt={address} src={ensAvatar ?? makeBlockie(address)} />
-      </>
+      </div>
     );
   };
 
@@ -208,12 +252,13 @@ export const Drawer = () => {
     if (isSupportedNetwork) {
       return null;
     }
+
     return (
       <Typography variant="h5">Please switch to Goerli testnet</Typography>
     );
   };
 
-  const indexs = STEP_NAVIGATION.map(i => i.includes(router.asPath));
+  const indexs = STEP_NAVIGATION.map((i) => i.includes(router.asPath));
   const stepNo = indexs?.indexOf(true);
 
   const drawer = (
@@ -224,28 +269,13 @@ export const Drawer = () => {
       <div className={classes.header}>{renderAvatar()}</div>
       <div className={classes.hr}></div>
       <div>
-        {/* <List>
-          {steps.map((step, index) => (
-            <ListItem
-              key={index}
-              className={classes.listItem + " " + classes.steps}
-              // selected={router.asPath === step.href ? true : false}
-              // classes={{ selected: classes.active }}
-            >
-              <ListItemIcon className={classes.colorWhite}>
-                <CheckCircleIcon />
-              </ListItemIcon>
-              <ListItemText primary={step.title} />
-            </ListItem>
-          ))}
-        </List> */}
         <div className={classes.stepper}>
-        <UmpireStepper
-          stepNumber={stepNo}
-          steps={STEPS_TITLE}
-          setStepNumber={setCreateJobStepNumber}
-          stepNavigation={STEP_NAVIGATION}
-        />
+          <UmpireStepper
+            stepNumber={stepNo}
+            steps={STEPS_TITLE}
+            setStepNumber={setCreateJobStepNumber}
+            stepNavigation={STEP_NAVIGATION}
+          />
         </div>
         <div className={classes.hr}></div>
         <List>
@@ -277,6 +307,5 @@ export const Drawer = () => {
       </div>
     </>
   );
-
   return <>{drawer}</>;
 };

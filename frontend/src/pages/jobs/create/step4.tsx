@@ -22,8 +22,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { v4 as uuidv4 } from "uuid";
 const useCreateJobStep4 = () => {
   const router = useRouter();
-  const { createJob, setCreateJob, addJob } =
-    useGlobalContext();
+  const { createJob, setCreateJob, addJob } = useGlobalContext();
   const [activationDate, setActivationDate] = useState<Dayjs | null>(null);
   const [deadlineDate, setDeadlineDate] = useState<Dayjs | null>(null);
   const [useActivationDate, setUseActivationDate] = useState(false);
@@ -125,7 +124,12 @@ const CreateJobStep4 = () => {
         label="Deadline date & time"
         value={deadlineDate}
         onChange={handleDeadlineDateChange}
-        renderInput={(params) => <TextField {...params} />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            className={classes.inputFieldDate}
+          />
+        )}
         disablePast={true}
         minDateTime={activationDate}
       />
@@ -149,7 +153,12 @@ const CreateJobStep4 = () => {
             label="Activation date & time"
             value={activationDate}
             onChange={handleActivationDateChange}
-            renderInput={(params) => <TextField {...params} />}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                className={classes.inputFieldDate}
+              />
+            )}
             disablePast={true}
           />
           {renderDeadlinePicker()}
@@ -172,8 +181,7 @@ const CreateJobStep4 = () => {
         <Typography variant="h5">Your formula looks like:</Typography>
       </Box>
       <Box
-        className={`${classes.centeredRow} ${classes.mt2} ${classes.withBorder}`}
-      >
+        className={`${classes.centeredRow} ${classes.mt2} ${classes.withBorder}`}>
         <Typography variant="body1">
           {leftSide} {comparator} {rightSide}
         </Typography>
@@ -183,7 +191,7 @@ const CreateJobStep4 = () => {
           id="jobName"
           label="Job name"
           variant="outlined"
-          className={classes.fullWidth}
+          className={classes.inputField}
           value={jobName}
           onChange={handleSetJobName}
         />
@@ -193,7 +201,7 @@ const CreateJobStep4 = () => {
           id="action-address"
           label="Action address"
           variant="outlined"
-          className={classes.fullWidth}
+          className={classes.inputField}
           value={actionAddress}
           onChange={handleSetActionAddress}
         />
@@ -204,6 +212,12 @@ const CreateJobStep4 = () => {
             <Checkbox
               id="use-activation-date"
               onChange={handleUseActivationDateChange}
+              disableRipple
+              sx={{
+                "& .MuiSvgIcon-root": {
+                  color: "#ec407a",
+                },
+              }}
             />
           }
           label="Use activation date"
@@ -214,8 +228,7 @@ const CreateJobStep4 = () => {
         <Button
           onClick={finishAndDeploy}
           disabled={missingData}
-          className="pink"
-        >
+          className="pink">
           Finish - deploy the job
         </Button>
       </Box>

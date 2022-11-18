@@ -1326,4 +1326,9 @@ export const STEP_NAVIGATION = [
   "/jobs/create/step4",
 ];
 
-export const STEPS_TITLE = ["Create a contract", "Select input variables", "Define formula", "Deploy the job"];
+export const STEPS_TITLE = [
+  "Create a contract",
+  "Select input variables",
+  "Define formula",
+  "Deploy the job",
+];

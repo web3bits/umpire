@@ -135,42 +135,38 @@ const renderRadioGroup = (
         defaultValue={""}
         onChange={handleOperatorChange}
         value={currentFormulaOperator}
-      >
+        sx={{
+          "& .MuiSvgIcon-root": { color: "#ec407a" },
+        }}>
         <FormControlLabel
           value={EComparator.EQUAL}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.EQUAL}
-          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.GREATER_THAN}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.GREATER_THAN}
-          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.GREATER_THAN_EQUAL}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.GREATER_THAN_EQUAL}
-          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.LOWER_THAN}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.LOWER_THAN}
-          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.LOWER_THAN_EQUAL}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.LOWER_THAN_EQUAL}
-          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
         <FormControlLabel
           value={EComparator.DIFFERENT_FROM}
-          control={<Radio />}
+          control={<Radio disableRipple />}
           label={EComparator.DIFFERENT_FROM}
-          sx={{ '& .MuiSvgIcon-root': { color: "#ec407a" }}}
         />
       </RadioGroup>
     </FormControl>
@@ -223,6 +219,7 @@ const EditFormula = ({
             id="formula-rightt-side"
             handleOnChange={handleRightSideChange}
             values={values}
+            style={{ border: "1px #000 solid" }}
           />
         </Box>
       </Box>

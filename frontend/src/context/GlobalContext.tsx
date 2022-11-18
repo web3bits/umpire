@@ -85,7 +85,11 @@ export const defaultGlobalContext: IGlobalContext = {
 export const GlobalContext: Context<IGlobalContext> =
   createContext<IGlobalContext>(defaultGlobalContext);
 
-export const GlobalContextProvider = ({ children }: { children: React.ReactNode }) => {
+export const GlobalContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [isLoading, setLoading] = useState<boolean>(false);
   const [loadingMessage, setLoadingMessage] = useState<string>("");
   const [user, setUser] = useState<IUser | undefined>();
@@ -116,8 +120,7 @@ export const GlobalContextProvider = ({ children }: { children: React.ReactNode 
         setCreateJob,
         jobs,
         addJob,
-      }}
-    >
+      }}>
       {children}
     </GlobalContext.Provider>
   );

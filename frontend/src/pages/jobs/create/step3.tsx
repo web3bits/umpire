@@ -10,8 +10,7 @@ import ItemsSelected from "./ItemsSelected";
 import { Alert } from "@mui/material";
 const useCreateJobStep3 = () => {
   const router = useRouter();
-  const { createJob, setCreateJob } =
-    useGlobalContext();
+  const { createJob, setCreateJob } = useGlobalContext();
   const { values } = createJob ?? {
     values: [],
   };
@@ -103,7 +102,9 @@ const CreateJobStep3 = () => {
       </Box>
       <Box className={`${classes.row} ${classes.mt2}`}>
         {errorInFormula && (
-          <Alert severity="warning" sx={{borderRadius: "0.75rem"}}>
+          <Alert
+            severity="warning"
+            sx={{ borderRadius: "0.75rem" }}>
             The formula typed is not valid, please fix it.
           </Alert>
         )}
@@ -112,8 +113,7 @@ const CreateJobStep3 = () => {
         <Button
           onClick={nextStep}
           disabled={errorInFormula}
-          className="pink"
-        >
+          className="pink">
           Next Step
         </Button>
       </Box>
