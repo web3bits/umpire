@@ -11,6 +11,8 @@ This project has been created for Chainlink 2022 Fall Hackathon. We hope you lik
 
 Please note, this is a proof of concept and should be treated as such, code is provided as is, do not use in production with real funds!
 
+![Architecture](/architecture.png)
+
 ## Deploying Umpire contracts
 
 ```shell
